@@ -7,11 +7,10 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+// Response は、、
 type Response struct {
-	Body string `body`
+	Body string
 }
-
-// ss
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	res := Response{Body: "Secret API!"}
