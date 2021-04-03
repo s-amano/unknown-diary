@@ -1,0 +1,17 @@
+receiver:
+  handler: bin/receiver
+  name: '${self:service}-${self:provider.stage}-receiver'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /test/get
+        method: get
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer
+  headers:
+    - Content-Type
+    - X-Amz-Date
+    - Authorization
+    - X-Api-Key
+    - X-Amz-Security-Token

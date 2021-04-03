@@ -1,10 +1,11 @@
-service: comconfirm-lambda
+service: unknown-diary-stack
 
 provider:
   name: aws
   runtime: go1.x
   region: ap-northeast-1
   profile: amagai
+  stage: ${opt:stage, "dev"}
 
 package:
   exclude:
@@ -12,18 +13,21 @@ package:
   include:
     - ./bin/**
 
+custom:
+  ### dev / prod で使い分けるパラメータの設定
+  # DynamoDBテーブル名
+  diaryStoreDynamoDBTableCustom:
+    dev: unknown_diary_dev
+    prod: unknown_diary_prod
+
+  ### データストア関連
+  diaryStoreDynamoDBTable: ${self:custom.diaryStoreDynamoDBTableCustom.${self:provider.stage}}
+  diaryStoreDynamoDBARN: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.diaryStoreDynamoDBTable}'
+
 functions:
-  testlambda:
-    handler: bin/comconfirm-lambda
-    name: test-communication-confirm-lambda
-    events:
-      # API Gateway にて起動
-      - http:
-          path: /test/get
-          method: get
-    headers:
-      - Content-Type
-      - X-Amz-Date
-      - Authorization
-      - X-Api-Key
-      - X-Amz-Security-Token
+  - ${file(./functions/receiver.yml)}
+
+resources:
+  - ${file(./resources/dynamodb.yml)}
+  - ${file(./resources/cognito.yml)}
+  - ${file(./resources/apigateway-authorizer.yml)}

@@ -1,0 +1,85 @@
+Resources:
+  UnknownDiaryUserPool:
+    Type: 'AWS::Cognito::UserPool'
+    Properties:
+      AccountRecoverySetting: # パスワード忘れの際の復帰方法
+        RecoveryMechanisms:
+          - Name: 'admin_only'
+            Priority: 1
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+        InviteMessageTemplate:
+          EmailMessage: 'ユーザー名は {username}、仮パスワードは {####} です。'
+          EmailSubject: '仮パスワード'
+          SMSMessage: 'ユーザー名は {username}、仮パスワードは {####} です。'
+      AliasAttributes:
+        - preferred_username
+      AutoVerifiedAttributes:
+        - email
+      DeviceConfiguration:
+        ChallengeRequiredOnNewDevice: false
+        DeviceOnlyRememberedOnUserPrompt: false
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+      EmailVerificationMessage: '検証コードは {####} です。'
+      EmailVerificationSubject: '検証コード'
+      MfaConfiguration: OFF
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+          TemporaryPasswordValidityDays: 365
+      Schema:
+        - AttributeDataType: String
+          DeveloperOnlyAttribute: false
+          Mutable: true
+          Name: name
+          StringAttributeConstraints: { 'MinLength': '0', 'MaxLength': '15' }
+      SmsAuthenticationMessage: '認証コードは {####} です。'
+      SmsVerificationMessage: '検証コードは {####} です。'
+      UsernameConfiguration:
+        CaseSensitive: true
+      UserPoolAddOns:
+        AdvancedSecurityMode: AUDIT
+      UserPoolName: ${self:service}-${self:provider.stage}-user-pool
+      UserPoolTags:
+        Service: ${self:service}-${self:provider.stage}
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_CODE
+        EmailMessage: '検証コードは {####} です。'
+        EmailSubject: '検証コード'
+        SmsMessage: '検証コードは {####} です。'
+
+  UnknownDiaryUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      CallbackURLs:
+        - 'http://localhost:3000'
+      ClientName: ${self:service}-${self:provider.stage}-user-pool-client
+      DefaultRedirectURI: 'http://localhost:3000'
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_ADMIN_USER_PASSWORD_AUTH
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_CUSTOM_AUTH
+      # GenerateSecret: Boolean
+      LogoutURLs:
+        - 'http://localhost:3000'
+      PreventUserExistenceErrors: ENABLED
+      ReadAttributes:
+        - name
+        - preferred_username
+        - email
+      RefreshTokenValidity: 10
+      SupportedIdentityProviders:
+        - COGNITO
+      UserPoolId:
+        Ref: UnknownDiaryUserPool
+      WriteAttributes:
+        - name
+        - preferred_username
+        - email
