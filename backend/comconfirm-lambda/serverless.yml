@@ -25,7 +25,7 @@ custom:
   diaryStoreDynamoDBARN: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.diaryStoreDynamoDBTable}'
 
 functions:
-  - ${file(./functions/receiver.yml)}
+  - ${file(./resources/receiver.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}

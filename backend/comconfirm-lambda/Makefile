@@ -1,6 +1,6 @@
 .PHONY: build clean deploy
 build:
-	env GOOS=linux go build -ldflags="-s -w" -o bin/receiver main.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/receiver functions/diary-receiver/main.go
 clean:
 	rm -rf ./bin
 deploy: clean build
