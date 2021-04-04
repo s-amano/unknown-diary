@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 
 	"github.com/google/uuid"
 )
@@ -16,6 +18,8 @@ import (
 type Post struct {
 	ID                   string
 	Time                 time.Time
+	Author               string
+	Status               string
 	Header               url.Values
 	MarshaledHeader      string
 	QueryString          url.Values
@@ -26,7 +30,7 @@ type Post struct {
 }
 
 // NewPost - API Gateway のリクエスト情報から Post オブジェクトを生成
-func NewPost(request events.APIGatewayProxyRequest, campaignRecordName, categoryRecordName string) (*Post, error) {
+func NewPost(request events.APIGatewayProxyRequest, author string) (*Post, error) {
 	var id uuid.UUID
 	var err error
 
@@ -52,6 +56,8 @@ func NewPost(request events.APIGatewayProxyRequest, campaignRecordName, category
 		return nil, err
 	}
 
+	result.Author = author
+
 	// Marshaled* メンバをセット
 	if err := result.marshalJSON(); err != nil {
 		return nil, err
@@ -61,7 +67,7 @@ func NewPost(request events.APIGatewayProxyRequest, campaignRecordName, category
 }
 
 // parseRequestBody - ヘッダから Content-Type を抽出し、その型に従って Body をパースする
-func (sp *Post) parseRequestBody() error {
+func (p *Post) parseRequestBody() error {
 	var err error
 	var contentType = ""
 	// Content-Type ヘッダとして認識する文字列。ある程度のバリエーションに対応する
@@ -72,7 +78,7 @@ func (sp *Post) parseRequestBody() error {
 	// ヘッダから Content-Type の文字列を参照する
 	for _, contentTypeKey := range contentTypeKeys {
 		// Content-Type をあらかじめ小文字に変換して使用する
-		contentType = strings.ToLower(sp.Header.Get(contentTypeKey))
+		contentType = strings.ToLower(p.Header.Get(contentTypeKey))
 		// 何か値の入っているものがヒットした場合にはループ処理を抜ける
 		if contentType != "" {
 			break
@@ -82,7 +88,7 @@ func (sp *Post) parseRequestBody() error {
 	// Content-Type に "json" が含まれる場合
 	if strings.Index(contentType, "json") >= 0 {
 		// Body を JSON デコードする
-		if err = json.Unmarshal([]byte(sp.Body), &sp.PostForm); err != nil {
+		if err = json.Unmarshal([]byte(p.Body), &p.PostForm); err != nil {
 			return err
 		}
 		return nil
@@ -90,10 +96,10 @@ func (sp *Post) parseRequestBody() error {
 
 	if strings.Index(contentType, "urlencoded") >= 0 {
 		var postForm url.Values
-		if postForm, err = url.ParseQuery(sp.Body); err != nil {
+		if postForm, err = url.ParseQuery(p.Body); err != nil {
 			return err
 		}
-		sp.PostForm = postForm
+		p.PostForm = postForm
 
 		return nil
 	}
@@ -101,23 +107,58 @@ func (sp *Post) parseRequestBody() error {
 }
 
 // marshalJSON - Header, QueryString を JSON エンコードし MarshaledHeader, MarshaledQueryString に格納する
-func (sp *Post) marshalJSON() error {
+func (p *Post) marshalJSON() error {
 	var err error
 	var header, queryString, postForm []byte
 
-	if header, err = json.Marshal(sp.Header); err != nil {
+	if header, err = json.Marshal(p.Header); err != nil {
 		return err
 	}
-	if queryString, err = json.Marshal(sp.QueryString); err != nil {
+	if queryString, err = json.Marshal(p.QueryString); err != nil {
 		return err
 	}
-	if postForm, err = json.Marshal(sp.PostForm); err != nil {
+	if postForm, err = json.Marshal(p.PostForm); err != nil {
 		return err
 	}
 
-	sp.MarshaledHeader = string(header)
-	sp.MarshaledQueryString = string(queryString)
-	sp.MarshaledPostForm = string(postForm)
+	p.MarshaledHeader = string(header)
+	p.MarshaledQueryString = string(queryString)
+	p.MarshaledPostForm = string(postForm)
 
 	return nil
+}
+
+// GetDynamoDBItemMap - dynamoDB に格納する item データを生成する
+func (p *Post) GetDynamoDBItemMap() map[string]*dynamodb.AttributeValue {
+	currentTimeStr := fmt.Sprintf(
+		"%d.%09d", p.Time.Unix(), p.Time.Nanosecond())
+
+	statusPostAt := fmt.Sprintf("%s_%s", p.Status, currentTimeStr)
+
+	// DynamoDB に格納する item オブジェクトを生成
+	item := map[string]*dynamodb.AttributeValue{
+		"id": {
+			S: aws.String(p.ID),
+		},
+		"post_at": {
+			N: aws.String(currentTimeStr),
+		},
+		"post_data": {
+			S: aws.String(p.MarshaledPostForm),
+		},
+		"author": {
+			S: aws.String(p.Author),
+		},
+		"status": {
+			S: aws.String(p.Status),
+		},
+		"status_post_at": {
+			S: aws.String(statusPostAt),
+		},
+		"header": {
+			S: aws.String(p.MarshaledHeader),
+		},
+	}
+
+	return item
 }
