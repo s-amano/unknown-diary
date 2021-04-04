@@ -1,26 +1,57 @@
 package main
 
 import (
-	"encoding/json"
+	"context"
+	"fmt"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+
+	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-receiver/controller"
+	"github.com/s-amano/unknown-diary/infra/dynamodbclient"
 )
 
-// Response は、、
-type Response struct {
-	Body string
+const (
+	envNameDiaryStoreDynamoDBTable = "DIARY_STORE_DYNAMODB_TABLE"
+)
+
+var (
+	region                  string
+	dynamoDBClient          *dynamodbclient.DynamoDBClient
+	diaryStoreDynamoDBTable string
+)
+
+func init() {
+	region = "ap-northeast-1"
+
+	diaryStoreDynamoDBTable = os.Getenv(envNameDiaryStoreDynamoDBTable)
+
+	// DynamoDB クライアントの初期化
+	dynamoDBClient = dynamodbclient.NewDynamoDBClient(region, diaryStoreDynamoDBTable)
 }
 
-func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	res := Response{Body: "Secret API!"}
-	jsonBytes, _ := json.Marshal(res)
-
-	return events.APIGatewayProxyResponse{
-		Body:       string(jsonBytes),
-		Headers:    map[string]string{"Access-Control-Allow-Origin": "*"},
+func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	result := events.APIGatewayProxyResponse{
 		StatusCode: 200,
-	}, nil
+		Headers: map[string]string{
+			"Content-Type": "text/html",
+		},
+		Body:            "",
+		IsBase64Encoded: false,
+	}
+
+	// コントローラの作成
+	src := controller.ReceiverController{
+		DynamoDBClientRepo: dynamoDBClient,
+	}
+	// DynamoDB への書き込み
+	err := src.Run(context.Background(), apiGWEvent, &result)
+	if err != nil {
+		fmt.Printf("%s\n", err)
+	}
+
+	return result, err
 }
 
 func main() {

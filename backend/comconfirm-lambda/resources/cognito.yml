@@ -2,7 +2,7 @@ Resources:
   UnknownDiaryUserPool:
     Type: 'AWS::Cognito::UserPool'
     Properties:
-      AccountRecoverySetting: # パスワード忘れの際の復帰方法
+      AccountRecoverySetting:
         RecoveryMechanisms:
           - Name: 'admin_only'
             Priority: 1
@@ -23,6 +23,7 @@ Resources:
         EmailSendingAccount: COGNITO_DEFAULT
       EmailVerificationMessage: '検証コードは {####} です。'
       EmailVerificationSubject: '検証コード'
+      LambdaConfig: { 'PreSignUp': 'arn:aws:lambda:ap-northeast-1:666062638775:function:jidoukoushin' }
       MfaConfiguration: OFF
       Policies:
         PasswordPolicy:
