@@ -43,7 +43,7 @@ func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (eve
 	}
 
 	// POSTしたユーザー名取得
-	author = apiGWEvent.RequestContext.Authorizer["claims"].(map[string]string)["cognito:username"]
+	author = apiGWEvent.RequestContext.Authorizer["claims"].(map[string]interface{})["cognito:username"].(string)
 
 	fmt.Printf("author: %v", author)
 

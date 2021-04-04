@@ -11,6 +11,19 @@ provider:
     REGION: ${self:provider.region}
     DIARY_STORE_DYNAMODB_TABLE: ${self:custom.diaryStoreDynamoDBTable}
 
+  iamRoleStatements:
+    # DynamoDB へのアクセス許可設定
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource:
+        - '${self:custom.diaryStoreDynamoDBARN}'
+        - '${self:custom.diaryStoreDynamoDBARN}/index/*'
+
 package:
   exclude:
     - ./**
