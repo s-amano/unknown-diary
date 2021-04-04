@@ -8,7 +8,21 @@ provider:
   stage: ${opt:stage, "dev"}
 
   environment:
-    DIARY_STORE_DYNAMODB_TABLE: ${self:custom.diaryStoreDynamoDBTableCustom}
+    REGION: ${self:provider.region}
+    DIARY_STORE_DYNAMODB_TABLE: ${self:custom.diaryStoreDynamoDBTable}
+
+  iamRoleStatements:
+    # DynamoDB へのアクセス許可設定
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+      Resource:
+        - '${self:custom.diaryStoreDynamoDBARN}'
+        - '${self:custom.diaryStoreDynamoDBARN}/index/*'
 
 package:
   exclude:
@@ -27,8 +41,7 @@ custom:
   diaryStoreDynamoDBTable: ${self:custom.diaryStoreDynamoDBTableCustom.${self:provider.stage}}
   diaryStoreDynamoDBARN: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.diaryStoreDynamoDBTable}'
 
-functions:
-  - ${file(./resources/receiver.yml)}
+functions: ${file(./resources/receiver.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}
