@@ -4,23 +4,28 @@ import { AmplifyAuthenticator, AmplifySignOut, AmplifySignUp } from '@aws-amplif
 import { Auth, API } from 'aws-amplify';
 
 function App() {
-  const showSecret = async function () {
-    const apiName = 'TestAPI';
+  const survayPost = async function () {
+    const apiName = 'POSTStoreAPI';
     const path = '';
+
+    const postData = {
+      title: 'testタイトル',
+      content: 'てすと',
+    };
     const myInit = {
       headers: {
         Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
       },
+      body: postData,
+      contentType: 'application/json',
     };
 
-    API.get(apiName, path, myInit)
-      .then((response) => {
-        console.log(response);
-        alert(response.Body);
+    API.post(apiName, path, myInit)
+      .then(() => {
+        console.log('成功');
       })
       .catch((err) => {
         console.log(err);
-        alert(err);
       });
   };
   return (
@@ -43,7 +48,7 @@ function App() {
 
         <header className="App-header">
           <div className="container">
-            <button id="button" onClick={() => showSecret()}>
+            <button id="button" onClick={() => survayPost()}>
               Click Me!
             </button>
           </div>

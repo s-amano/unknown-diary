@@ -4,8 +4,8 @@ receiver:
   events:
     # API Gateway にて起動
     - http:
-        path: /test/get
-        method: get
+        path: /post
+        method: post
         authorizer:
           type: COGNITO_USER_POOLS
           authorizerId: !Ref UnknownDiaryAuthorizer
