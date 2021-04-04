@@ -56,7 +56,11 @@ func NewPost(request events.APIGatewayProxyRequest, author string) (*Post, error
 		return nil, err
 	}
 
+	// author　をセット
 	result.Author = author
+
+	// status　をセット
+	result.Status = "false"
 
 	// Marshaled* メンバをセット
 	if err := result.marshalJSON(); err != nil {
