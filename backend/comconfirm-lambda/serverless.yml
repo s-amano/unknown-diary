@@ -7,6 +7,9 @@ provider:
   profile: amagai
   stage: ${opt:stage, "dev"}
 
+  environment:
+    DIARY_STORE_DYNAMODB_TABLE: ${self:custom.diaryStoreDynamoDBTableCustom}
+
 package:
   exclude:
     - ./**
@@ -20,7 +23,7 @@ custom:
     dev: unknown_diary_dev
     prod: unknown_diary_prod
 
-  ### データストア関連
+  ### データストア
   diaryStoreDynamoDBTable: ${self:custom.diaryStoreDynamoDBTableCustom.${self:provider.stage}}
   diaryStoreDynamoDBARN: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.diaryStoreDynamoDBTable}'
 
