@@ -20,6 +20,7 @@ var (
 	region                  string
 	dynamoDBClient          *dynamodbclient.DynamoDBClient
 	diaryStoreDynamoDBTable string
+	author                  string
 )
 
 func init() {
@@ -41,9 +42,15 @@ func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (eve
 		IsBase64Encoded: false,
 	}
 
+	// POSTしたユーザー名取得
+	author = apiGWEvent.RequestContext.Authorizer["claims"].(map[string]string)["cognito:username"]
+
+	fmt.Printf("author: %v", author)
+
 	// コントローラの作成
 	src := controller.ReceiverController{
 		DynamoDBClientRepo: dynamoDBClient,
+		Author:             author,
 	}
 	// DynamoDB への書き込み
 	err := src.Run(context.Background(), apiGWEvent, &result)

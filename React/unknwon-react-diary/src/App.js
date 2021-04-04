@@ -5,7 +5,7 @@ import { Auth, API } from 'aws-amplify';
 
 function App() {
   const showSecret = async function () {
-    const apiName = 'TestAPI';
+    const apiName = 'POSTStoreAPI';
     const path = '';
     const myInit = {
       headers: {
