@@ -36,7 +36,9 @@ func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (eve
 	result := events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "text/html",
+			"Content-Type":                     "text/html",
+			"Access-Control-Allow-Origin":      "*",
+			"Access-Control-Allow-Credentials": "true",
 		},
 		Body:            "",
 		IsBase64Encoded: false,
