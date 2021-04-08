@@ -18,6 +18,11 @@ Amplify.configure({
         endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/post',
         region: 'ap-northeast-1',
       },
+      {
+        name: 'GETStoreAPI',
+        endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/get',
+        region: 'ap-northeast-1',
+      },
     ],
   },
 });

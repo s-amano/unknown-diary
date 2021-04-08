@@ -6,21 +6,21 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
-	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-receiver/adapter"
+	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-getter/adapter"
 
 	"math/rand"
 )
 
 // Diary - 日記の内容を表現する構造体です
 type Diary struct {
-	ID      string `dynamodbav:"id" json:"id"`           // id
-	PostAt  string `dynamodbav:"post_at" json:"post_at"` // ポストされた日時
-	Content string `json:"content"`                      // 日記の本文
+	ID      string // id
+	PostAt  string // ポストされた日時
+	Content string `json:"content"` // 日記の本文
 }
 
 // GetDiary - 日記を表現する構造体です
 type GetDiary struct {
-	diaryPoster string
+	DiaryGetter string
 	Diary       Diary // 日記内容の構造体
 }
 
@@ -28,22 +28,23 @@ type GetDiary struct {
 func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, error) {
 	var err error
 
-	// DynamoDB クエリ条件の生成 ( author-status_post_at-index インデックス対象 )
-
-	// 1. パーティションキー author が　postをした人のusernameと一致しない
-	cond := expression.NotEqual(expression.Key("author"), expression.Value(gd.diaryPoster))
-
-	// キー条件の生成  // 2. ソートキー条件 status が false
-	keyCond := expression.KeyBeginsWith(expression.Key("status_post_at-index"), "false")
+	filter := expression.And(
+		// status_post_at が　falseから始まる
+		expression.Name("status_post_at").BeginsWith("false"),
+		// author が　getをした当人ではない
+		expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter)),
+	)
 
 	// クエリ用 expression の生成
-	expr, err := expression.NewBuilder().WithCondition(cond).WithKeyCondition(keyCond).Build()
+	expr, err := expression.NewBuilder().WithFilter(filter).Build()
 	if err != nil {
+		fmt.Printf("expsakuseierr %v\n getter %v\n", err, gd.DiaryGetter)
 		return nil, err
 	}
 
-	res, err := dc.QueryByExpression("author-status_post_at-index", &expr, nil)
+	res, err := dc.GetAllRecords(&expr, nil)
 	if err != nil {
+		fmt.Printf("exp %v\n getter %v\n", err, gd.DiaryGetter)
 		return nil, err
 	}
 
@@ -59,7 +60,7 @@ func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRep
 }
 
 // SetDiary - クエリ結果を Diary に入れる
-func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) error {
+func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, error) {
 	var err error
 	var diary Diary
 
@@ -67,15 +68,13 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) error {
 	err = json.Unmarshal([]byte(*item["post_data"].S), &diary)
 	if err != nil {
 		fmt.Printf("failed to unmarshal post_data. input: %s", *item["post_data"])
-		return err
+		return diary, err
 	}
 
 	diary.ID = *item["id"].S
-	diary.PostAt = *item["post_at"].S
+	diary.PostAt = *item["post_at"].N
 
-	gd.Diary = diary
-
-	return nil
+	return diary, nil
 }
 
-// 受け取った日記のreceiverをpostした人のusernameへ更新する
+// 受け取った日記のreceiverをgetした人のusernameへ更新する

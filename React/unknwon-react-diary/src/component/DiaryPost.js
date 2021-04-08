@@ -16,6 +16,27 @@ const DiaryPost = () => {
     setDiary(event.target.value);
   };
 
+  const getni = async function () {
+    const apiName = 'GETStoreAPI';
+    const path = '';
+
+    const myInit = {
+      headers: {
+        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+      },
+    };
+
+    API.get(apiName, path, myInit)
+      .then((response) => {
+        console.log(response);
+        alert(response.diary_content);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err);
+      });
+  };
+
   const survayPost = async function () {
     const apiName = 'POSTStoreAPI';
     const path = '';
@@ -71,6 +92,9 @@ const DiaryPost = () => {
       />
       <Button variant="contained" color="primary" onClick={() => survayPost()}>
         送信する
+      </Button>
+      <Button variant="contained" color="primary" onClick={() => getni()}>
+        日記取得
       </Button>
     </Container>
   );
