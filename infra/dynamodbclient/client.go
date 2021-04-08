@@ -30,10 +30,15 @@ func NewDynamoDBClient(region string, tableName string) *DynamoDBClient {
 }
 
 // GetAllRecords dynamoDBのレコードを全て取得する関数
-func (c *DynamoDBClient) GetAllRecords(attributesToGet []*string) (*dynamodb.ScanOutput, error) {
+func (c *DynamoDBClient) GetAllRecords(expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue) (*dynamodb.ScanOutput, error) {
 	s := &dynamodb.ScanInput{
-		AttributesToGet: attributesToGet,
-		TableName:       aws.String(c.tableName),
+		// AttributesToGet:   attributesToGet,
+		TableName:                 aws.String(c.tableName),
+		FilterExpression:          expr.Filter(),
+		ExclusiveStartKey:         exclusiveStartKey,
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		ProjectionExpression:      expr.Projection(),
 	}
 	return c.dynamo.Scan(s)
 }
