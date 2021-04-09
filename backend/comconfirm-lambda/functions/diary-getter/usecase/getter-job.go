@@ -40,6 +40,10 @@ func (gj *GetterJob) featchDiary(ctx context.Context) (domain.Diary, error) {
 		if err != nil {
 			fmt.Printf("setDiaryでエラー: %v \n", err)
 		}
+		err = gj.diary.AlterReceiverAndStatus(res, gj.DynamoDBClientRepo)
+		if err != nil {
+			fmt.Printf("AlterReceiverAndStatusでエラー: %v \n", err)
+		}
 
 		return resp, err
 	}
