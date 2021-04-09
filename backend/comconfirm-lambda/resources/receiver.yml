@@ -15,3 +15,15 @@ receiver:
     - Authorization
     - X-Api-Key
     - X-Amz-Security-Token
+
+getter:
+  handler: bin/getter
+  name: '${self:service}-${self:provider.stage}-getter'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /get
+        method: get
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer
