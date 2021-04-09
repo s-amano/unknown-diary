@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-getter/adapter"
@@ -30,7 +31,7 @@ func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRep
 
 	filter := expression.And(
 		// status_post_at が　falseから始まる
-		expression.Name("status_post_at").BeginsWith("false"),
+		expression.Name("status").BeginsWith("false"),
 		// author が　getをした当人ではない
 		expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter)),
 	)
@@ -77,4 +78,33 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 	return diary, nil
 }
 
-// 受け取った日記のreceiverをgetした人のusernameへ更新する
+// AlterReceiverAndStatus - 受け取った日記のreceiverをgetした人のusernameへ更新し、statusをfalseにする。
+func (gd *GetDiary) AlterReceiverAndStatus(item map[string]*dynamodb.AttributeValue, dc adapter.DynamoDBClientRepository) error {
+	var err error
+
+	updateItem := expression.UpdateBuilder{}.Set(expression.Name("receiver"), expression.Value(gd.DiaryGetter)).Set(expression.Name("status"), expression.Value("true"))
+
+	// keyを生成
+
+	updateItemKey := map[string]*dynamodb.AttributeValue{
+		"id": {
+			S: aws.String(*item["id"].S),
+		},
+		"post_at": {
+			N: aws.String(*item["post_at"].N),
+		},
+	}
+
+	expr, err := expression.NewBuilder().WithUpdate(updateItem).Build()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("aleter item: %v", item)
+	_, err = dc.UpdateItem(updateItemKey, &expr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
