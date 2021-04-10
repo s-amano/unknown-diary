@@ -14,8 +14,18 @@ const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
   const [isSucces, setIsSucces] = useState(false);
 
+  const envAPI = () => {
+    const env = process.env.NODE_ENV;
+    console.log(env);
+    if (env === 'production') {
+      return 'POSTStoreAPIProd';
+    } else {
+      return 'POSTStoreAPIDev';
+    }
+  };
+
   const survayPost = async () => {
-    const apiName = 'POSTStoreAPI';
+    const apiName = envAPI();
     const path = '';
 
     const postData = {
@@ -78,7 +88,7 @@ const DiaryPost = () => {
         rows={20}
         value={postDiary}
         onChange={updateDiary()}
-        error={Boolean(postDiary.length != 0 && postDiary.length < 17)}
+        error={Boolean(postDiary.length !== 0 && postDiary.length < 17)}
         helperText="17文字以上入力してください"
       />
 
