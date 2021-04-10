@@ -41,7 +41,9 @@ custom:
   diaryStoreDynamoDBTable: ${self:custom.diaryStoreDynamoDBTableCustom.${self:provider.stage}}
   diaryStoreDynamoDBARN: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.diaryStoreDynamoDBTable}'
 
-functions: ${file(./resources/receiver.yml)}
+functions:
+  - ${file(./resources/receiver.yml)}
+  - ${file(./resources/getter.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}
