@@ -14,13 +14,23 @@ Amplify.configure({
   API: {
     endpoints: [
       {
-        name: 'POSTStoreAPI',
+        name: 'POSTStoreAPIDev',
         endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/post',
         region: 'ap-northeast-1',
       },
       {
-        name: 'GETStoreAPI',
+        name: 'POSTStoreAPIProd',
+        endpoint: 'https://nrua2chkbg.execute-api.ap-northeast-1.amazonaws.com/prod/post',
+        region: 'ap-northeast-1',
+      },
+      {
+        name: 'GETStoreAPIDev',
         endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/get',
+        region: 'ap-northeast-1',
+      },
+      {
+        name: 'GETStoreAPIProd',
+        endpoint: 'https://nrua2chkbg.execute-api.ap-northeast-1.amazonaws.com/prod/get',
         region: 'ap-northeast-1',
       },
     ],

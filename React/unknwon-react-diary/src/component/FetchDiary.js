@@ -11,7 +11,12 @@ const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
 
   const fetchDiary = async () => {
-    const apiName = 'GETStoreAPI';
+    const env = process.env.NODE_ENV;
+    let apiName = 'GETStoreAPIDev';
+    console.log(env);
+    if (env === 'production') {
+      apiName = 'GETStoreAPIProd';
+    }
     const path = '';
 
     const myInit = {
