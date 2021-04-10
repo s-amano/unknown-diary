@@ -78,8 +78,16 @@ const DiaryPost = () => {
         rows={20}
         value={postDiary}
         onChange={updateDiary()}
+        error={Boolean(postDiary.length != 0 && postDiary.length < 17)}
+        helperText="17文字以上入力してください"
       />
-      <Button variant="contained" color="primary" onClick={() => survayPost()}>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => survayPost()}
+        disabled={Boolean(postDiary.length < 17)}
+      >
         送信する
       </Button>
     </Container>
