@@ -23,7 +23,6 @@ const DiaryFetch = () => {
     await API.get(apiName, path, myInit)
       .then((response) => {
         console.log(response);
-        setDiary({});
         setDiary(response);
       })
       .catch((err) => {
