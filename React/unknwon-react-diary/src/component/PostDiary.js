@@ -11,19 +11,15 @@ import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 
 const DiaryPost = () => {
-  const [diary, setDiary] = useState('');
+  const [postDiary, setPostDiary] = useState('');
   const [isSucces, setIsSucces] = useState(false);
 
-  const updateDiary = () => (event) => {
-    setDiary(event.target.value);
-  };
-
-  const survayPost = async function () {
+  const survayPost = async () => {
     const apiName = 'POSTStoreAPI';
     const path = '';
 
     const postData = {
-      content: diary,
+      content: postDiary,
     };
     const myInit = {
       headers: {
@@ -33,16 +29,21 @@ const DiaryPost = () => {
       contentType: 'application/json',
     };
 
-    API.post(apiName, path, myInit)
+    await API.post(apiName, path, myInit)
       .then(() => {
         console.log('成功');
         setIsSucces(true);
-        setDiary('');
+        setPostDiary('');
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const updateDiary = () => (event) => {
+    setPostDiary(event.target.value);
+  };
+
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
       <Grid container justify="flex-end">
@@ -75,7 +76,7 @@ const DiaryPost = () => {
         label="日記を書く"
         multiline
         rows={20}
-        value={diary}
+        value={postDiary}
         onChange={updateDiary()}
       />
       <Button variant="contained" color="primary" onClick={() => survayPost()}>
