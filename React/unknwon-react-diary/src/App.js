@@ -1,7 +1,9 @@
 import './App.css';
 import { AmplifyAuthenticator, AmplifySignUp } from '@aws-amplify/ui-react';
 import Navbar from './component/Navbar';
-import DiaryPost from './component/DiaryPost';
+import PostDiary from './component/PostDiary';
+import FetchDiary from './component/FetchDiary';
+import { Route, BrowserRouter } from 'react-router-dom';
 
 function App() {
   return (
@@ -23,9 +25,10 @@ function App() {
         />
         <Navbar />
         <header className="App-header">
-          <div className="container">
-            <DiaryPost />
-          </div>
+          <BrowserRouter>
+            <Route exact path="/post" component={PostDiary} />
+            <Route exact path="/" component={FetchDiary} />
+          </BrowserRouter>
         </header>
       </AmplifyAuthenticator>
     </div>
