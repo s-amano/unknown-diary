@@ -15,11 +15,11 @@ const DiaryPost = () => {
   const [isSucces, setIsSucces] = useState(false);
 
   const envAPI = () => {
-    const env = process.env.NODE_ENV;
+    const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
-    if (env === 'production') {
+    if (env === 'prod') {
       return 'POSTStoreAPIProd';
-    } else {
+    } else if (env === 'dev') {
       return 'POSTStoreAPIDev';
     }
   };

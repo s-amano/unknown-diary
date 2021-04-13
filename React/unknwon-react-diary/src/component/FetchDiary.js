@@ -10,13 +10,18 @@ import Button from '@material-ui/core/Button';
 const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
 
-  const fetchDiary = async () => {
-    const env = process.env.NODE_ENV;
-    let apiName = 'GETStoreAPIDev';
+  const envAPI = () => {
+    const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
-    if (env === 'production') {
-      apiName = 'GETStoreAPIProd';
+    if (env === 'prod') {
+      return 'GETStoreAPIProd';
+    } else if (env === 'dev') {
+      return 'GETStoreAPIDev';
     }
+  };
+
+  const fetchDiary = async () => {
+    const apiName = envAPI();
     const path = '';
 
     const myInit = {

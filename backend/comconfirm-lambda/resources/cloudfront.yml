@@ -1,0 +1,43 @@
+Resources:
+  CloudFrontOriginAccessIdentity:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'access-identity-${webContentsS3}'
+
+  CloudFrontDistribution:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        PriceClass: PriceClass_All
+        Aliases:
+          - 'unknown-diary.com'
+        Origins:
+          - DomainName: !GetAtt webContentsS3.RegionalDomainName
+            Id: !Sub 'S3origin-${webContentsS3}'
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: !Sub 'S3origin-${webContentsS3}'
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          DefaultTTL: 3600
+          MaxTTL: 86400
+          MinTTL: 60
+          Compress: true
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: false
+        ViewerCertificate:
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.1_2016
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:666062638775:certificate/0f0301fb-11c1-41dc-8382-917d5be75fe3'
+        HttpVersion: http2
+        Enabled: true

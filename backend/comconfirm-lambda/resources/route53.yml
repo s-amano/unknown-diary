@@ -1,0 +1,12 @@
+Resources:
+  webContentsRecordSetA:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Name: !Ref webContentsS3
+      HostedZoneId: Z066442021VDAV64CLJQF
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt
+          - CloudFrontDistribution
+          - DomainName
