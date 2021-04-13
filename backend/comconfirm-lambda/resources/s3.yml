@@ -1,0 +1,18 @@
+Resources:
+  webContentsS3:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ${self:custom.webContentsBucket}
+      AccessControl: Private
+
+  webContentsS3Policy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref webContentsS3
+      PolicyDocument:
+        Statement:
+          Action: 's3:GetObject'
+          Effect: 'Allow'
+          Resource: !Sub 'arn:aws:s3:::${webContentsS3}/*'
+          Principal:
+            CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId

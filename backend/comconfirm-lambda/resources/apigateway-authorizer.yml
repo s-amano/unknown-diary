@@ -10,4 +10,4 @@ Resources:
       IdentitySource: method.request.header.Authorization
       Type: COGNITO_USER_POOLS
       ProviderARNs:
-        - { Fn::GetAtt: [UnknownDiaryUserPool, Arn] }
+        - !GetAtt UnknownDiaryUserPool.Arn
