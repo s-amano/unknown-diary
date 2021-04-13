@@ -24,6 +24,10 @@ provider:
         - '${self:custom.diaryStoreDynamoDBARN}'
         - '${self:custom.diaryStoreDynamoDBARN}/index/*'
 
+  cloudfrontAmCertificateArn: 'arn:aws:acm:us-east-1:666062638775:certificate/0f0301fb-11c1-41dc-8382-917d5be75fe3'
+
+  cloudfrontAlias: unknown-diary.com
+
 package:
   exclude:
     - ./**
@@ -41,11 +45,20 @@ custom:
   diaryStoreDynamoDBTable: ${self:custom.diaryStoreDynamoDBTableCustom.${self:provider.stage}}
   diaryStoreDynamoDBARN: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.diaryStoreDynamoDBTable}'
 
+  webContentsBucketCustom:
+    dev: dev.unknown-diary.com
+    prod: unknown-diary.com
+
+  webContentsBucket: ${self:custom.webContentsBucketCustom.${self:provider.stage}}
+
 functions:
   - ${file(./resources/receiver.yml)}
   - ${file(./resources/getter.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}
+  - ${file(./resources/s3.yml)}
+  - ${file(./resources/cloudfront.yml)}
   - ${file(./resources/cognito.yml)}
   - ${file(./resources/apigateway-authorizer.yml)}
+  - ${file(./resources/route53.yml)}
