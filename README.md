@@ -16,6 +16,10 @@ https://unknown-diary.com/
   - Route53 (名前解決)
   - S3　(Webホスティング)
   - CloudFront (CDN)
+
+
+# 構成図
+<img width="775" alt="infra構成図" src="https://user-images.githubusercontent.com/53635209/114696010-2ac1ed80-9d57-11eb-94d4-a0bf1a3505bf.png">
   
 # 機能一覧
 - 誰かの日記を取得することができる
