@@ -8,8 +8,8 @@ import { Amplify } from 'aws-amplify';
 Amplify.configure({
   Auth: {
     region: 'ap-northeast-1',
-    userPoolId: 'ap-northeast-1_W4ffYSzxL',
-    userPoolWebClientId: '9aj5850fcqijsqo2kud4ri25a',
+    userPoolId: 'ap-northeast-1_SGhA5k2tK',
+    userPoolWebClientId: '5s9ftbi8f5pde1u4djlknhpgib',
   },
   API: {
     endpoints: [
@@ -19,18 +19,23 @@ Amplify.configure({
         region: 'ap-northeast-1',
       },
       {
-        name: 'POSTStoreAPIProd',
-        endpoint: 'https://y5berxt5w3.execute-api.ap-northeast-1.amazonaws.com/prod/post',
-        region: 'ap-northeast-1',
-      },
-      {
         name: 'GETStoreAPIDev',
         endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/get',
         region: 'ap-northeast-1',
       },
       {
+        name: 'POSTStoreAPIProd',
+        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/post',
+        region: 'ap-northeast-1',
+      },
+      {
         name: 'GETStoreAPIProd',
-        endpoint: 'https://y5berxt5w3.execute-api.ap-northeast-1.amazonaws.com/prod/get',
+        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get',
+        region: 'ap-northeast-1',
+      },
+      {
+        name: 'GETMyDiariesAPIProd',
+        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get/mydiaries',
         region: 'ap-northeast-1',
       },
     ],

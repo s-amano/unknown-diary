@@ -39,6 +39,25 @@ const DiaryFetch = () => {
         console.log(err);
       });
   };
+  const fetchMyDiaries = async () => {
+    const apiName = 'GETMyDiariesAPIProd';
+    const path = '';
+
+    const myInit = {
+      headers: {
+        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+      },
+    };
+
+    await API.get(apiName, path, myInit)
+      .then((response) => {
+        console.log(response);
+        console.log(response.Diaries[0]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
@@ -62,6 +81,10 @@ const DiaryFetch = () => {
       />
       <Button variant="contained" color="primary" onClick={() => fetchDiary()}>
         日記を取得
+      </Button>
+
+      <Button variant="contained" color="primary" onClick={() => fetchMyDiaries()}>
+        自分の日記を取得
       </Button>
     </Container>
   );
