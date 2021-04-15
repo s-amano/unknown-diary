@@ -1,0 +1,11 @@
+getterMyDiaries:
+  handler: bin/getter-my-diaries
+  name: '${self:service}-${self:provider.stage}-getter-my-diaries'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /get/mydiaries/
+        method: get
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer
