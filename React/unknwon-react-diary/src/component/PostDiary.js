@@ -58,7 +58,7 @@ const DiaryPost = () => {
     <Container style={{ marginTop: '20px' }} maxWidth="md">
       <Grid container justify="flex-end">
         <Button style={{ marginBottom: '5%' }} variant="contained" color="primary">
-          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+          <Link to="/diary" style={{ textDecoration: 'none', color: 'white' }}>
             日記を取得
           </Link>
         </Button>
