@@ -10,6 +10,7 @@ import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
 
 const FetchMyDiaries = () => {
   const [myDiaries, setMyDiaries] = useState([]);
@@ -53,7 +54,7 @@ const FetchMyDiaries = () => {
   };
 
   return (
-    <>
+    <Container style={{ marginTop: '20px' }} maxWidth="md">
       <Grid container justify="flex-end">
         <Button variant="contained" color="primary">
           <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
@@ -67,7 +68,7 @@ const FetchMyDiaries = () => {
       <List>
         {myDiaries.map((value) => {
           const diaryContent = value.content;
-          const maxLength = 20;
+          const maxLength = 22;
           let modifiedDiaryContent = '';
           if (diaryContent.length > maxLength) {
             modifiedDiaryContent = diaryContent.substr(0, maxLength) + '...';
@@ -85,7 +86,7 @@ const FetchMyDiaries = () => {
           );
         })}
       </List>
-    </>
+    </Container>
   );
 };
 
