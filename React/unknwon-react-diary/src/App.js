@@ -28,8 +28,8 @@ function App() {
         <header className="App-header">
           <BrowserRouter>
             <Route exact path="/mydiary" component={FetchMyDiaries} />
-            <Route exact path="/post" component={PostDiary} />
-            <Route exact path="/" component={FetchDiary} />
+            <Route exact path="/diary" component={FetchDiary} />
+            <Route exact path="/" component={PostDiary} />
           </BrowserRouter>
         </header>
       </AmplifyAuthenticator>

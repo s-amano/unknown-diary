@@ -51,7 +51,7 @@ const DiaryFetch = () => {
       </Grid>
       <Grid container justify="flex-end">
         <Button variant="contained" color="primary">
-          <Link to="/post" style={{ textDecoration: 'none', color: 'white' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
             日記を書く
           </Link>
         </Button>
