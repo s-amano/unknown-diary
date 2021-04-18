@@ -12,20 +12,20 @@ import { Route, BrowserRouter } from 'react-router-dom';
 function App() {
   return (
     <ApiContextProvider>
-      <div className="App">
-        <AmplifyAuthenticator>
+      <AmplifyAuthenticator>
+        <BrowserRouter>
           <Login />
-          <Navbar />
-          <header className="App-header">
-            <BrowserRouter>
+          <div className="App">
+            <Navbar />
+            <header className="App-header">
               <Route exact path="/mydiary" component={FetchMyDiaries} />
               <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
               <Route exact path="/diary" component={FetchDiary} />
               <Route exact path="/" component={PostDiary} />
-            </BrowserRouter>
-          </header>
-        </AmplifyAuthenticator>
-      </div>
+            </header>
+          </div>
+        </BrowserRouter>
+      </AmplifyAuthenticator>
     </ApiContextProvider>
   );
 }
