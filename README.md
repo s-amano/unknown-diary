@@ -9,7 +9,7 @@ https://unknown-diary.com/
 一意なユーザー名とパスワードでアカウントを作成し、ログインしてください。
 
 # 使用した技術など
-- React
+- React (UIフレームワークにMaterial UI)
 - AWS (serverlessframework + cloudformation で構築)
   - Lambda (APIとして利用, 言語はGolang)
   - DyanmoDB (データベース)
