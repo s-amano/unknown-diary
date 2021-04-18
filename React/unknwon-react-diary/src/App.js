@@ -2,6 +2,7 @@ import './App.css';
 import { AmplifyAuthenticator, AmplifySignUp } from '@aws-amplify/ui-react';
 import ApiContextProvider from './context/ApiContext';
 import Navbar from './component/Navbar';
+import Login from './component/Login';
 import PostDiary from './component/PostDiary';
 import FetchDiary from './component/FetchDiary';
 import MyDiaryDetail from './component/MyDiaryDetail';
@@ -13,20 +14,7 @@ function App() {
     <ApiContextProvider>
       <div className="App">
         <AmplifyAuthenticator>
-          <AmplifySignUp
-            slot="sign-up"
-            formFields={[
-              {
-                type: 'username',
-                required: true,
-                placeholder: 'Enter your name',
-              },
-              {
-                type: 'password',
-                required: true,
-              },
-            ]}
-          />
+          <Login />
           <Navbar />
           <header className="App-header">
             <BrowserRouter>
