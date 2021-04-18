@@ -2,6 +2,7 @@ import './App.css';
 import { AmplifyAuthenticator, AmplifySignUp } from '@aws-amplify/ui-react';
 import ApiContextProvider from './context/ApiContext';
 import Navbar from './component/Navbar';
+import Login from './component/Login';
 import PostDiary from './component/PostDiary';
 import FetchDiary from './component/FetchDiary';
 import MyDiaryDetail from './component/MyDiaryDetail';
@@ -11,33 +12,20 @@ import { Route, BrowserRouter } from 'react-router-dom';
 function App() {
   return (
     <ApiContextProvider>
-      <div className="App">
-        <AmplifyAuthenticator>
-          <AmplifySignUp
-            slot="sign-up"
-            formFields={[
-              {
-                type: 'username',
-                required: true,
-                placeholder: 'Enter your name',
-              },
-              {
-                type: 'password',
-                required: true,
-              },
-            ]}
-          />
-          <Navbar />
-          <header className="App-header">
-            <BrowserRouter>
+      <AmplifyAuthenticator>
+        <BrowserRouter>
+          <Login />
+          <div className="App">
+            <Navbar />
+            <header className="App-header">
               <Route exact path="/mydiary" component={FetchMyDiaries} />
               <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
               <Route exact path="/diary" component={FetchDiary} />
               <Route exact path="/" component={PostDiary} />
-            </BrowserRouter>
-          </header>
-        </AmplifyAuthenticator>
-      </div>
+            </header>
+          </div>
+        </BrowserRouter>
+      </AmplifyAuthenticator>
     </ApiContextProvider>
   );
 }
