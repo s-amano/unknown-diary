@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Auth, API } from 'aws-amplify';
+import { ApiContext } from '../context/ApiContext';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -13,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 const FetchMyDiaries = () => {
+  const { myDiaryDetail, setMyDiaryDetail } = useContext(ApiContext);
   const [myDiaries, setMyDiaries] = useState([]);
 
   useEffect(() => {
@@ -51,13 +53,14 @@ const FetchMyDiaries = () => {
 
   const DetailMyDiary = (diaryContent) => {
     console.log(diaryContent);
+    setMyDiaryDetail(diaryContent);
   };
 
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
       <Grid container justify="flex-end">
         <Button variant="contained" color="primary">
-          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
+          <Link to="/diary" style={{ textDecoration: 'none', color: 'white' }}>
             日記を取得
           </Link>
         </Button>
@@ -78,9 +81,11 @@ const FetchMyDiaries = () => {
             <ListItem key={value.id} role={undefined} dense button>
               <ListItemText style={{ color: 'black', textOverflow: 'ellipsis' }}>{modifiedDiaryContent}</ListItemText>
               <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="detail" onClick={() => DetailMyDiary(diaryContent)}>
-                  <DetailsIcon />
-                </IconButton>
+                <Link to="/mydiary-detail" onClick={() => DetailMyDiary(diaryContent)}>
+                  <IconButton edge="end" aria-label="detail">
+                    <DetailsIcon />
+                  </IconButton>
+                </Link>
               </ListItemSecondaryAction>
             </ListItem>
           );
