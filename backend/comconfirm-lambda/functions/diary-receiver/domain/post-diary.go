@@ -3,8 +3,6 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -16,17 +14,13 @@ import (
 
 // Post はクライアントからのポスト内容を表現する構造体です
 type Post struct {
-	ID                   string
-	Time                 time.Time
-	Author               string
-	Status               string
-	Header               url.Values
-	MarshaledHeader      string
-	QueryString          url.Values
-	MarshaledQueryString string
-	Body                 string
-	PostForm             interface{}
-	MarshaledPostForm    string
+	ID                string
+	Time              time.Time
+	Author            string
+	Status            string
+	Body              string
+	PostForm          interface{}
+	MarshaledPostForm string
 }
 
 // NewPost - API Gateway のリクエスト情報から Post オブジェクトを生成
@@ -47,14 +41,16 @@ func NewPost(request events.APIGatewayProxyRequest, author string) (*Post, error
 	result.ID = id.String()
 
 	// request から情報をコピー
-	result.Header = request.MultiValueHeaders
-	result.QueryString = request.MultiValueQueryStringParameters
 	result.Body = request.Body
 
-	// BODY 文字列をパースし PostForm にセット
-	if err := result.parseRequestBody(); err != nil {
+	fmt.Printf("request.Body: %+v\n", request.Body)
+
+	// BODY 文字列をパースし PostForm に変換
+	if err = json.Unmarshal([]byte(result.Body), &result.PostForm); err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("postForm: %+v\n", result.PostForm)
 
 	// author　をセット
 	result.Author = author
@@ -62,71 +58,25 @@ func NewPost(request events.APIGatewayProxyRequest, author string) (*Post, error
 	// status　をセット
 	result.Status = "false"
 
-	// Marshaled* メンバをセット
+	// Marshaled 形式に変換
 	if err := result.marshalJSON(); err != nil {
 		return nil, err
 	}
 
+	fmt.Printf("result: %+v\n", result)
+
 	return result, nil
 }
 
-// parseRequestBody - ヘッダから Content-Type を抽出し、その型に従って Body をパースする
-func (p *Post) parseRequestBody() error {
-	var err error
-	var contentType = ""
-	// Content-Type ヘッダとして認識する文字列。ある程度のバリエーションに対応する
-	var contentTypeKeys = []string{
-		"content-type", "Content-Type", "CONTENT-TYPE",
-	}
-
-	// ヘッダから Content-Type の文字列を参照する
-	for _, contentTypeKey := range contentTypeKeys {
-		// Content-Type をあらかじめ小文字に変換して使用する
-		contentType = strings.ToLower(p.Header.Get(contentTypeKey))
-		// 何か値の入っているものがヒットした場合にはループ処理を抜ける
-		if contentType != "" {
-			break
-		}
-	}
-
-	// Content-Type に "json" が含まれる場合
-	if strings.Index(contentType, "json") >= 0 {
-		// Body を JSON デコードする
-		if err = json.Unmarshal([]byte(p.Body), &p.PostForm); err != nil {
-			return err
-		}
-		return nil
-	}
-
-	if strings.Index(contentType, "urlencoded") >= 0 {
-		var postForm url.Values
-		if postForm, err = url.ParseQuery(p.Body); err != nil {
-			return err
-		}
-		p.PostForm = postForm
-
-		return nil
-	}
-	return fmt.Errorf("invalid Content-Type specified : %s", contentType)
-}
-
-// marshalJSON - Header, QueryString を JSON エンコードし MarshaledHeader, MarshaledQueryString に格納する
+// marshalJSON - PostForm を JSON エンコードし MarshaledPostForm に格納する
 func (p *Post) marshalJSON() error {
 	var err error
-	var header, queryString, postForm []byte
+	var postForm []byte
 
-	if header, err = json.Marshal(p.Header); err != nil {
-		return err
-	}
-	if queryString, err = json.Marshal(p.QueryString); err != nil {
-		return err
-	}
 	if postForm, err = json.Marshal(p.PostForm); err != nil {
 		return err
 	}
 
-	p.MarshaledHeader = string(header)
-	p.MarshaledQueryString = string(queryString)
 	p.MarshaledPostForm = string(postForm)
 
 	return nil
@@ -158,9 +108,6 @@ func (p *Post) GetDynamoDBItemMap() map[string]*dynamodb.AttributeValue {
 		},
 		"status_post_at": {
 			S: aws.String(statusPostAt),
-		},
-		"header": {
-			S: aws.String(p.MarshaledHeader),
 		},
 	}
 

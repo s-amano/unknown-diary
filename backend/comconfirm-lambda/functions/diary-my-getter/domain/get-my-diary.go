@@ -46,7 +46,7 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 	return result, nil
 }
 
-// AddDiaries - DynamoDBのクエリ結果を Diaries を格納する
+// AddDiaries - DynamoDBのクエリ結果を Diaries に格納する
 func (gd *GetDiaries) AddDiaries(res *dynamodb.QueryOutput) ([]Diary, error) {
 	var err error
 

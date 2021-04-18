@@ -29,12 +29,8 @@ type GetDiary struct {
 func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, error) {
 	var err error
 
-	filter := expression.And(
-		// status_post_at が　falseから始まる
-		expression.Name("status").BeginsWith("false"),
-		// author が　getをした当人ではない
-		expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter)),
-	)
+	// author が　getをした当人ではない
+	filter := expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter))
 
 	// クエリ用 expression の生成
 	expr, err := expression.NewBuilder().WithFilter(filter).Build()
