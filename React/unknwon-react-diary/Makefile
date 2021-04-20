@@ -14,9 +14,9 @@ WEB_CONTENTS_SRC = ./build
 
 # S3 同期用のコピー先
 ifeq ($(STAGE),prod)
-  WEB_CONTENTS_S3 = s3://unknown-diary.com
+  WEB_CONTENTS_S3 = s3://prod.unknown-diary.com
 else
-  WEB_CONTENTS_S3 = s3://unknown-diary-dev.com
+  WEB_CONTENTS_S3 = s3://dev.unknown-diary.com
 endif
 
 all: build

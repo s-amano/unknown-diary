@@ -11,7 +11,7 @@ Resources:
       DistributionConfig:
         PriceClass: PriceClass_All
         Aliases:
-          - 'unknown-diary.com'
+          - ${self:custom.webContentsBucket}
         Origins:
           - DomainName: !GetAtt webContentsS3.RegionalDomainName
             Id: !Sub 'S3origin-${webContentsS3}'
@@ -43,6 +43,6 @@ Resources:
         ViewerCertificate:
           SslSupportMethod: sni-only
           MinimumProtocolVersion: TLSv1.1_2016
-          AcmCertificateArn: 'arn:aws:acm:us-east-1:666062638775:certificate/0f0301fb-11c1-41dc-8382-917d5be75fe3'
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:666062638775:certificate/1027b690-b8dd-4a2e-a7db-d7fba7628eaf'
         HttpVersion: http2
         Enabled: true
