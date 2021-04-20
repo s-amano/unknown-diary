@@ -4,8 +4,9 @@
 逆に貴方は見知らぬ誰かの想い出のあの日を見ることで、人生の1ページを覗いた気分になれます。
 
 # URL
-https://unknown-diary.com/
+https://prod.unknown-diary.com/
 
+create accout から
 一意なユーザー名とパスワードでアカウントを作成し、ログインしてください。
 
 # 使用した技術など
