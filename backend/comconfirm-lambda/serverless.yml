@@ -47,7 +47,7 @@ custom:
 
   webContentsBucketCustom:
     dev: dev.unknown-diary.com
-    prod: unknown-diary.com
+    prod: prod.unknown-diary.com
 
   webContentsBucket: ${self:custom.webContentsBucketCustom.${self:provider.stage}}
 

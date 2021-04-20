@@ -1,5 +1,5 @@
 import './App.css';
-import { AmplifyAuthenticator, AmplifySignUp } from '@aws-amplify/ui-react';
+import { AmplifyAuthenticator } from '@aws-amplify/ui-react';
 import ApiContextProvider from './context/ApiContext';
 import Navbar from './component/Navbar';
 import Login from './component/Login';
