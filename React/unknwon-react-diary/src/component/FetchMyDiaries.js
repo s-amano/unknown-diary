@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 
 const FetchMyDiaries = () => {
-  const { myDiaryDetail, setMyDiaryDetail } = useContext(ApiContext);
+  const { setMyDiaryDetail } = useContext(ApiContext);
   const [myDiaries, setMyDiaries] = useState([]);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const FetchMyDiaries = () => {
       if (env === 'prod') {
         return 'GETMyDiariesAPIProd';
       } else if (env === 'dev') {
-        return 'GETMyDiariesAPIProd';
+        return 'GETMyDiariesAPIDev';
       }
     };
 
