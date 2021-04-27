@@ -11,7 +11,7 @@ create accout から
 一意なユーザー名とパスワードでアカウントを作成し、ログインしてください。
 
 # 使用した技術など
-- React (UIフレームワークにMaterial UI)
+- React (UIフレームワークにMaterial UI)(フロントの開発環境はDockerで構築)
 - AWS (serverlessframework + cloudformation で構築)
   - Lambda (APIとして利用, 言語はGolang)
   - DyanmoDB (データベース)
