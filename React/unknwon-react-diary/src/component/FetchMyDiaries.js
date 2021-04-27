@@ -75,6 +75,8 @@ const FetchMyDiaries = () => {
           let modifiedDiaryContent = '';
           if (diaryContent.length > maxLength) {
             modifiedDiaryContent = diaryContent.substr(0, maxLength) + '...';
+          } else {
+            modifiedDiaryContent = diaryContent;
           }
 
           return (
