@@ -10,6 +10,15 @@ https://prod.unknown-diary.com/
 create accout から
 一意なユーザー名とパスワードでアカウントを作成し、ログインしてください。
 
+アカウントを作成せずに動作確認したいだけと言う方は、
+https://dev.unknown-diary.com/
+こちらへ、
+```
+username: テスト太郎  
+password: 12345678
+```
+へログインしてください。
+
 # 使用した技術など
 - React (UIフレームワークにMaterial UI)(フロントの開発環境はDockerで構築)
 - AWS (serverlessframework + cloudformation で構築)
