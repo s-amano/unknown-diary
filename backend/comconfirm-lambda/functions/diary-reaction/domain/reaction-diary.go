@@ -26,10 +26,11 @@ type ReactionDiary struct {
 	ThisReactioner string // 今回反応をした人
 	Reaction       string // 日記の反応
 	Reactioners    string // 日記に反応した人一覧
+	Content        string // 日記の内容
 }
 
 // NewPostDiary - API Gateway のリクエスト情報から PostDiary オブジェクトを生成
-func NewPostDiary(request events.APIGatewayProxyRequest) (*PostDiary, error) {
+func NewPostDiary(request events.APIGatewayProxyRequest, diaryReactioner string) (*PostDiary, error) {
 	var err error
 
 	result := &PostDiary{}
@@ -119,7 +120,7 @@ func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.Attribute
 	rd.Reaction = strconv.Itoa(IntReaction)
 
 	// 反応者に名前を追加する
-	rd.Reactioners += rd.ThisReactioner
+	rd.Reactioners += "," + rd.ThisReactioner
 
 	// 更新情報をitemとして生成
 	updateItem := expression.UpdateBuilder{}.Set(expression.Name("reaction"), expression.Value(rd.Reaction)).Set(expression.Name("reactioners"), expression.Value(rd.Reactioners))
