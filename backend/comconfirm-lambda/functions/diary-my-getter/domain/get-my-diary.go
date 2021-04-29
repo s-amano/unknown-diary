@@ -32,18 +32,31 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 		return nil, err
 	}
 
-	// 初期段階はexclusiveStartKeyをnil指定で
-	result, err := dc.QueryByExpression("author-status_post_at-index", &expr, nil)
-	if err != nil {
-		return nil, err
+	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
+	defaultCount := int64(0)
+	var defaultItems []map[string]*dynamodb.AttributeValue
+	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
+
+	// LastEvaluatedKeyがある間,データを取得し続ける
+	for {
+		result, err := dc.QueryByExpression("author-status_post_at-index", &expr, exclusiveStartKey)
+		if err != nil {
+			return nil, err
+		}
+
+		res.Items = append(res.Items, result.Items...)
+
+		*res.Count = *res.Count + *result.Count
+
+		exclusiveStartKey = result.LastEvaluatedKey
+
+		if result.LastEvaluatedKey == nil {
+			break
+		}
+
 	}
 
-	// 結果が空の場合の処理
-	if *result.Count < 1 {
-		return nil, nil
-	}
-
-	return result, nil
+	return res, nil
 }
 
 // AddDiaries - DynamoDBのクエリ結果を Diaries に格納する
