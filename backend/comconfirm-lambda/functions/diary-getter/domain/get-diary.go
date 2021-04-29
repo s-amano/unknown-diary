@@ -39,15 +39,27 @@ func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRep
 		return nil, err
 	}
 
-	res, err := dc.GetAllRecords(&expr, nil)
-	if err != nil {
-		fmt.Printf("exp %v\n getter %v\n", err, gd.DiaryGetter)
-		return nil, err
-	}
+	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
 
-	// 結果が空の場合の処理
-	if *res.Count < 1 {
-		return nil, nil
+	defaultCount := int64(0)
+	var defaultItems []map[string]*dynamodb.AttributeValue
+	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
+
+	for {
+		result, err := dc.GetAllRecords(&expr, exclusiveStartKey)
+		if err != nil {
+			fmt.Printf("exp %v\n getter %v\n", err, gd.DiaryGetter)
+			return nil, err
+		}
+		res.Items = append(res.Items, result.Items...)
+
+		*res.Count = *res.Count + *result.Count
+
+		exclusiveStartKey = result.LastEvaluatedKey
+
+		if result.LastEvaluatedKey == nil {
+			break
+		}
 	}
 
 	// 返されたres.Itemsのランダム番目を取得
