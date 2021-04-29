@@ -110,6 +110,12 @@ func (p *Post) GetDynamoDBItemMap() map[string]*dynamodb.AttributeValue {
 		"status_post_at": {
 			S: aws.String(statusPostAt),
 		},
+		"reaction": {
+			S: aws.String("0"),
+		},
+		"reactioners": {
+			S: aws.String(""),
+		},
 	}
 
 	return item
