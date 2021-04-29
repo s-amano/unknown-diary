@@ -49,6 +49,11 @@ Amplify.configure({
         region: 'ap-northeast-1',
       },
       {
+        name: 'UPDATEDiaryAPIDev',
+        endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/reaction',
+        region: 'ap-northeast-1',
+      },
+      {
         name: 'POSTStoreAPIProd',
         endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/post',
         region: 'ap-northeast-1',

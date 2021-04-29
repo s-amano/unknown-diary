@@ -1,6 +1,6 @@
-reaction:
-  handler: bin/reaction
-  name: '${self:service}-${self:provider.stage}-reaction'
+reaction-diary:
+  handler: bin/reaction-diary
+  name: '${self:service}-${self:provider.stage}-reaction-diary'
   events:
     # API Gateway にて起動
     - http:
