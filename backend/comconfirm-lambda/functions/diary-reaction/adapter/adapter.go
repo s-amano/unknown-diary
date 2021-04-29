@@ -8,6 +8,6 @@ import (
 // DynamoDBClientRepository - DynamoDBを操作するためのインタフェース
 // infraから使用するメソッドを列挙
 type DynamoDBClientRepository interface {
-	Query(input *dynamodb.QueryInput) (*dynamodb.QueryOutput, error)
+	QueryByExpressionNoindex(expr *expression.Expression) (*dynamodb.QueryOutput, error)
 	UpdateItem(item map[string]*dynamodb.AttributeValue, expr *expression.Expression) (*dynamodb.UpdateItemOutput, error)
 }

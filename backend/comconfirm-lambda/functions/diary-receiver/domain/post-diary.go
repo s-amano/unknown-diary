@@ -51,6 +51,7 @@ func NewPost(request events.APIGatewayProxyRequest, author string) (*Post, error
 	}
 
 	fmt.Printf("postForm: %+v\n", result.PostForm)
+	fmt.Printf("postForm type: %T\n", result.PostForm)
 
 	// author　をセット
 	result.Author = author
