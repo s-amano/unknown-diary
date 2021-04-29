@@ -16,8 +16,10 @@ type GetterJob struct {
 	diary *domain.GetDiary
 }
 
-// ResultDiaryContent はAPIのresponse内に格納する日記の内容を格納する構造体です
-type ResultDiaryContent struct {
+// ResultDiary はAPIのresponse内に格納する日記の内容を格納する構造体です
+type ResultDiary struct {
+	ID           string `json:"id"`
+	PostAt       string `json:"post_at"`
 	DiaryContent string `json:"diary_content"`
 }
 
@@ -53,18 +55,20 @@ func (gj *GetterJob) featchDiary(ctx context.Context) (domain.Diary, error) {
 // recevier を変更する
 
 // Run は実際の処理を行うメソッドです
-func (gj *GetterJob) Run(ctx context.Context) (ResultDiaryContent, error) {
+func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 	var err error
 
-	resultDiaryContent := ResultDiaryContent{}
+	ResultDiary := ResultDiary{}
 
 	getItem, err := gj.featchDiary(ctx)
 	if err != nil {
 		fmt.Printf("getItem: %v \n", err)
 	}
 
-	resultDiaryContent.DiaryContent = getItem.Content
+	ResultDiary.ID = getItem.ID
+	ResultDiary.PostAt = getItem.PostAt
+	ResultDiary.DiaryContent = getItem.Content
 
-	return resultDiaryContent, nil
+	return ResultDiary, nil
 
 }

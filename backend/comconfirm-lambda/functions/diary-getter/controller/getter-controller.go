@@ -14,7 +14,7 @@ type GetterController struct {
 }
 
 // Run - usecase 上の GetterJob 経由で処理する
-func (c *GetterController) Run(ctx context.Context) (usecase.ResultDiaryContent, error) {
+func (c *GetterController) Run(ctx context.Context) (usecase.ResultDiary, error) {
 	gj := usecase.GetterJob{
 		DynamoDBClientRepo: c.DynamoDBClientRepo,
 		DiaryGetter:        c.DiaryGetter,
