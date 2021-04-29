@@ -1,0 +1,11 @@
+reaction:
+  handler: bin/reaction
+  name: '${self:service}-${self:provider.stage}-reaction'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /reaction
+        method: post
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer

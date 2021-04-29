@@ -55,6 +55,7 @@ functions:
   - ${file(./resources/receiver.yml)}
   - ${file(./resources/getter.yml)}
   - ${file(./resources/getter-my-diaries.yml)}
+  - ${file(./resources/reaction-diary.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}
