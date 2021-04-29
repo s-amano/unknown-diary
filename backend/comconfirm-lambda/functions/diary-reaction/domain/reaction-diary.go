@@ -61,10 +61,9 @@ func (rd *ReactionDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepo
 	}
 
 	// キー条件の生成
-	keyCond := expression.KeyAnd(
-		expression.Key("id").Equal(expression.Value(rd.ID)),
-		expression.Key("post_at").GreaterThan(expression.Value(rd.PostAt)),
-	)
+	keyCond := expression.Key("id").Equal(expression.Value(rd.ID))
+
+	fmt.Printf("ID: %v\n", rd.ID)
 
 	// クエリ用 expression の生成
 	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
@@ -78,10 +77,12 @@ func (rd *ReactionDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepo
 		return err
 	}
 
+	fmt.Printf("res + %+v\n", res)
+
 	rd.Reactioners = *res.Items[0]["reactioners"].S
 	// reactionカラムがなかった時の処理
 
-	rd.Reaction = *res.Items[0]["reaction"].N
+	rd.Reaction = *res.Items[0]["reaction"].S
 	// reactionカラムがなかった時の処理
 
 	return nil
