@@ -21,7 +21,7 @@ type ReceiverJob struct {
 func (c *ReceiverJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest, result *events.APIGatewayProxyResponse) error {
 	var err error
 
-	// apiGWEvent のヘッダ、queryString から SurveyPost 構造体を生成
+	// apiGWEvent のヘッダ、queryString から Post 構造体を生成
 	post, err := domain.NewPost(apiGWEvent, c.Author)
 	if err != nil {
 		return err

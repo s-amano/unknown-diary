@@ -21,6 +21,7 @@ type ResultDiary struct {
 	ID           string `json:"id"`
 	PostAt       string `json:"post_at"`
 	DiaryContent string `json:"diary_content"`
+	Reaction     string `json:"reaction"`
 }
 
 func (gj *GetterJob) featchDiary(ctx context.Context) (domain.Diary, error) {
@@ -52,8 +53,6 @@ func (gj *GetterJob) featchDiary(ctx context.Context) (domain.Diary, error) {
 	return domain.Diary{}, err
 }
 
-// recevier を変更する
-
 // Run は実際の処理を行うメソッドです
 func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 	var err error
@@ -68,6 +67,7 @@ func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 	ResultDiary.ID = getItem.ID
 	ResultDiary.PostAt = getItem.PostAt
 	ResultDiary.DiaryContent = getItem.Content
+	ResultDiary.Reaction = getItem.Reaction
 
 	return ResultDiary, nil
 
