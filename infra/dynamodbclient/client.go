@@ -58,6 +58,19 @@ func (c *DynamoDBClient) QueryByExpression(indexName string, expr *expression.Ex
 	return c.dynamo.Query(q)
 }
 
+// QueryByExpressionNoindex 検索してレコードを取得する関数(indexをデフォルトのものを使う)
+func (c *DynamoDBClient) QueryByExpressionNoindex(expr *expression.Expression) (*dynamodb.QueryOutput, error) {
+	q := &dynamodb.QueryInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		KeyConditionExpression:    expr.KeyCondition(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(c.tableName),
+	}
+	return c.dynamo.Query(q)
+}
+
 // PutItem dynamoDBにデータをPUTする関数
 func (c *DynamoDBClient) PutItem(item map[string]*dynamodb.AttributeValue) (*dynamodb.PutItemOutput, error) {
 	p := &dynamodb.PutItemInput{

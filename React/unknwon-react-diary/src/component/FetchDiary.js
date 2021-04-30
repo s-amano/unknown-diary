@@ -40,6 +40,31 @@ const DiaryFetch = () => {
       });
   };
 
+  const upadteDiary = async () => {
+    const apiName = 'UPDATEDiaryAPIDev';
+    const path = '';
+
+    const postData = {
+      id: diary.id,
+      post_at: diary.post_at,
+    };
+    const myInit = {
+      headers: {
+        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+      },
+      body: postData,
+      contentType: 'application/json',
+    };
+
+    await API.post(apiName, path, myInit)
+      .then(() => {
+        console.log('成功');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
       <Grid container>
@@ -70,6 +95,9 @@ const DiaryFetch = () => {
       <Button variant="contained" color="primary" onClick={() => fetchDiary()}>
         日記を取得
       </Button>
+      {/* <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
+        日記に反応する
+      </Button> */}
     </Container>
   );
 };
