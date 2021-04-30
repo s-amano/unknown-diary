@@ -146,7 +146,6 @@ func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.Attribute
 		ID:       rd.ID,
 		PostAt:   rd.PostAt,
 		Reaction: *responseitem["reaction"].S,
-		Content:  rd.Content,
 	}
 
 	fmt.Printf("updateItemのres : %+v\n", res.Attributes)
