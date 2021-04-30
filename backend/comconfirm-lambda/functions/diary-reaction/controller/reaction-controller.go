@@ -15,15 +15,15 @@ type ReactionController struct {
 }
 
 // Run - usecase 上の ReactionJob 経由でメッセージを処理する
-func (c *ReactionController) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest, result *events.APIGatewayProxyResponse) error {
+func (c *ReactionController) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest, result *events.APIGatewayProxyResponse) (usecase.ResultDiary, error) {
 	srj := usecase.ReactionJob{
 		DynamoDBClientRepo: c.DynamoDBClientRepo,
 		DiaryReactioner:    c.DiaryReactioner,
 	}
 
-	err := srj.Run(ctx, apiGWEvent, result)
+	resposeDiary, err := srj.Run(ctx, apiGWEvent, result)
 	if err != nil {
-		return err
+		return resposeDiary, err
 	}
-	return nil
+	return resposeDiary, nil
 }

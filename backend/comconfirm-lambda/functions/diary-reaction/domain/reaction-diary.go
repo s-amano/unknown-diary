@@ -27,7 +27,6 @@ type ReactionDiary struct {
 	Reaction       string // 日記の反応
 	Reactioners    string // 日記に反応した人一覧
 	Content        string // 日記の内容
-	ReactionFlag   bool   // 該当の日記にすでに反応があるかどうかのフラグ
 }
 
 // NewPostDiary - API Gateway のリクエスト情報から PostDiary オブジェクトを生成
@@ -116,13 +115,13 @@ func (rd *ReactionDiary) GetDynamoDBItemMap() (map[string]*dynamodb.AttributeVal
 }
 
 // UpdateDiaryReaction 日記の反応をアップデートする
-func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.AttributeValue, dc adapter.DynamoDBClientRepository) error {
+func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.AttributeValue, dc adapter.DynamoDBClientRepository) (ReactionDiary, error) {
 	var err error
 
 	// 反応を+1する
 	IntReaction, err := strconv.Atoi(rd.Reaction)
 	if err != nil {
-		return err
+		return ReactionDiary{}, err
 	}
 	IntReaction++
 	rd.Reaction = strconv.Itoa(IntReaction)
@@ -135,13 +134,22 @@ func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.Attribute
 
 	expr, err := expression.NewBuilder().WithUpdate(updateItem).Build()
 	if err != nil {
-		return err
+		return ReactionDiary{}, err
 	}
 
-	_, err = dc.UpdateItem(item, &expr)
+	res, err := dc.UpdateItem(item, &expr)
 	if err != nil {
-		return err
+		return ReactionDiary{}, err
+	}
+	responseitem := res.Attributes
+	responseDiary := ReactionDiary{
+		ID:       rd.ID,
+		PostAt:   rd.PostAt,
+		Reaction: *responseitem["reaction"].S,
+		Content:  rd.Content,
 	}
 
-	return nil
+	fmt.Printf("updateItemのres : %+v\n", res.Attributes)
+
+	return responseDiary, nil
 }
