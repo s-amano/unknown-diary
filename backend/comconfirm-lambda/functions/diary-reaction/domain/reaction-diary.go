@@ -27,6 +27,7 @@ type ReactionDiary struct {
 	Reaction       string // 日記の反応
 	Reactioners    string // 日記に反応した人一覧
 	Content        string // 日記の内容
+	ReactionFlag   bool   // 該当の日記にすでに反応があるかどうかのフラグ
 }
 
 // NewPostDiary - API Gateway のリクエスト情報から PostDiary オブジェクトを生成
@@ -79,11 +80,17 @@ func (rd *ReactionDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepo
 
 	fmt.Printf("res + %+v\n", res)
 
-	rd.Reactioners = *res.Items[0]["reactioners"].S
-	// reactionカラムがなかった時の処理
+	item := res.Items[0]
 
-	rd.Reaction = *res.Items[0]["reaction"].S
-	// reactionカラムがなかった時の処理
+	reactioners, ok := item["reactioners"]
+	if !ok {
+		rd.Reaction = "0"
+		rd.Reactioners = ""
+		fmt.Printf("既存リアクションがない")
+	} else {
+		rd.Reactioners = *reactioners.S
+		rd.Reaction = *item["reaction"].S
+	}
 
 	return nil
 }

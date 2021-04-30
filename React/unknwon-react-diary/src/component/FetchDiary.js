@@ -95,9 +95,9 @@ const DiaryFetch = () => {
       <Button variant="contained" color="primary" onClick={() => fetchDiary()}>
         日記を取得
       </Button>
-      {/* <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
+      <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
         日記に反応する
-      </Button> */}
+      </Button>
     </Container>
   );
 };
