@@ -11,7 +11,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
 
-  const envAPI = () => {
+  const envFetchAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
@@ -21,8 +21,18 @@ const DiaryFetch = () => {
     }
   };
 
+  const envUpdateAPI = () => {
+    const env = process.env.REACT_APP_ENVIROMENT;
+    console.log(env);
+    if (env === 'prod') {
+      return 'UPDATEDiaryAPIProd';
+    } else if (env === 'dev') {
+      return 'UPDATEDiaryAPIDev';
+    }
+  };
+
   const fetchDiary = async () => {
-    const apiName = envAPI();
+    const apiName = envFetchAPI();
     const path = '';
 
     const myInit = {
@@ -42,7 +52,7 @@ const DiaryFetch = () => {
   };
 
   const upadteDiary = async () => {
-    const apiName = 'UPDATEDiaryAPIDev';
+    const apiName = envUpdateAPI();
     const path = '';
 
     const postData = {
@@ -60,7 +70,7 @@ const DiaryFetch = () => {
     await API.post(apiName, path, myInit)
       .then((response) => {
         console.log('成功');
-        setDiary(response);
+        setDiary({ ...diary, reaction: response.reaction });
       })
       .catch((err) => {
         console.log(err);
