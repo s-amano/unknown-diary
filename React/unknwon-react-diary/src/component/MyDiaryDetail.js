@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const MyDiaryDetail = () => {
   const { myDiaryDetail } = useContext(ApiContext);
@@ -21,7 +22,19 @@ const MyDiaryDetail = () => {
       <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
         自分の日記の詳細
       </Typography>
-      <TextField style={{ width: '100%', marginBottom: '5%' }} multiline rows={20} value={myDiaryDetail} disabled />
+      <TextField
+        style={{ width: '100%', marginBottom: '5%' }}
+        multiline
+        rows={20}
+        value={myDiaryDetail.diaryContent}
+        disabled
+      />
+      <Grid container justify="flex-end">
+        <Button variant="contained" color="primary">
+          <FavoriteIcon color="error" />
+          {myDiaryDetail.diaryReaction}
+        </Button>
+      </Grid>
     </Container>
   );
 };
