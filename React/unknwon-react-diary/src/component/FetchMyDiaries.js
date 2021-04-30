@@ -51,9 +51,9 @@ const FetchMyDiaries = () => {
     fetchMyDiaries();
   }, []);
 
-  const DetailMyDiary = (diaryContent) => {
-    console.log(diaryContent);
-    setMyDiaryDetail(diaryContent);
+  const DetailMyDiary = (diary) => {
+    console.log(diary);
+    setMyDiaryDetail(diary);
   };
 
   return (
@@ -70,7 +70,9 @@ const FetchMyDiaries = () => {
       </Typography>
       <List>
         {myDiaries.map((value) => {
+          const diary = {};
           const diaryContent = value.content;
+          const diaryReaction = value.reaction;
           const maxLength = 22;
           let modifiedDiaryContent = '';
           if (diaryContent.length > maxLength) {
@@ -79,11 +81,14 @@ const FetchMyDiaries = () => {
             modifiedDiaryContent = diaryContent;
           }
 
+          diary.diaryContent = diaryContent;
+          diary.diaryReaction = diaryReaction;
+
           return (
             <ListItem key={value.id} role={undefined} dense button>
               <ListItemText style={{ color: 'black', textOverflow: 'ellipsis' }}>{modifiedDiaryContent}</ListItemText>
               <ListItemSecondaryAction>
-                <Link to="/mydiary-detail" onClick={() => DetailMyDiary(diaryContent)}>
+                <Link to="/mydiary-detail" onClick={() => DetailMyDiary(diary)}>
                   <IconButton edge="end" aria-label="detail">
                     <DetailsIcon />
                   </IconButton>
