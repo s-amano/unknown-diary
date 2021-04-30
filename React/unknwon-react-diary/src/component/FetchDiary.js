@@ -58,8 +58,9 @@ const DiaryFetch = () => {
     };
 
     await API.post(apiName, path, myInit)
-      .then(() => {
+      .then((response) => {
         console.log('成功');
+        setDiary(response);
       })
       .catch((err) => {
         console.log(err);

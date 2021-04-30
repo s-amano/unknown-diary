@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -55,10 +56,17 @@ func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (eve
 		DiaryReactioner:    reactioner,
 	}
 	// DynamoDB への書き込み
-	err := src.Run(context.Background(), apiGWEvent, &result)
+	responseDiary, err := src.Run(context.Background(), apiGWEvent, &result)
 	if err != nil {
 		fmt.Printf("%s\n", err)
 	}
+
+	j, err := json.Marshal(responseDiary)
+	if err != nil {
+		fmt.Printf("j作成 : %s\n", err)
+	}
+
+	result.Body = string(j)
 
 	return result, err
 }

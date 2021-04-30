@@ -18,18 +18,22 @@ type ReactionJob struct {
 
 // ResultDiary はAPIのresponse内に格納する日記を格納する構造体です
 type ResultDiary struct {
-	DiaryContent  string `json:"diary_content"`
-	DiaryReaction int    `json:"diary_reaction"`
+	ID           string `json:"id"`
+	PostAt       string `json:"post_at"`
+	DiaryContent string `json:"diary_content"`
+	Reaction     string `json:"reaction"`
 }
 
 // Run メソッドは、受け取ったポストデータを実際に処理します
-func (rj *ReactionJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest, result *events.APIGatewayProxyResponse) error {
+func (rj *ReactionJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest, result *events.APIGatewayProxyResponse) (ResultDiary, error) {
 	var err error
+
+	ResultDiary := ResultDiary{}
 
 	// apiGWEvent のヘッダ、queryString から PostDiary 構造体を生成
 	diaryPost, err := domain.NewPostDiary(apiGWEvent, rj.DiaryReactioner)
 	if err != nil {
-		return err
+		return ResultDiary, err
 	}
 
 	// GetDiary を初期化
@@ -40,20 +44,24 @@ func (rj *ReactionJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProx
 	// DynamoDB からitemを取得
 	err = rj.diary.FetchOneDiaryFromDynamoDB(rj.DynamoDBClientRepo, diaryPost)
 	if err != nil {
-		return err
+		return ResultDiary, err
 	}
 
 	// updateするためのitem作成
 	item, err := rj.diary.GetDynamoDBItemMap()
 	if err != nil {
-		return err
+		return ResultDiary, err
 	}
 
 	// updateを実行
-	err = rj.diary.UpdateDiaryReaction(item, rj.DynamoDBClientRepo)
+	responseDiary, err := rj.diary.UpdateDiaryReaction(item, rj.DynamoDBClientRepo)
 	if err != nil {
-		return err
+		return ResultDiary, err
 	}
+	ResultDiary.ID = responseDiary.ID
+	ResultDiary.PostAt = responseDiary.PostAt
+	ResultDiary.DiaryContent = responseDiary.Content
+	ResultDiary.Reaction = responseDiary.Reaction
 
-	return nil
+	return ResultDiary, nil
 }
