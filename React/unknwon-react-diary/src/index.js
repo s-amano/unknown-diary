@@ -68,6 +68,11 @@ Amplify.configure({
         endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get/mydiaries',
         region: 'ap-northeast-1',
       },
+      {
+        name: 'UPDATEDiaryAPIProd',
+        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/reaction',
+        region: 'ap-northeast-1',
+      },
     ],
   },
 });
