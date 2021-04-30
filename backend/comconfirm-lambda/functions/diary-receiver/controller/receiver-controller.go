@@ -14,7 +14,7 @@ type ReceiverController struct {
 	Author             string
 }
 
-// Run - usecase 上の SurveyReceiverJob 経由でメッセージを処理する
+// Run - usecase 上の ReceiverJob 経由でメッセージを処理する
 func (c *ReceiverController) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest, result *events.APIGatewayProxyResponse) error {
 	srj := usecase.ReceiverJob{
 		DynamoDBRepo: c.DynamoDBClientRepo,

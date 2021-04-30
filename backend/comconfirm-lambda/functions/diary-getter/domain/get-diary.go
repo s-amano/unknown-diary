@@ -14,9 +14,10 @@ import (
 
 // Diary - 日記の内容を表現する構造体です
 type Diary struct {
-	ID      string // id
-	PostAt  string // ポストされた日時
-	Content string `json:"content"` // 日記の本文
+	ID       string // id
+	PostAt   string // ポストされた日時
+	Content  string // 日記の本文
+	Reaction string // 日記のリアクション
 }
 
 // GetDiary - 日記を表現する構造体です
@@ -78,6 +79,14 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 	if err != nil {
 		fmt.Printf("failed to unmarshal post_data. input: %s", *item["post_data"])
 		return diary, err
+	}
+
+	// リアクションがない場合とある場合で条件分岐
+	reaction, ok := item["reaction"]
+	if !ok {
+		diary.Reaction = "0"
+	} else {
+		diary.Reaction = *reaction.S
 	}
 
 	diary.ID = *item["id"].S
