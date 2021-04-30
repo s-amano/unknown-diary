@@ -51,6 +51,7 @@ func NewPost(request events.APIGatewayProxyRequest, author string) (*Post, error
 	}
 
 	fmt.Printf("postForm: %+v\n", result.PostForm)
+	fmt.Printf("postForm type: %T\n", result.PostForm)
 
 	// author　をセット
 	result.Author = author
@@ -108,6 +109,12 @@ func (p *Post) GetDynamoDBItemMap() map[string]*dynamodb.AttributeValue {
 		},
 		"status_post_at": {
 			S: aws.String(statusPostAt),
+		},
+		"reaction": {
+			S: aws.String("0"),
+		},
+		"reactioners": {
+			S: aws.String(""),
 		},
 	}
 

@@ -11,9 +11,10 @@ import (
 
 // Diary - 各日記の内容を格納する構造体
 type Diary struct {
-	ID      string `json:"id"`      // id
-	PostAt  string `json:"post_at"` // ポストされた日時
-	Content string `json:"content"` // 日記の本文
+	ID       string `json:"id"`      // id
+	PostAt   string `json:"post_at"` // ポストされた日時
+	Content  string `json:"content"` // 日記の本文
+	Reaction string `json:"reaction"`
 }
 
 // GetDiaries - 日記を格納する構造体
@@ -72,6 +73,14 @@ func (gd *GetDiaries) AddDiaries(res *dynamodb.QueryOutput) ([]Diary, error) {
 		if err != nil {
 			fmt.Printf("failed to unmarshal post_data. input: %s", *item["post_data"])
 			continue
+		}
+
+		// リアクションがあるかどうかで条件分岐
+		reaction, ok := item["reaction"]
+		if !ok {
+			diary.Reaction = "0"
+		} else {
+			diary.Reaction = *reaction.S
 		}
 
 		diary.ID = *item["id"].S
