@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
@@ -92,12 +93,18 @@ const DiaryFetch = () => {
         value={diary.diary_content}
         disabled
       />
-      <Button variant="contained" color="primary" onClick={() => fetchDiary()}>
-        日記を取得
-      </Button>
-      {/* <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
-        日記に反応する
-      </Button> */}
+      <Grid container>
+        <Button variant="contained" color="primary" onClick={() => fetchDiary()}>
+          日記を取得
+        </Button>
+      </Grid>
+
+      <Grid container justify="flex-end">
+        <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
+          <FavoriteIcon color="error" />
+          {diary.reaction}
+        </Button>
+      </Grid>
     </Container>
   );
 };
