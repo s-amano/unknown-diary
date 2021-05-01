@@ -45,7 +45,7 @@ func NewPostDiary(request events.APIGatewayProxyRequest, diaryReactioner string)
 	}
 	fmt.Printf("postForm: %+v\n", result.PostForm)
 
-	return result, err
+	return result, nil
 }
 
 // FetchOneDiaryFromDynamoDB - dynamoDBから特定の日記を取得する
