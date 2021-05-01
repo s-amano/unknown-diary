@@ -110,12 +110,16 @@ const DiaryFetch = () => {
         </Button>
       </Grid>
 
-      <Grid container justify="flex-end">
-        <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
-          <FavoriteIcon color="error" />
-          {diary.reaction}
-        </Button>
-      </Grid>
+      {diary.reaction ? (
+        <Grid container justify="flex-end">
+          <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
+            <FavoriteIcon color="error" />
+            {diary.reaction}
+          </Button>
+        </Grid>
+      ) : (
+        <></>
+      )}
     </Container>
   );
 };
