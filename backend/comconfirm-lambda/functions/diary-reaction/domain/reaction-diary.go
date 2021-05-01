@@ -21,12 +21,13 @@ type PostDiary struct {
 
 // ReactionDiary 更新用の日記内容を表現する構造体です
 type ReactionDiary struct {
-	ID             string // id
-	PostAt         string // ポストされた日時
-	ThisReactioner string // 今回反応をした人
-	Reaction       string // 日記の反応
-	Reactioners    string // 日記に反応した人一覧
-	Content        string // 日記の内容
+	ID             string   // id
+	PostAt         string   // ポストされた日時
+	ThisReactioner string   // 今回反応をした人
+	Reaction       string   // 日記の反応
+	Reactioners    []string // 日記に反応した人一覧
+	Content        string   // 日記の内容
+	ReacionerFlag  bool     // 日記に反応したかどうかのフラグ
 }
 
 // NewPostDiary - API Gateway のリクエスト情報から PostDiary オブジェクトを生成
@@ -77,27 +78,22 @@ func (rd *ReactionDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepo
 		return err
 	}
 
-	fmt.Printf("res + %+v\n", res)
-
 	item := res.Items[0]
 
 	reactioners, ok := item["reactioners"]
 	if !ok {
 		rd.Reaction = "0"
-		rd.Reactioners = ""
+		rd.Reactioners = []string{}
 		fmt.Printf("既存リアクションがない")
 	} else {
-		rd.Reactioners = *reactioners.S
+		fmt.Printf("reactionersSlice L %+v\n", reactioners.L)
+		for _, v := range reactioners.L {
+			rd.Reactioners = append(rd.Reactioners, *v.S)
+		}
 		rd.Reaction = *item["reaction"].S
 	}
 
 	return nil
-}
-
-// DetermineAlreadyReaction - すでにリアクションしたかどうかを判定する
-func (rd *ReactionDiary) DetermineAlreadyReaction(dc adapter.DynamoDBClientRepository) error {
-	var err error
-	return err
 }
 
 // GetDynamoDBItemMap - updateするitemの特定をするためにプライマリーキー情報を生成します
@@ -118,16 +114,31 @@ func (rd *ReactionDiary) GetDynamoDBItemMap() (map[string]*dynamodb.AttributeVal
 func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.AttributeValue, dc adapter.DynamoDBClientRepository) (ReactionDiary, error) {
 	var err error
 
-	// 反応を+1する
+	// 反応をすでにリアクションしたかどうかで判定し、+1/-1する
 	IntReaction, err := strconv.Atoi(rd.Reaction)
 	if err != nil {
 		return ReactionDiary{}, err
 	}
-	IntReaction++
-	rd.Reaction = strconv.Itoa(IntReaction)
+	rd.ReacionerFlag = false
 
-	// 反応者に名前を追加する
-	rd.Reactioners += "," + rd.ThisReactioner
+	// fmt.Printf("rectioners forの前のやつ %v\n", rd.Reactioners)
+	for i, v := range rd.Reactioners {
+		// fmt.Printf("rectioner for %v\n", v)
+		if v == rd.ThisReactioner {
+			IntReaction--
+			rd.Reactioners = append(rd.Reactioners[:i], rd.Reactioners[i+1:]...)
+			rd.ReacionerFlag = true
+			continue
+		}
+	}
+
+	if !rd.ReacionerFlag {
+		IntReaction++
+		// 反応者に名前を追加する
+		rd.Reactioners = append(rd.Reactioners, rd.ThisReactioner)
+	}
+
+	rd.Reaction = strconv.Itoa(IntReaction)
 
 	// 更新情報をitemとして生成
 	updateItem := expression.UpdateBuilder{}.Set(expression.Name("reaction"), expression.Value(rd.Reaction)).Set(expression.Name("reactioners"), expression.Value(rd.Reactioners))
