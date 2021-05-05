@@ -41,6 +41,10 @@ HASH	RANGE
 | uuid        | post_at   | author     | receiver         | post_data                | reaction | reactioners                                            | 
 | 12345.67890 | 988999898 | テスト太郎 | テストレシーバー | {"content":"テスト日記"} | 2        | [ { "S" : " テストさん" }, { "S" : "サンプルユーザ" }] | 
 
+## グローバルインデックス
+- author-status_post_at-index
+HASH KeyをauthorにRANGE Keyをpost_atに指定。  
+自分の日記一覧を取得する際に利用
   
 # 機能一覧
 - 誰かの日記を取得することができる
@@ -48,3 +52,11 @@ HASH	RANGE
 - 自分の書いた日記を一覧で見ることができる
 - 自分の書いた日記の詳細を見ることができる
 - 日記にリアクションをつけることができ、それを著者が確認することができる
+
+## API機能補足
+### 誰かの日記を取得する
+dynamoDBから全件取得したあと、authorが自分でないものをFilterして、ランダムな1件をresponseする
+
+### 日記にリアクションをつけることができ、それを著者が確認することができる
+日記のリアクションボタンを押すと、該当の日記をDynamoDBから取得する。押したUserがreactioners配列に含まれていれば、reacrtionの数を1つ減らし、reactionersからUserを排除する。  
+押したUserがreactioners配列に含まれていなければ、reactionの数を1つ増やし、reactionersへUserを追加する。
