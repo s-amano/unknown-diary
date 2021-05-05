@@ -32,6 +32,15 @@ password: 12345678
 
 # 構成図
 <img width="775" alt="infra構成図" src="https://user-images.githubusercontent.com/53635209/114696010-2ac1ed80-9d57-11eb-94d4-a0bf1a3505bf.png">
+
+# DynamoDB
+
+HASH	RANGE							
+| HASH Key    | RANGE Key |            |                  |                          |          |                                                        | 
+| ----------- | --------- | ---------- | ---------------- | ------------------------ | -------- | ------------------------------------------------------ | 
+| uuid        | post_at   | author     | receiver         | post_data                | reaction | reactioners                                            | 
+| 12345.67890 | 988999898 | テスト太郎 | テストレシーバー | {"content":"テスト日記"} | 2        | [ { "S" : " テストさん" }, { "S" : "サンプルユーザ" }] | 
+
   
 # 機能一覧
 - 誰かの日記を取得することができる
