@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { Link } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
+import { Grid } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
+import CreateIcon from '@material-ui/icons/Create';
 
 const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
@@ -55,14 +55,7 @@ const DiaryPost = () => {
   };
 
   return (
-    <Container style={{ marginTop: '20px' }} maxWidth="md">
-      <Grid container justify="flex-end">
-        <Button style={{ marginBottom: '5%' }} variant="contained" color="primary">
-          <Link to="/diary" style={{ textDecoration: 'none', color: 'white' }}>
-            日記を取得
-          </Link>
-        </Button>
-      </Grid>
+    <Container style={{ marginTop: '40px' }} maxWidth="md">
       <Collapse in={isSucces}>
         <Alert
           action={
@@ -93,14 +86,16 @@ const DiaryPost = () => {
         helperText="17文字以上5000字以下で入力してください"
       />
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => survayPost()}
-        disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000))}
-      >
-        送信する
-      </Button>
+      <Grid container justify="flex-end">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => survayPost()}
+          disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000))}
+        >
+          <CreateIcon />
+        </Button>
+      </Grid>
     </Container>
   );
 };
