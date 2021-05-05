@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { Link } from 'react-router-dom';
-import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -55,14 +53,7 @@ const DiaryPost = () => {
   };
 
   return (
-    <Container style={{ marginTop: '20px' }} maxWidth="md">
-      <Grid container justify="flex-end">
-        <Button style={{ marginBottom: '5%' }} variant="contained" color="primary">
-          <Link to="/diary" style={{ textDecoration: 'none', color: 'white' }}>
-            日記を取得
-          </Link>
-        </Button>
-      </Grid>
+    <Container style={{ marginTop: '40px' }} maxWidth="md">
       <Collapse in={isSucces}>
         <Alert
           action={
