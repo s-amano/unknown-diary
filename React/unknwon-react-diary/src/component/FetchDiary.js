@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { Link } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
@@ -78,21 +78,7 @@ const DiaryFetch = () => {
   };
 
   return (
-    <Container style={{ marginTop: '20px' }} maxWidth="md">
-      <Grid container>
-        <Button variant="contained" color="primary">
-          <Link to="/mydiary" style={{ textDecoration: 'none', color: 'white' }}>
-            自分の日記を取得
-          </Link>
-        </Button>
-      </Grid>
-      <Grid container justify="flex-end">
-        <Button variant="contained" color="primary">
-          <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
-            日記を書く
-          </Link>
-        </Button>
-      </Grid>
+    <Container style={{ marginTop: '40px' }} maxWidth="md">
       <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
         誰かのある日
       </Typography>
@@ -104,22 +90,20 @@ const DiaryFetch = () => {
         value={diary.diary_content}
         disabled
       />
-      <Grid container>
-        <Button variant="contained" color="primary" onClick={() => fetchDiary()}>
-          日記を取得
+      <Grid container justify="flex-end">
+        <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
+          <MenuBookIcon style={{ marginRight: '1%' }} />
         </Button>
-      </Grid>
 
-      {diary.reaction ? (
-        <Grid container justify="flex-end">
+        {diary.reaction ? (
           <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
-            <FavoriteIcon color="error" />
+            <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
             {diary.reaction}
           </Button>
-        </Grid>
-      ) : (
-        <></>
-      )}
+        ) : (
+          <></>
+        )}
+      </Grid>
     </Container>
   );
 };

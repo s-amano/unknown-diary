@@ -17,12 +17,10 @@ function App() {
           <Login />
           <div className="App">
             <Navbar />
-            <header className="App-header">
-              <Route exact path="/mydiary" component={FetchMyDiaries} />
-              <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
-              <Route exact path="/diary" component={FetchDiary} />
-              <Route exact path="/" component={PostDiary} />
-            </header>
+            <Route exact path="/mydiary" component={FetchMyDiaries} />
+            <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
+            <Route exact path="/diary" component={FetchDiary} />
+            <Route exact path="/" component={PostDiary} />
           </div>
         </BrowserRouter>
       </AmplifyAuthenticator>
