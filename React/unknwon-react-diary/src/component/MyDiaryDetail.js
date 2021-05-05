@@ -12,15 +12,8 @@ const MyDiaryDetail = () => {
   const { myDiaryDetail } = useContext(ApiContext);
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
-      <Grid container>
-        <Button variant="contained" color="primary">
-          <Link to="/mydiary" style={{ textDecoration: 'none', color: 'white' }}>
-            戻る
-          </Link>
-        </Button>
-      </Grid>
       <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
-        自分の日記の詳細
+        貴方の日記の詳細
       </Typography>
       <TextField
         style={{ width: '100%', marginBottom: '5%' }}
@@ -31,7 +24,7 @@ const MyDiaryDetail = () => {
       />
       <Grid container justify="flex-end">
         <Button variant="contained" color="primary">
-          <FavoriteIcon color="error" />
+          <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
           {myDiaryDetail.diaryReaction}
         </Button>
       </Grid>
