@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const MyDiaryDetail = () => {
