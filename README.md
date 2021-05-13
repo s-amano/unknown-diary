@@ -7,7 +7,7 @@
 # URL
 https://prod.unknown-diary.com/
 
-create accout から
+create accout リンクから
 一意なユーザー名とパスワードでアカウントを作成し、ログインしてください。
 
 アカウントを作成せずに動作確認したいだけと言う方は、
@@ -22,12 +22,17 @@ password: 12345678
 # 使用した技術など
 - React (UIフレームワークにMaterial UI)(フロントの開発環境はDockerで構築)
 - AWS (serverlessframework + cloudformation で構築)
-  - Lambda (APIとして利用, 言語はGolang)
+  - Lambda (APIとして利用, 言語はGolang, 単体テスト)
   - DyanmoDB (データベース)
   - Cognito (認証)
   - Route53 (名前解決)
   - S3　(Webホスティング)
   - CloudFront (CDN)
+
+## 補足
+フロントエンドはS3 のWebホスティング + CloudFrontで、バックエンドAPIはLambdaで実装、データベースにはDynamoDBという感じです。
+認証にはAWS cognitoを利用しています。Amplifyのライブラリを利用しているので、ログイン画面のUIと機能は全てAWSが行ってくれています。
+また、デプロイ作業をなるべく簡略化できるようにMakefileを作っています。後々、CI/CD環境導入したいです。
 
 
 # 構成図
