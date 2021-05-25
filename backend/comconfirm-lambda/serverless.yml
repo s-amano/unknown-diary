@@ -1,5 +1,9 @@
 service: unknown-diary-stack
 
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
+
 provider:
   name: aws
   runtime: go1.x
@@ -50,6 +54,23 @@ custom:
     prod: prod.unknown-diary.com
 
   webContentsBucket: ${self:custom.webContentsBucketCustom.${self:provider.stage}}
+
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: ${self:custom.diaryStoreDynamoDBTable}
+            sources: [./migrations/sample.json]
+
+  serverless-offline:
+    useDocker: true
 
 functions:
   - ${file(./resources/receiver.yml)}
