@@ -23,7 +23,7 @@ password: 12345678
 - React (UIフレームワークにMaterial UI)(フロントの開発環境はDockerで構築)
 - AWS (serverlessframework + cloudformation で構築)
   - Lambda (APIとして利用, 言語はGolang, 単体テスト)
-  - DyanmoDB (データベース)
+  - DynamoDB (データベース)
   - Cognito (認証)
   - Route53 (名前解決)
   - S3　(Webホスティング)
