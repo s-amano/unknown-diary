@@ -34,7 +34,28 @@ package:
   include:
     - ./bin/**
 
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
+
 custom:
+  ### ローカル実行のためのカスタム定義
+  serverless-offline:
+    useDocker: true
+
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: ${self:custom.diaryStoreDynamoDBTableCustom.${self:provider.stage}}
+
   ### dev / prod で使い分けるパラメータの設定
   # DynamoDBテーブル名
   diaryStoreDynamoDBTableCustom:
