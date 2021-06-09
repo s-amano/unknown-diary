@@ -2,6 +2,7 @@ package dynamodbclient
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
@@ -14,8 +15,11 @@ type DynamoDBClient struct {
 	dynamo    adapter.DynamoDBRepository
 }
 
-// NewDynamoDBClient 新たにdynamoDBClientを作成する関数
-func NewDynamoDBClient(region string, tableName string) *DynamoDBClient {
+// NewDynamoDBClient 新たにdynamoDBClientを作成する関数 offlineによる実行かどうかを判定する
+func NewDynamoDBClient(region string, tableName string, localOfflineFlag string) *DynamoDBClient {
+	if localOfflineFlag == "true" {
+		return NewOfflineDynamoDBClient(region, tableName)
+	}
 	sess := session.Must(session.NewSession())
 	config := aws.Config{
 		Region: aws.String(region),
@@ -26,6 +30,24 @@ func NewDynamoDBClient(region string, tableName string) *DynamoDBClient {
 		dynamo:    dynamodb.New(sess, &config),
 	}
 
+	return &dynamodbClient
+
+}
+
+// NewOfflineDynamoDBClient ローカル実行の際の接続Client
+func NewOfflineDynamoDBClient(region string, tableName string) *DynamoDBClient {
+	sess := session.Must(session.NewSession())
+	config := aws.Config{
+		Region:      aws.String(region),
+		Endpoint:    aws.String("http://host.docker.internal:8000"),
+		DisableSSL:  aws.Bool(true),
+		Credentials: credentials.NewStaticCredentials("dummy", "dummy", "dummy"),
+	}
+
+	dynamodbClient := DynamoDBClient{
+		tableName: tableName,
+		dynamo:    dynamodb.New(sess, &config),
+	}
 	return &dynamodbClient
 }
 

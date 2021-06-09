@@ -15,6 +15,7 @@ import (
 
 const (
 	envNameDiaryStoreDynamoDBTable = "DIARY_STORE_DYNAMODB_TABLE"
+	envLocalOfflineFlag            = "IS_OFFLINE"
 )
 
 var (
@@ -22,6 +23,7 @@ var (
 	dynamoDBClient          *dynamodbclient.DynamoDBClient
 	diaryStoreDynamoDBTable string
 	diaryGetter             string
+	localOfflineFlag        string
 )
 
 func init() {
@@ -29,8 +31,10 @@ func init() {
 
 	diaryStoreDynamoDBTable = os.Getenv(envNameDiaryStoreDynamoDBTable)
 
+	localOfflineFlag = os.Getenv(envLocalOfflineFlag)
+
 	// DynamoDB クライアントの初期化
-	dynamoDBClient = dynamodbclient.NewDynamoDBClient(region, diaryStoreDynamoDBTable)
+	dynamoDBClient = dynamodbclient.NewDynamoDBClient(region, diaryStoreDynamoDBTable, localOfflineFlag)
 }
 
 func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
