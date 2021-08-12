@@ -92,7 +92,7 @@ const DiaryFetch = () => {
       />
       <Grid container justify="flex-end">
         <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
-          <MenuBookIcon style={{ marginRight: '1%' }} />
+          <MenuBookIcon style={{ marginRight: '1%', color: 'white' }} />
         </Button>
 
         {diary.reaction ? (

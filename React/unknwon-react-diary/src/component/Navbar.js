@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     textAlign: 'left',
+    color: 'white',
+    fontWeight: 'bolder',
   },
   icon: {
     textDecoration: 'none',
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="static">
       <Toolbar>
         <Typography variant="h5" className={classes.title}>
           Unknown Diary

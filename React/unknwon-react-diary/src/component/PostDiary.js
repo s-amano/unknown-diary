@@ -93,7 +93,7 @@ const DiaryPost = () => {
           onClick={() => survayPost()}
           disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000))}
         >
-          <CreateIcon />
+          <CreateIcon style={{ color: 'white' }} />
         </Button>
       </Grid>
     </Container>
