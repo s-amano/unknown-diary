@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Auth, API } from 'aws-amplify';
 import { ApiContext } from '../context/ApiContext';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -28,44 +27,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FetchMyDiaries = () => {
+const FetchMyDiaries = (props) => {
   const classes = useStyles();
   const { setMyDiaryDetail } = useContext(ApiContext);
-  const [myDiaries, setMyDiaries] = useState([]);
-
-  useEffect(() => {
-    const envAPI = () => {
-      const env = process.env.REACT_APP_ENVIROMENT;
-      console.log(env);
-      if (env === 'prod') {
-        return 'GETMyDiariesAPIProd';
-      } else if (env === 'dev') {
-        return 'GETMyDiariesAPIDev';
-      }
-    };
-
-    const fetchMyDiaries = async () => {
-      const apiName = envAPI();
-      const path = '';
-
-      const myInit = {
-        headers: {
-          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
-        },
-      };
-
-      await API.get(apiName, path, myInit)
-        .then((response) => {
-          console.log(response);
-          setMyDiaries(response.Diaries);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-
-    fetchMyDiaries();
-  }, []);
 
   const DetailMyDiary = (diary) => {
     console.log(diary);
@@ -74,7 +38,7 @@ const FetchMyDiaries = () => {
 
   return (
     <Container style={{ marginTop: '40px' }} maxWidth="md">
-      {myDiaries.map((value) => {
+      {props.myDiaries.map((value, key) => {
         const diary = {};
         const diaryContent = value.content;
         const diaryReaction = value.reaction;
@@ -90,7 +54,7 @@ const FetchMyDiaries = () => {
         diary.diaryReaction = diaryReaction;
 
         return (
-          <Grid container>
+          <Grid container key={key}>
             <Card className={classes.card}>
               <CardContent className={classes.cardContent}>
                 <Typography>{modifiedDiaryContent}</Typography>

@@ -29,14 +29,20 @@ const useStyles = makeStyles((theme) => ({
   numOfGotLike: { flex: 1 },
 }));
 
-const StatisticalDataCard = () => {
+const StatisticalDataCard = (props) => {
   const classes = useStyles();
+
+  const numberOfMyDiaries = props.myDiaries.length;
+  var numberOfMydieriesReaction = 0;
+  props.myDiaries.forEach((diary, index) => {
+    numberOfMydieriesReaction += Number(diary.reaction);
+  });
   return (
     <Grid container className={classes.grid}>
       <Card className={classes.card}>
         <div className={classes.numOfPost}>
           <CardContent className={classes.number}>
-            <Typography variant="h6">15</Typography>
+            <Typography variant="h6">{numberOfMyDiaries}</Typography>
             <Typography component="h5" variant="h5">
               YourPost
             </Typography>
@@ -44,7 +50,7 @@ const StatisticalDataCard = () => {
         </div>
         <div className={classes.numOfGotLike}>
           <CardContent className={classes.number}>
-            <Typography variant="h6">24</Typography>
+            <Typography variant="h6">{numberOfMydieriesReaction}</Typography>
             <Typography component="h5" variant="h5">
               Like
             </Typography>
