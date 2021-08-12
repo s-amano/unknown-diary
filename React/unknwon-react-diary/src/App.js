@@ -8,22 +8,40 @@ import FetchDiary from './component/FetchDiary';
 import MyDiaryDetail from './component/MyDiaryDetail';
 import MyProfile from './component/MyProfile';
 import { Route, BrowserRouter } from 'react-router-dom';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#81c784',
+    },
+    secondary: {
+      main: '#f44336',
+    },
+  },
+  typography: {
+    fontFamily: 'Comic Neue',
+  },
+});
 
 function App() {
   return (
     <ApiContextProvider>
-      <AmplifyAuthenticator>
-        <BrowserRouter>
-          <Login />
-          <div className="App">
-            <Navbar />
-            <Route exact path="/mydiary" component={MyProfile} />
-            <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
-            <Route exact path="/diary" component={FetchDiary} />
-            <Route exact path="/" component={PostDiary} />
-          </div>
-        </BrowserRouter>
-      </AmplifyAuthenticator>
+      <MuiThemeProvider theme={theme}>
+        <AmplifyAuthenticator>
+          <BrowserRouter>
+            <Login />
+            <div className="App">
+              <Navbar theme={theme} />
+              <Route exact path="/mydiary" component={MyProfile} />
+              <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
+              <Route exact path="/diary" component={FetchDiary} />
+              <Route exact path="/" component={PostDiary} />
+            </div>
+          </BrowserRouter>
+        </AmplifyAuthenticator>
+      </MuiThemeProvider>
     </ApiContextProvider>
   );
 }

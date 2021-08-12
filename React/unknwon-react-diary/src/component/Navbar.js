@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = () => {
   const classes = useStyles();
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="primary">
       <Toolbar>
         <Typography variant="h5" className={classes.title}>
           Unknown Diary
