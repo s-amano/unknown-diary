@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     textAlign: 'left',
+    color: 'white',
+    fontWeight: 'bolder',
   },
   icon: {
     textDecoration: 'none',

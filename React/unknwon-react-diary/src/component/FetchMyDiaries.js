@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     display: 'flex',
     marginBottom: '4%',
-    border: 'thick double #32a1ce',
   },
   cardContent: {
     display: 'flex',
