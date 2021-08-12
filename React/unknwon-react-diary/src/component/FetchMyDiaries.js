@@ -74,9 +74,6 @@ const FetchMyDiaries = () => {
 
   return (
     <Container style={{ marginTop: '40px' }} maxWidth="md">
-      <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
-        貴方の日記
-      </Typography>
       {myDiaries.map((value) => {
         const diary = {};
         const diaryContent = value.content;
