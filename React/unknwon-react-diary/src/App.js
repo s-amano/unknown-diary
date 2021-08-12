@@ -33,7 +33,7 @@ function App() {
           <BrowserRouter>
             <Login />
             <div className="App">
-              <Navbar theme={theme} />
+              <Navbar />
               <Route exact path="/mydiary" component={MyProfile} />
               <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
               <Route exact path="/diary" component={FetchDiary} />
