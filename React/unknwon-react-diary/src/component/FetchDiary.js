@@ -98,7 +98,7 @@ const DiaryFetch = () => {
         {diary.reaction ? (
           <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
             <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
-            {diary.reaction}
+            <p style={{ margin: 0, fontWeight: 'bold', color: 'white', fontSize: '16px' }}>{diary.reaction}</p>
           </Button>
         ) : (
           <></>

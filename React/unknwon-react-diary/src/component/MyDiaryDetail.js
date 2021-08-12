@@ -22,9 +22,11 @@ const MyDiaryDetail = () => {
         disabled
       />
       <Grid container justify="flex-end">
-        <Button variant="contained">
+        <Button variant="contained" color="primary">
           <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
-          {myDiaryDetail.diaryReaction}
+          <p style={{ margin: 0, fontWeight: 'bold', color: 'white', fontSize: '16px' }}>
+            {myDiaryDetail.diaryReaction}
+          </p>
         </Button>
       </Grid>
     </Container>
