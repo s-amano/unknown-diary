@@ -20,18 +20,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '40px',
   },
   card: {
-    // display: 'flex',
-    // flexDirection: 'column',
-    // // justifyContent: 'flex-start',
+    justifyContent: 'flex-start',
+    height: '100%',
     width: '100%',
     marginBottom: '4%',
     maxWidth: 345,
   },
   cardContent: {
-    // display: 'flex',
-    // flexDirection: 'column',
-    // justifyContent: 'flex-start',
-    // alignItems: 'center',
     flexGrow: 1,
   },
 }));
@@ -53,7 +48,7 @@ const FetchMyDiaries = (props) => {
         const diaryReaction = value.reaction;
         const diaryTitle = value.title ? value.title : 'タイトルなし';
         const diaryDate = value.date ? value.date : '日付なし';
-        const maxLength = 137;
+        const maxLength = 37;
         let modifiedDiaryContent = '';
         if (diaryContent.length > maxLength) {
           modifiedDiaryContent = diaryContent.substr(0, maxLength) + '...';
@@ -67,7 +62,6 @@ const FetchMyDiaries = (props) => {
         diary.diaryDate = diaryDate;
 
         return (
-          // <Grid container key={key} className={classes.grid}>
           <Card className={classes.card} key={key}>
             <Link to="/mydiary-detail" onClick={() => DetailMyDiary(diary)} style={{ textDecoration: 'none' }}>
               <CardActionArea>
@@ -87,7 +81,6 @@ const FetchMyDiaries = (props) => {
               </CardActionArea>
             </Link>
           </Card>
-          // </Grid>
         );
       })}
     </Container>
