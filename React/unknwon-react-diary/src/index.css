@@ -16,3 +16,10 @@ code {
   --amplify-primary-tint: #81c784;
   --amplify-primary-shade: #81c784;
 }
+
+a {
+  color: #2b2b2b;
+}
+a:hover {
+  color: #2b2b2b;
+}
