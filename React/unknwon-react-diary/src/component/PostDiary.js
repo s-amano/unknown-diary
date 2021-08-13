@@ -12,6 +12,7 @@ import CreateIcon from '@material-ui/icons/Create';
 
 const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
+  const [postDiaryTitle, setPostDiaryTitle] = useState('');
   const [isSucces, setIsSucces] = useState(false);
 
   const envAPI = () => {
@@ -29,6 +30,7 @@ const DiaryPost = () => {
     const path = '';
 
     const postData = {
+      title: postDiaryTitle,
       content: postDiary,
     };
     const myInit = {
@@ -44,6 +46,7 @@ const DiaryPost = () => {
         console.log('成功');
         setIsSucces(true);
         setPostDiary('');
+        setPostDiaryTitle('');
       })
       .catch((err) => {
         console.log(err);
@@ -52,6 +55,10 @@ const DiaryPost = () => {
 
   const updateDiary = () => (event) => {
     setPostDiary(event.target.value);
+  };
+
+  const updateDiaryTitle = () => (event) => {
+    setPostDiaryTitle(event.target.value);
   };
 
   return (
@@ -76,7 +83,16 @@ const DiaryPost = () => {
       </Collapse>
       <TextField
         style={{ width: '100%', marginBottom: '5%' }}
-        label="日記を書く"
+        label="日記のタイトル"
+        helperText="3文字以上50字以下で入力してください"
+        error={Boolean(postDiaryTitle.length !== 0 && !(3 <= postDiaryTitle.length && postDiaryTitle.length < 50))}
+        value={postDiaryTitle}
+        onChange={updateDiaryTitle()}
+        rows={2}
+      />
+      <TextField
+        style={{ width: '100%', marginBottom: '5%' }}
+        label="日記の内容"
         multiline
         rows={20}
         value={postDiary}
