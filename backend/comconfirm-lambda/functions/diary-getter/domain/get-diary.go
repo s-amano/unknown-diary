@@ -3,6 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -14,10 +15,12 @@ import (
 
 // Diary - 日記の内容を表現する構造体です
 type Diary struct {
-	ID       string // id
-	PostAt   string // ポストされた日時
-	Content  string // 日記の本文
-	Reaction string // 日記のリアクション
+	ID       string     // id
+	PostAt   string     // ポストされた日時
+	Title    string     `json:"title"`   // 日記のタイトル
+	Content  string     `json:"content"` // 日記の本文
+	Date     *time.Time `json:"date"`    // 日記の日付
+	Reaction string     // 日記のリアクション
 }
 
 // GetDiary - 日記を表現する構造体です
