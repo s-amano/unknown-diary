@@ -2,14 +2,12 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { ApiContext } from '../context/ApiContext';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import IconButton from '@material-ui/core/IconButton';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
-import ChromeReaderModeIcon from '@material-ui/icons/ChromeReaderMode';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const useStyles = makeStyles((theme) => ({
