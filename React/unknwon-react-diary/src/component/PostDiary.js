@@ -15,7 +15,8 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
   const [postDiaryTitle, setPostDiaryTitle] = useState('');
-  const [postDiaryDate, setPostDiaryDate] = useState(new Date());
+  const [inputDiaryDate, setInputDiaryDate] = useState(new Date());
+  const [postDiaryDate, setPostDiaryDate] = useState('');
   const [isSucces, setIsSucces] = useState(false);
 
   const envAPI = () => {
@@ -49,9 +50,11 @@ const DiaryPost = () => {
       .then(() => {
         console.log('成功');
         setIsSucces(true);
+        console.log(postData);
         setPostDiary('');
         setPostDiaryTitle('');
         setPostDiaryDate('');
+        setInputDiaryDate(new Date());
       })
       .catch((err) => {
         console.log(err);
@@ -67,7 +70,14 @@ const DiaryPost = () => {
   };
 
   const updateDiaryDate = () => (date) => {
-    setPostDiaryDate(date);
+    console.log(date);
+    var y = date.getFullYear();
+    var m = ('00' + (date.getMonth() + 1)).slice(-2);
+    var d = ('00' + date.getDate()).slice(-2);
+    var result = y + '/' + m + '/' + d;
+    // console.log(result);
+    setPostDiaryDate(result);
+    setInputDiaryDate(date);
   };
 
   return (
@@ -117,7 +127,7 @@ const DiaryPost = () => {
             id="date-picker-dialog"
             // label="日付"
             format="yyyy/MM/dd"
-            value={postDiaryDate}
+            value={inputDiaryDate}
             onChange={updateDiaryDate()}
             KeyboardButtonProps={{
               'aria-label': 'change date',
