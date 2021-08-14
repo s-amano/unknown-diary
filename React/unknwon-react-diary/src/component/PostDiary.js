@@ -121,21 +121,19 @@ const DiaryPost = () => {
         helperText="17文字以上5000字以下で入力してください"
       />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container justifyContent="space-around">
-          <KeyboardDatePicker
-            margin="normal"
-            id="date-picker-dialog"
-            // label="日付"
-            format="yyyy/MM/dd"
-            value={inputDiaryDate}
-            onChange={updateDiaryDate()}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-            error={Boolean(false)}
-            helperText="日付を入力してください"
-          />
-        </Grid>
+        <KeyboardDatePicker
+          margin="normal"
+          id="date-picker-dialog"
+          // label="日付"
+          format="yyyy/MM/dd"
+          value={inputDiaryDate}
+          onChange={updateDiaryDate()}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+          error={Boolean(false)}
+          helperText="日付を入力してください"
+        />
       </MuiPickersUtilsProvider>
 
       <Grid container justify="flex-end">
