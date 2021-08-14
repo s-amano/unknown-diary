@@ -101,14 +101,32 @@ const DiaryPost = () => {
         </Alert>
       </Collapse>
       <TextField
-        style={{ width: '100%', marginBottom: '5%' }}
+        style={{ width: '100%' }}
         label="日記のタイトル"
-        helperText="3文字以上50字以下で入力してください"
-        error={Boolean(postDiaryTitle.length !== 0 && !(3 <= postDiaryTitle.length && postDiaryTitle.length < 50))}
+        helperText="30字以下で入力してください"
+        error={Boolean(postDiaryTitle.length !== 0 && !(postDiaryTitle.length <= 30))}
         value={postDiaryTitle}
+        multiline
         onChange={updateDiaryTitle()}
         rows={2}
       />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid container justifyContent="flex-end" style={{ justifyContent: 'flex-end' }}>
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            // label="日付"
+            format="yyyy/MM/dd"
+            value={inputDiaryDate}
+            onChange={updateDiaryDate()}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+            error={Boolean(false)}
+            helperText="日付を入力してください"
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
       <TextField
         style={{ width: '100%', marginBottom: '5%' }}
         label="日記の内容"
@@ -120,21 +138,6 @@ const DiaryPost = () => {
         error={Boolean(postDiary.length !== 0 && !(17 <= postDiary.length && postDiary.length < 5000))}
         helperText="17文字以上5000字以下で入力してください"
       />
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-          margin="normal"
-          id="date-picker-dialog"
-          // label="日付"
-          format="yyyy/MM/dd"
-          value={inputDiaryDate}
-          onChange={updateDiaryDate()}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-          error={Boolean(false)}
-          helperText="日付を入力してください"
-        />
-      </MuiPickersUtilsProvider>
 
       <Grid container justify="flex-end">
         <Button
