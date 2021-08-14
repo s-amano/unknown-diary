@@ -15,7 +15,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
   const [postDiaryTitle, setPostDiaryTitle] = useState('');
-  const [postDiaryDate, setPostDiaryDate] = useState('');
+  const [postDiaryDate, setPostDiaryDate] = useState(new Date());
   const [isSucces, setIsSucces] = useState(false);
 
   const envAPI = () => {
