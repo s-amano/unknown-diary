@@ -9,9 +9,14 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CreateIcon from '@material-ui/icons/Create';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
+  const [postDiaryTitle, setPostDiaryTitle] = useState('');
+  const [inputDiaryDate, setInputDiaryDate] = useState(new Date());
+  const [postDiaryDate, setPostDiaryDate] = useState('');
   const [isSucces, setIsSucces] = useState(false);
 
   const envAPI = () => {
@@ -29,7 +34,9 @@ const DiaryPost = () => {
     const path = '';
 
     const postData = {
+      title: postDiaryTitle,
       content: postDiary,
+      date: postDiaryDate,
     };
     const myInit = {
       headers: {
@@ -43,7 +50,11 @@ const DiaryPost = () => {
       .then(() => {
         console.log('成功');
         setIsSucces(true);
+        console.log(postData);
         setPostDiary('');
+        setPostDiaryTitle('');
+        setPostDiaryDate('');
+        setInputDiaryDate(new Date());
       })
       .catch((err) => {
         console.log(err);
@@ -54,8 +65,23 @@ const DiaryPost = () => {
     setPostDiary(event.target.value);
   };
 
+  const updateDiaryTitle = () => (event) => {
+    setPostDiaryTitle(event.target.value);
+  };
+
+  const updateDiaryDate = () => (date) => {
+    console.log(date);
+    var y = date.getFullYear();
+    var m = ('00' + (date.getMonth() + 1)).slice(-2);
+    var d = ('00' + date.getDate()).slice(-2);
+    var result = y + '/' + m + '/' + d;
+    // console.log(result);
+    setPostDiaryDate(result);
+    setInputDiaryDate(date);
+  };
+
   return (
-    <Container style={{ marginTop: '40px' }} maxWidth="md">
+    <Container style={{ marginTop: '40px', marginBottom: '30px' }} maxWidth="md">
       <Collapse in={isSucces}>
         <Alert
           action={
@@ -76,7 +102,16 @@ const DiaryPost = () => {
       </Collapse>
       <TextField
         style={{ width: '100%', marginBottom: '5%' }}
-        label="日記を書く"
+        label="日記のタイトル"
+        helperText="3文字以上50字以下で入力してください"
+        error={Boolean(postDiaryTitle.length !== 0 && !(3 <= postDiaryTitle.length && postDiaryTitle.length < 50))}
+        value={postDiaryTitle}
+        onChange={updateDiaryTitle()}
+        rows={2}
+      />
+      <TextField
+        style={{ width: '100%', marginBottom: '5%' }}
+        label="日記の内容"
         multiline
         rows={20}
         value={postDiary}
@@ -85,13 +120,30 @@ const DiaryPost = () => {
         error={Boolean(postDiary.length !== 0 && !(17 <= postDiary.length && postDiary.length < 5000))}
         helperText="17文字以上5000字以下で入力してください"
       />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+          margin="normal"
+          id="date-picker-dialog"
+          // label="日付"
+          format="yyyy/MM/dd"
+          value={inputDiaryDate}
+          onChange={updateDiaryDate()}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+          error={Boolean(false)}
+          helperText="日付を入力してください"
+        />
+      </MuiPickersUtilsProvider>
 
       <Grid container justify="flex-end">
         <Button
           variant="contained"
           color="primary"
           onClick={() => survayPost()}
-          disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000))}
+          disabled={Boolean(
+            !(17 <= postDiary.length && postDiary.length < 5000 && 3 <= postDiaryTitle.length && postDiaryTitle.length)
+          )}
         >
           <CreateIcon style={{ color: 'white' }} />
         </Button>
