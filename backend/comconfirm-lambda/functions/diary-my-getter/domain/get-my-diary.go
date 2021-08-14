@@ -3,7 +3,6 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
@@ -12,12 +11,12 @@ import (
 
 // Diary - 各日記の内容を格納する構造体
 type Diary struct {
-	ID       string     `json:"id"`      // id
-	PostAt   string     `json:"post_at"` // ポストされた日時
-	Title    string     `json:"title"`   // 日記のタイトル
-	Content  string     `json:"content"` // 日記の本文
-	Date     *time.Time `json:"date"`    // 日記の日付
-	Reaction string     `json:"reaction"`
+	ID       string  `json:"id"`      // id
+	PostAt   string  `json:"post_at"` // ポストされた日時
+	Title    string  `json:"title"`   // 日記のタイトル
+	Content  string  `json:"content"` // 日記の本文
+	Date     *string `json:"date"`    // 日記の日付
+	Reaction string  `json:"reaction"`
 }
 
 // GetDiaries - 日記を格納する構造体
@@ -77,7 +76,6 @@ func (gd *GetDiaries) AddDiaries(res *dynamodb.QueryOutput) ([]Diary, error) {
 			fmt.Printf("failed to unmarshal post_data. input: %s", *item["post_data"])
 			continue
 		}
-
 		// リアクションがあるかどうかで条件分岐
 		reaction, ok := item["reaction"]
 		if !ok {
