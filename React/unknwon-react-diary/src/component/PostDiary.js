@@ -9,10 +9,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CreateIcon from '@material-ui/icons/Create';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 const DiaryPost = () => {
   const [postDiary, setPostDiary] = useState('');
   const [postDiaryTitle, setPostDiaryTitle] = useState('');
+  const [postDiaryDate, setPostDiaryDate] = useState('');
   const [isSucces, setIsSucces] = useState(false);
 
   const envAPI = () => {
@@ -32,6 +35,7 @@ const DiaryPost = () => {
     const postData = {
       title: postDiaryTitle,
       content: postDiary,
+      date: postDiaryDate,
     };
     const myInit = {
       headers: {
@@ -47,6 +51,7 @@ const DiaryPost = () => {
         setIsSucces(true);
         setPostDiary('');
         setPostDiaryTitle('');
+        setPostDiaryDate('');
       })
       .catch((err) => {
         console.log(err);
@@ -61,8 +66,12 @@ const DiaryPost = () => {
     setPostDiaryTitle(event.target.value);
   };
 
+  const updateDiaryDate = () => (date) => {
+    setPostDiaryDate(date);
+  };
+
   return (
-    <Container style={{ marginTop: '40px' }} maxWidth="md">
+    <Container style={{ marginTop: '40px', marginBottom: '30px' }} maxWidth="md">
       <Collapse in={isSucces}>
         <Alert
           action={
@@ -101,13 +110,32 @@ const DiaryPost = () => {
         error={Boolean(postDiary.length !== 0 && !(17 <= postDiary.length && postDiary.length < 5000))}
         helperText="17文字以上5000字以下で入力してください"
       />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid container justifyContent="space-around">
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            // label="日付"
+            format="yyyy/MM/dd"
+            value={postDiaryDate}
+            onChange={updateDiaryDate()}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+            error={Boolean(false)}
+            helperText="日付を入力してください"
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
 
       <Grid container justify="flex-end">
         <Button
           variant="contained"
           color="primary"
           onClick={() => survayPost()}
-          disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000))}
+          disabled={Boolean(
+            !(17 <= postDiary.length && postDiary.length < 5000 && 3 <= postDiaryTitle.length && postDiaryTitle.length)
+          )}
         >
           <CreateIcon style={{ color: 'white' }} />
         </Button>
