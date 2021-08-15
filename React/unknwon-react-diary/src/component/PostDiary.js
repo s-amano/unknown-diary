@@ -106,9 +106,7 @@ const DiaryPost = () => {
         helperText="30字以下で入力してください"
         error={Boolean(postDiaryTitle.length !== 0 && !(postDiaryTitle.length <= 30))}
         value={postDiaryTitle}
-        multiline
         onChange={updateDiaryTitle()}
-        rows={2}
       />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container justifyContent="flex-end" style={{ justifyContent: 'flex-end' }}>
