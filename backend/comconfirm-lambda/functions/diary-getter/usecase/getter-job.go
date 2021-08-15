@@ -18,10 +18,7 @@ type GetterJob struct {
 
 // ResultDiary はAPIのresponse内に格納する日記の内容を格納する構造体です
 type ResultDiary struct {
-	ID           string `json:"id"`
-	PostAt       string `json:"post_at"`
-	DiaryContent string `json:"diary_content"`
-	Reaction     string `json:"reaction"`
+	domain.Diary
 }
 
 func (gj *GetterJob) featchDiary(ctx context.Context) (domain.Diary, error) {
@@ -66,8 +63,10 @@ func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 
 	ResultDiary.ID = getItem.ID
 	ResultDiary.PostAt = getItem.PostAt
-	ResultDiary.DiaryContent = getItem.Content
+	ResultDiary.Content = getItem.Content
 	ResultDiary.Reaction = getItem.Reaction
+	ResultDiary.Date = getItem.Date
+	ResultDiary.Title = getItem.Title
 
 	return ResultDiary, nil
 

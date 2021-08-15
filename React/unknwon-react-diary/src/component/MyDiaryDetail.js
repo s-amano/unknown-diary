@@ -11,9 +11,14 @@ const MyDiaryDetail = () => {
   const { myDiaryDetail } = useContext(ApiContext);
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
-      <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
-        貴方の日記の詳細
-      </Typography>
+      <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
+        <Typography variant="h5" component="h2" style={{ marginBottom: '2%' }}>
+          {myDiaryDetail.diaryTitle !== '' ? myDiaryDetail.diaryTitle : 'タイトル'}
+        </Typography>
+        <Typography variant="subtitle1" component="h2">
+          {myDiaryDetail.diaryDate ? myDiaryDetail.diaryDate : '日付'}
+        </Typography>
+      </Grid>
       <TextField
         style={{ width: '100%', marginBottom: '5%' }}
         multiline

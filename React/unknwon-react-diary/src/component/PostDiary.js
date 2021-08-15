@@ -142,9 +142,7 @@ const DiaryPost = () => {
           variant="contained"
           color="primary"
           onClick={() => survayPost()}
-          disabled={Boolean(
-            !(17 <= postDiary.length && postDiary.length < 5000 && 3 <= postDiaryTitle.length && postDiaryTitle.length)
-          )}
+          disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000 && postDiaryTitle.length <= 30))}
         >
           <CreateIcon style={{ color: 'white' }} />
         </Button>
