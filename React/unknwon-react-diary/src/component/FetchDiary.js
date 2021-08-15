@@ -70,6 +70,7 @@ const DiaryFetch = () => {
     await API.post(apiName, path, myInit)
       .then((response) => {
         console.log('成功');
+        console.log(diary);
         setDiary({ ...diary, reaction: response.reaction });
       })
       .catch((err) => {
@@ -83,13 +84,7 @@ const DiaryFetch = () => {
         誰かのある日
       </Typography>
 
-      <TextField
-        style={{ width: '100%', marginBottom: '5%' }}
-        multiline
-        rows={20}
-        value={diary.diary_content}
-        disabled
-      />
+      <TextField style={{ width: '100%', marginBottom: '5%' }} multiline rows={20} value={diary.content} disabled />
       <Grid container justify="flex-end">
         <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
           <MenuBookIcon style={{ marginRight: '1%', color: 'white' }} />
