@@ -80,9 +80,20 @@ const DiaryFetch = () => {
 
   return (
     <Container style={{ marginTop: '40px' }} maxWidth="md">
-      <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
-        誰かのある日
-      </Typography>
+      {diary.content ? (
+        <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
+          <Typography variant="h5" component="h2" style={{ marginBottom: '2%' }}>
+            {diary.title !== '' ? diary.title : 'タイトル'}
+          </Typography>
+          <Typography variant="subtitle1" component="h2">
+            {diary.date ? diary.date : '日付'}
+          </Typography>
+        </Grid>
+      ) : (
+        <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '5%' }} variant="h6">
+          誰かのある日
+        </Typography>
+      )}
 
       <TextField style={{ width: '100%', marginBottom: '5%' }} multiline rows={20} value={diary.content} disabled />
       <Grid container justify="flex-end">
