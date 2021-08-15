@@ -13,11 +13,36 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 const DiaryPost = () => {
+  const dateConvert = (date) => {
+    var y = date.getFullYear();
+    var m = ('00' + (date.getMonth() + 1)).slice(-2);
+    var d = ('00' + date.getDate()).slice(-2);
+    var result = y + '/' + m + '/' + d;
+    return result;
+  };
+
+  const todayDate = new Date();
   const [postDiary, setPostDiary] = useState('');
   const [postDiaryTitle, setPostDiaryTitle] = useState('');
-  const [inputDiaryDate, setInputDiaryDate] = useState(new Date());
-  const [postDiaryDate, setPostDiaryDate] = useState('');
+  const [inputDiaryDate, setInputDiaryDate] = useState(todayDate);
+  const [postDiaryDate, setPostDiaryDate] = useState(dateConvert(todayDate));
   const [isSucces, setIsSucces] = useState(false);
+
+  const isDateValid = (strDate) => {
+    console.log(strDate);
+    if (!strDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+      return false;
+    }
+    var y = strDate.split('/')[0];
+    var m = strDate.split('/')[1] - 1;
+    var d = strDate.split('/')[2];
+    var date = new Date(y, m, d);
+    console.log(date);
+    if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
+      return false;
+    }
+    return true;
+  };
 
   const envAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
@@ -53,8 +78,8 @@ const DiaryPost = () => {
         console.log(postData);
         setPostDiary('');
         setPostDiaryTitle('');
-        setPostDiaryDate('');
-        setInputDiaryDate(new Date());
+        setPostDiaryDate(dateConvert(todayDate));
+        setInputDiaryDate(todayDate);
       })
       .catch((err) => {
         console.log(err);
@@ -71,11 +96,7 @@ const DiaryPost = () => {
 
   const updateDiaryDate = () => (date) => {
     console.log(date);
-    var y = date.getFullYear();
-    var m = ('00' + (date.getMonth() + 1)).slice(-2);
-    var d = ('00' + date.getDate()).slice(-2);
-    var result = y + '/' + m + '/' + d;
-    // console.log(result);
+    const result = dateConvert(date);
     setPostDiaryDate(result);
     setInputDiaryDate(date);
   };
@@ -120,8 +141,8 @@ const DiaryPost = () => {
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
-            error={Boolean(false)}
-            helperText="日付を入力してください"
+            error={Boolean(!isDateValid(postDiaryDate))}
+            helperText="有効な形式で日付を入力してください"
           />
         </Grid>
       </MuiPickersUtilsProvider>
@@ -142,7 +163,14 @@ const DiaryPost = () => {
           variant="contained"
           color="primary"
           onClick={() => survayPost()}
-          disabled={Boolean(!(17 <= postDiary.length && postDiary.length < 5000 && postDiaryTitle.length <= 30))}
+          disabled={Boolean(
+            !(
+              17 <= postDiary.length &&
+              postDiary.length < 5000 &&
+              postDiaryTitle.length <= 30 &&
+              isDateValid(postDiaryDate)
+            )
+          )}
         >
           <CreateIcon style={{ color: 'white' }} />
         </Button>
