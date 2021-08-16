@@ -57,22 +57,22 @@ Amplify.configure({
       },
       {
         name: 'POSTStoreAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/post',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'post',
         region: region,
       },
       {
         name: 'GETStoreAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'get',
         region: region,
       },
       {
         name: 'GETMyDiariesAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get/mydiaries',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'get/mydiaries',
         region: region,
       },
       {
         name: 'UPDATEDiaryAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/reaction',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'reaction',
         region: region,
       },
     ],
