@@ -7,27 +7,29 @@ import { Amplify } from 'aws-amplify';
 
 const env = process.env.REACT_APP_ENVIROMENT;
 
+const region = 'ap-northeast-1';
+
 const userpoolIdEnv = () => {
   console.log(env);
   if (env === 'prod') {
-    return 'ap-northeast-1_SGhA5k2tK';
+    return process.env.REACT_APP_PROD_USERPOOL;
   } else if (env === 'dev') {
-    return 'ap-northeast-1_Ti2rjpXht';
+    return process.env.REACT_APP_DEV_USERPOOL;
   }
 };
 
 const userPoolWebClientIdEnv = () => {
   console.log(env);
   if (env === 'prod') {
-    return '5s9ftbi8f5pde1u4djlknhpgib';
+    return process.env.REACT_APP_PROD_USERPOOL_WEBCLIENT;
   } else if (env === 'dev') {
-    return '59h992ke2hcpi367054n2bt2tt';
+    return process.env.REACT_APP_DEV_USERPOOL_WEBCLIENT;
   }
 };
 
 Amplify.configure({
   Auth: {
-    region: 'ap-northeast-1',
+    region: region,
     userPoolId: userpoolIdEnv(),
     userPoolWebClientId: userPoolWebClientIdEnv(),
   },
@@ -35,43 +37,43 @@ Amplify.configure({
     endpoints: [
       {
         name: 'POSTStoreAPIDev',
-        endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/post',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'post',
+        region: region,
       },
       {
         name: 'GETStoreAPIDev',
-        endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/get',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'get',
+        region: region,
       },
       {
         name: 'GETMyDiariesAPIDev',
-        endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/get/mydiaries',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'get/mydiaries',
+        region: region,
       },
       {
         name: 'UPDATEDiaryAPIDev',
-        endpoint: 'https://c3xw1225c3.execute-api.ap-northeast-1.amazonaws.com/dev/reaction',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'reaction',
+        region: region,
       },
       {
         name: 'POSTStoreAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/post',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'post',
+        region: region,
       },
       {
         name: 'GETStoreAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'get',
+        region: region,
       },
       {
         name: 'GETMyDiariesAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/get/mydiaries',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'get/mydiaries',
+        region: region,
       },
       {
         name: 'UPDATEDiaryAPIProd',
-        endpoint: 'https://n1ek4zl4n9.execute-api.ap-northeast-1.amazonaws.com/prod/reaction',
-        region: 'ap-northeast-1',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'reaction',
+        region: region,
       },
     ],
   },
