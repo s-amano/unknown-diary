@@ -64,15 +64,9 @@ const FetchMyDiaries = (props) => {
       });
   };
 
-  const DetailMyDiary = (diary) => {
-    console.log(diary);
-    setMyDiaryDetail(diary);
-  };
-
   return (
     <Container className={classes.cardContainer} maxWidth="md">
       {props.myDiaries.map((value, key) => {
-        // const diary = {};
         const diaryContent = value.content;
         const diaryReaction = value.reaction;
         const diaryTitle = value.title ? value.title : 'タイトルなし';
@@ -84,11 +78,6 @@ const FetchMyDiaries = (props) => {
         } else {
           modifiedDiaryContent = diaryContent;
         }
-
-        // diary.diaryTitle = diaryTitle;
-        // diary.diaryContent = diaryContent;
-        // diary.diaryReaction = diaryReaction;
-        // diary.diaryDate = diaryDate;
 
         return (
           <Card className={classes.card} key={key}>
