@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Auth, API } from 'aws-amplify';
 import { makeStyles } from '@material-ui/core/styles';
 import { ApiContext } from '../context/ApiContext';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -32,37 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const FetchMyDiaries = (props) => {
   const classes = useStyles();
-  const { setMyDiaryDetail } = useContext(ApiContext);
-
-  const envFetchAPI = () => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'GETStoreAPIProd';
-    } else if (env === 'dev') {
-      return 'GETStoreAPIDev';
-    }
-  };
-
-  const fetchMyDiary = async (diaryID) => {
-    const apiName = envFetchAPI();
-    const path = `?id=${diaryID}`;
-
-    const myInit = {
-      headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
-      },
-    };
-
-    await API.get(apiName, path, myInit)
-      .then((response) => {
-        console.log(response);
-        setMyDiaryDetail(response);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const { setMyDiaryDetail } = useContext(ApiContext);
 
   return (
     <Container className={classes.cardContainer} maxWidth="md">
@@ -81,7 +50,11 @@ const FetchMyDiaries = (props) => {
 
         return (
           <Card className={classes.card} key={key}>
-            <Link to="/mydiary-detail" onClick={() => fetchMyDiary(value.id)} style={{ textDecoration: 'none' }}>
+            <Link
+              to={{ pathname: '/mydiary-detail', search: `?id=${value.id}` }}
+              // onClick={() => fetchMyDiary(value.id)
+              style={{ textDecoration: 'none' }}
+            >
               <CardActionArea>
                 <CardContent className={classes.cardContent}>
                   <Typography style={{ textAlign: 'left' }} gutterBottom variant="h5" component="h2">
