@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { ApiContext } from '../context/ApiContext';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -31,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 
 const FetchMyDiaries = (props) => {
   const classes = useStyles();
-  // const { setMyDiaryDetail } = useContext(ApiContext);
 
   return (
     <Container className={classes.cardContainer} maxWidth="md">

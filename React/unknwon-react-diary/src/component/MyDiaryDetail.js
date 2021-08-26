@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { ApiContext } from '../context/ApiContext';
-import { useLocation, Redirect } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -10,9 +9,8 @@ import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const MyDiaryDetail = () => {
-  // const { myDiaryDetail } = useContext(ApiContext);
   const location = useLocation();
-  const [myDiaryDetail, setMyDiaryDetail] = useState([]);
+  const [myDiaryDetail, setMyDiaryDetail] = useState({});
 
   useEffect(() => {
     const envFetchAPI = () => {
@@ -49,7 +47,7 @@ const MyDiaryDetail = () => {
     };
 
     fetchMyDiary();
-  }, []);
+  }, [location.search]);
 
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
