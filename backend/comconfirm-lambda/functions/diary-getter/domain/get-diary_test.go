@@ -14,6 +14,7 @@ type dMock struct {
 	debugError               string
 	debugUpdateItemOutput    *dynamodb.UpdateItemOutput
 	debugGetAllRecordsOutput *dynamodb.ScanOutput
+	debugQueryOutput         *dynamodb.QueryOutput
 }
 
 func (dm dMock) UpdateItem(item map[string]*dynamodb.AttributeValue, expr *expression.Expression) (*dynamodb.UpdateItemOutput, error) {
@@ -32,6 +33,14 @@ func (dm dMock) GetAllRecords(expr *expression.Expression, exclusiveStartKey map
 		err = errors.New(dm.debugError)
 	}
 	return dm.debugGetAllRecordsOutput, err
+}
+
+func (dm dMock) QueryByExpressionNoindex(expr *expression.Expression) (*dynamodb.QueryOutput, error) {
+	var err error
+	if dm.debugError != "" {
+		err = errors.New(dm.debugError)
+	}
+	return dm.debugQueryOutput, err
 }
 
 func TestFetchRandomOneDiaryFromDynamoDB(t *testing.T) {

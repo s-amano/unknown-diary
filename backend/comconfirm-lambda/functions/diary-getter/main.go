@@ -35,15 +35,23 @@ func init() {
 
 func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	// GETしたユーザー名取得
-	diaryGetter = apiGWEvent.RequestContext.Authorizer["claims"].(map[string]interface{})["cognito:username"].(string)
-
-	fmt.Printf("getter: %v\n", diaryGetter)
-
-	// コントローラの作成
+	// コントローラ初期化
 	src := controller.GetterController{
 		DynamoDBClientRepo: dynamoDBClient,
-		DiaryGetter:        diaryGetter,
+	}
+
+	diaryID := apiGWEvent.QueryStringParameters["id"]
+	if len(diaryID) > 0 {
+		// コントローラの作成(特定の日記取得)
+		fmt.Printf("idとれてる？ : %v\n", diaryID)
+		src.DiaryID = diaryID
+	} else {
+		// コントローラの作成
+		fmt.Printf("idとれてないぱたーん？ : %v\n", diaryID)
+		// GETしたユーザー名取得
+		diaryGetter = apiGWEvent.RequestContext.Authorizer["claims"].(map[string]interface{})["cognito:username"].(string)
+		fmt.Printf("getter : %v\n", diaryGetter)
+		src.DiaryGetter = diaryGetter
 	}
 
 	item, err := src.Run(context.Background())

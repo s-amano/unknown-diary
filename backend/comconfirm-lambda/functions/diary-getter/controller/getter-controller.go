@@ -11,6 +11,7 @@ import (
 type GetterController struct {
 	DynamoDBClientRepo adapter.DynamoDBClientRepository
 	DiaryGetter        string
+	DiaryID            string
 }
 
 // Run - usecase 上の GetterJob 経由で処理する
@@ -18,6 +19,7 @@ func (c *GetterController) Run(ctx context.Context) (usecase.ResultDiary, error)
 	gj := usecase.GetterJob{
 		DynamoDBClientRepo: c.DynamoDBClientRepo,
 		DiaryGetter:        c.DiaryGetter,
+		DiaryID:            c.DiaryID,
 	}
 
 	item, err := gj.Run(ctx)

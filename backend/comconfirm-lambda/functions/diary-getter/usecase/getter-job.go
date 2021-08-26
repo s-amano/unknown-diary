@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-getter/adapter"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-getter/domain"
 )
@@ -12,6 +14,7 @@ import (
 type GetterJob struct {
 	DynamoDBClientRepo adapter.DynamoDBClientRepository
 	DiaryGetter        string
+	DiaryID            string
 
 	diary *domain.GetDiary
 }
@@ -23,16 +26,26 @@ type ResultDiary struct {
 
 func (gj *GetterJob) featchDiary(ctx context.Context) (domain.Diary, error) {
 
+	var res map[string]*dynamodb.AttributeValue
+	var err error
+
 	// GetDiary を初期化
 	gj.diary = &domain.GetDiary{
 		DiaryGetter: gj.DiaryGetter,
+		DiaryID:     gj.DiaryID,
 	}
 
-	res, err := gj.diary.FetchRandomOneDiaryFromDynamoDB(gj.DynamoDBClientRepo)
-	if err != nil {
-		fmt.Printf("fetch: %v \n", err)
+	if len(gj.DiaryID) > 0 {
+		res, err = gj.diary.FetchSpecificOneDiaryFromDynamoDB(gj.DynamoDBClientRepo)
+		if err != nil {
+			fmt.Printf("fetch: %v \n", err)
+		}
+	} else {
+		res, err = gj.diary.FetchRandomOneDiaryFromDynamoDB(gj.DynamoDBClientRepo)
+		if err != nil {
+			fmt.Printf("fetch: %v \n", err)
+		}
 	}
-
 	// 結果が存在する場合にはDynamoDB データを Diary に登録
 	if res != nil {
 		resp, err := gj.diary.SetDiary(res)

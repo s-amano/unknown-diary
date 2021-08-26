@@ -25,6 +25,7 @@ type Diary struct {
 // GetDiary - 日記を表現する構造体です
 type GetDiary struct {
 	DiaryGetter string
+	DiaryID     string
 	Diary       Diary // 日記内容の構造体
 }
 
@@ -69,6 +70,28 @@ func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRep
 	num := rand.Intn(len(res.Items))
 
 	return res.Items[num], err
+}
+
+// FetchSpecificOneDiaryFromDynamoDB は特定の１つの日記を取得する関数です
+func (gd *GetDiary) FetchSpecificOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, error) {
+	var err error
+
+	// キー条件の生成
+	keyCond := expression.Key("id").Equal(expression.Value(gd.DiaryID))
+
+	// クエリ用 expression の生成
+	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
+	if err != nil {
+		fmt.Printf("exp create err %v\n", err)
+		return nil, err
+	}
+
+	res, err := dc.QueryByExpressionNoindex(&expr)
+	if err != nil {
+		return nil, err
+	}
+
+	return res.Items[0], err
 }
 
 // SetDiary - クエリ結果を Diary に入れる
