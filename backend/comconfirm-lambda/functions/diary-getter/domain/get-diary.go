@@ -91,6 +91,10 @@ func (gd *GetDiary) FetchSpecificOneDiaryFromDynamoDB(dc adapter.DynamoDBClientR
 		return nil, err
 	}
 
+	if *res.Count == int64(0) {
+		return nil, err
+	}
+
 	return res.Items[0], err
 }
 
