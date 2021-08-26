@@ -28,7 +28,6 @@ const MyDiaryDetail = () => {
     const fetchMyDiary = async () => {
       const apiName = envFetchAPI();
       const path = `${location.search}`;
-      console.log(path);
 
       const myInit = {
         headers: {
@@ -39,6 +38,9 @@ const MyDiaryDetail = () => {
       await API.get(apiName, path, myInit)
         .then((response) => {
           console.log(response);
+          if (response.id === '') {
+            window.location.href = '/mydiary';
+          }
           setMyDiaryDetail(response);
         })
         .catch((err) => {
