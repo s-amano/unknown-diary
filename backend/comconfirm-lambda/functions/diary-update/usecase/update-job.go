@@ -53,7 +53,9 @@ func (rj *UpdateJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyR
 	ResultDiary.PostAt = responseDiary.PostAt
 	ResultDiary.Title = responseDiary.Title
 	ResultDiary.Content = responseDiary.Content
-	ResultDiary.Date = *responseDiary.Date
+	if responseDiary.Date != nil {
+		ResultDiary.Date = *responseDiary.Date
+	}
 
 	return ResultDiary, nil
 }
