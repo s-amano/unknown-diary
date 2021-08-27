@@ -1,0 +1,11 @@
+update-diary:
+  handler: bin/update-diary
+  name: '${self:service}-${self:provider.stage}-update-diary'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /update
+        method: post
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer
