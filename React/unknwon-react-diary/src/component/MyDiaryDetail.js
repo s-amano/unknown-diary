@@ -27,7 +27,6 @@ const MyDiaryDetail = () => {
   };
 
   const isDateValid = (strDate) => {
-    console.log(strDate);
     if (!strDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
       return false;
     }
@@ -35,7 +34,6 @@ const MyDiaryDetail = () => {
     var m = strDate.split('/')[1] - 1;
     var d = strDate.split('/')[2];
     var date = new Date(y, m, d);
-    console.log(date);
     if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
       return false;
     }
@@ -99,9 +97,6 @@ const MyDiaryDetail = () => {
   const upadteMyDiary = async () => {
     const apiName = envUpdateAPI();
     const path = '';
-    console.log(myDiaryDetail);
-    console.log(editDiaryTitle);
-    console.log(editDiaryContent);
 
     const postData = {
       id: myDiaryDetail.id,
@@ -144,17 +139,18 @@ const MyDiaryDetail = () => {
 
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
-      <Grid container justify="flex-end">
-        <Button onClick={() => setEditMode(!editMode)}>
-          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>編集モード</p>
+      <Grid container justify="flex-end" style={{ marginTop: '5%' }}>
+        <Button onClick={() => setEditMode(!editMode)} color="primary" variant="contained">
+          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>編集モード</p>
         </Button>
       </Grid>
       {editMode ? (
         <>
-          <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
+          <Grid container justifyContent="space-around" style={{ marginTop: '4%', marginBottom: '5%' }}>
             <TextField
               value={editDiaryTitle}
               onChange={updateDiaryTitle()}
+              style={{ width: '100%' }}
               label="日記のタイトル"
               helperText="30字以下で入力してください"
               error={Boolean(editDiaryTitle.length !== 0 && !(editDiaryTitle.length <= 30))}
@@ -188,7 +184,7 @@ const MyDiaryDetail = () => {
             )}
             helperText="17文字以上5000字以下で入力してください"
           />
-          <Grid container justify="flex-end">
+          <Grid container justify="flex-end" style={{ marginBottom: '8%' }}>
             <Button
               onClick={() => upadteMyDiary()}
               disabled={Boolean(
@@ -199,8 +195,10 @@ const MyDiaryDetail = () => {
                   isDateValid(editDiaryDate)
                 )
               )}
+              variant="contained"
+              color="primary"
             >
-              <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>日記を編集する</p>
+              <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>日記を編集する</p>
             </Button>
           </Grid>
         </>
