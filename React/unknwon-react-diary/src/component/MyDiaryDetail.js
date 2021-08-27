@@ -7,6 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 const MyDiaryDetail = () => {
   const location = useLocation();
@@ -15,6 +17,30 @@ const MyDiaryDetail = () => {
   const [editDiaryTitle, setEditDiaryTitle] = useState('');
   const [editDiaryContent, setEditDiaryContent] = useState('');
   const [editDiaryDate, setEditDiaryDate] = useState();
+
+  const dateConvert = (date) => {
+    var y = date.getFullYear();
+    var m = ('00' + (date.getMonth() + 1)).slice(-2);
+    var d = ('00' + date.getDate()).slice(-2);
+    var result = y + '/' + m + '/' + d;
+    return result;
+  };
+
+  const isDateValid = (strDate) => {
+    console.log(strDate);
+    if (!strDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+      return false;
+    }
+    var y = strDate.split('/')[0];
+    var m = strDate.split('/')[1] - 1;
+    var d = strDate.split('/')[2];
+    var date = new Date(y, m, d);
+    console.log(date);
+    if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
+      return false;
+    }
+    return true;
+  };
 
   const envUpdateAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
@@ -56,7 +82,11 @@ const MyDiaryDetail = () => {
           setMyDiaryDetail(response);
           setEditDiaryTitle(response.title);
           setEditDiaryContent(response.content);
-          setEditDiaryDate(response.date);
+          if (response.date == null) {
+            setEditDiaryDate(dateConvert(new Date()));
+          } else {
+            setEditDiaryDate(response.date);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -78,7 +108,7 @@ const MyDiaryDetail = () => {
       post_at: myDiaryDetail.post_at,
       title: editDiaryTitle,
       content: editDiaryContent,
-      date: myDiaryDetail.date,
+      date: editDiaryDate,
     };
     const myInit = {
       headers: {
@@ -107,6 +137,11 @@ const MyDiaryDetail = () => {
     setEditDiaryTitle(event.target.value);
   };
 
+  const updateDiaryDate = () => (date) => {
+    const result = dateConvert(date);
+    setEditDiaryDate(result);
+  };
+
   return (
     <Container style={{ marginTop: '20px' }} maxWidth="md">
       <Grid container justify="flex-end">
@@ -124,7 +159,23 @@ const MyDiaryDetail = () => {
               helperText="30字以下で入力してください"
               error={Boolean(editDiaryTitle.length !== 0 && !(editDiaryTitle.length <= 30))}
             />
-            <TextField value={editDiaryDate} />
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Grid container justifyContent="flex-end" style={{ justifyContent: 'flex-end' }}>
+                <KeyboardDatePicker
+                  margin="normal"
+                  id="date-picker-dialog"
+                  // label="日付"
+                  format="yyyy/MM/dd"
+                  value={editDiaryDate}
+                  onChange={updateDiaryDate()}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                  error={Boolean(!isDateValid(editDiaryDate))}
+                  helperText="有効な形式で日付を入力してください"
+                />
+              </Grid>
+            </MuiPickersUtilsProvider>
           </Grid>
           <TextField
             style={{ width: '100%', marginBottom: '5%' }}
@@ -138,7 +189,17 @@ const MyDiaryDetail = () => {
             helperText="17文字以上5000字以下で入力してください"
           />
           <Grid container justify="flex-end">
-            <Button onClick={() => upadteMyDiary()}>
+            <Button
+              onClick={() => upadteMyDiary()}
+              disabled={Boolean(
+                !(
+                  17 <= editDiaryContent.length &&
+                  editDiaryContent.length < 5000 &&
+                  editDiaryTitle.length <= 30 &&
+                  isDateValid(editDiaryDate)
+                )
+              )}
+            >
               <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>日記を編集する</p>
             </Button>
           </Grid>
