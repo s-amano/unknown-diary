@@ -25,9 +25,9 @@ const DiaryFetch = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'UPDATEDiaryAPIProd';
+      return 'REACTIONDiaryAPIProd';
     } else if (env === 'dev') {
-      return 'UPDATEDiaryAPIDev';
+      return 'REACTIONDiaryAPIDev';
     }
   };
 

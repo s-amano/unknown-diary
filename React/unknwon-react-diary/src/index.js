@@ -51,8 +51,13 @@ Amplify.configure({
         region: region,
       },
       {
-        name: 'UPDATEDiaryAPIDev',
+        name: 'REACTIONDiaryAPIDev',
         endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'reaction',
+        region: region,
+      },
+      {
+        name: 'UPDATEDiaryAPIDev',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'update',
         region: region,
       },
       {
@@ -71,8 +76,13 @@ Amplify.configure({
         region: region,
       },
       {
-        name: 'UPDATEDiaryAPIProd',
+        name: 'REACTIONDiaryAPIProd',
         endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'reaction',
+        region: region,
+      },
+      {
+        name: 'UPDATEDiaryAPIProd',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'update',
         region: region,
       },
     ],

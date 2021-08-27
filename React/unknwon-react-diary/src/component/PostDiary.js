@@ -95,7 +95,6 @@ const DiaryPost = () => {
   };
 
   const updateDiaryDate = () => (date) => {
-    console.log(date);
     const result = dateConvert(date);
     setPostDiaryDate(result);
     setInputDiaryDate(date);
