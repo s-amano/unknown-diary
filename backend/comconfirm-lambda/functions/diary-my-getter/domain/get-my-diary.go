@@ -36,13 +36,14 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 	}
 
 	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
+	var limit = int64(100)
 	defaultCount := int64(0)
 	var defaultItems []map[string]*dynamodb.AttributeValue
 	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
 
 	// LastEvaluatedKeyがある間,データを取得し続ける
 	for {
-		result, err := dc.QueryByExpression("author-status_post_at-index", &expr, exclusiveStartKey)
+		result, err := dc.QueryByExpression("author-status_post_at-index", &expr, exclusiveStartKey, limit)
 		if err != nil {
 			return nil, err
 		}

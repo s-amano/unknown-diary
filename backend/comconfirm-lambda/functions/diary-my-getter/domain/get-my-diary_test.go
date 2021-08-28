@@ -15,7 +15,7 @@ type dMock struct {
 	debugQueryOutput *dynamodb.QueryOutput
 }
 
-func (dm dMock) QueryByExpression(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue) (*dynamodb.QueryOutput, error) {
+func (dm dMock) QueryByExpressionWithLimit(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue, limit *int64) (*dynamodb.QueryOutput, error) {
 	var err error
 	if dm.debugError != "" {
 		err = errors.New(dm.debugError)
