@@ -3,7 +3,10 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-my-getter/adapter"
@@ -25,8 +28,38 @@ type GetDiaries struct {
 	Diaries       []Diary
 }
 
-// FetchMyDiaryFromDynamoDB - DynamoDB から該当するレコードを取得する
-func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (*dynamodb.QueryOutput, error) {
+// SetPaginationData - ページネーションに必要なデータを取得する
+func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, *string, error) {
+	var err error
+
+	id := request.QueryStringParameters["id"]
+	fmt.Printf("string request Query id: %v, type:%T\n", id, id)
+
+	limit := request.QueryStringParameters["limit"]
+	fmt.Printf("string request Query id: %v, type:%T\n", limit, limit)
+	if id == "" {
+		return nil, &limit, err
+	}
+	// キー条件の生成
+	keyCond := expression.Key("id").Equal(expression.Value(id))
+	// クエリ用 expression の生成
+	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
+	if err != nil {
+		fmt.Printf("exp create err %v\n", err)
+		return nil, &limit, err
+	}
+	res, err := dc.QueryByExpressionNoindex(&expr)
+	if err != nil {
+		return nil, &limit, err
+	}
+
+	item := res.Items[0]
+
+	return item, &limit, err
+}
+
+// FetchAllMyDiaryFromDynamoDB - DynamoDB から該当するレコードを全て取得する
+func (gd *GetDiaries) FetchAllMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (*dynamodb.QueryOutput, error) {
 	// DynamoDB クエリ作成
 	keyCond := expression.Key("author").Equal(expression.Value(gd.DiariesGetter))
 
@@ -58,6 +91,60 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 		}
 
 	}
+
+	return res, nil
+}
+
+// FetchMyDiaryFromDynamoDB - DynamoDB から該当するレコードを取得する
+func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository, item map[string]*dynamodb.AttributeValue, limit string) (*dynamodb.QueryOutput, error) {
+	// DynamoDB クエリ作成
+	keyCond := expression.Key("author").Equal(expression.Value(gd.DiariesGetter))
+
+	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
+	if err != nil {
+		return nil, err
+	}
+
+	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
+
+	if item != nil {
+		exclusiveStartKey = map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(*item["id"].S),
+			},
+			"post_at": {
+				N: aws.String(*item["post_at"].N),
+			},
+			"author": {
+				S: aws.String(*item["author"].S),
+			},
+			"status_post_at": {
+				S: aws.String(*item["status_post_at"].S),
+			},
+		}
+	}
+
+	var intLimit int64
+
+	if limit != "" {
+		i, _ := strconv.Atoi(limit)
+		intLimit = int64(i)
+	}
+
+	defaultCount := int64(0)
+	var defaultItems []map[string]*dynamodb.AttributeValue
+	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
+
+	result, err := dc.QueryByExpressionWithLimit("author-status_post_at-index", &expr, exclusiveStartKey, &intLimit)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("result %s\n", result.LastEvaluatedKey)
+
+	res.Items = append(res.Items, result.Items...)
+
+	*res.Count = *res.Count + *result.Count
 
 	return res, nil
 }

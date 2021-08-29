@@ -45,6 +45,7 @@ func (c *DynamoDBClient) GetAllRecords(expr *expression.Expression, exclusiveSta
 
 // QueryByExpression 検索してレコードを取得する関数
 func (c *DynamoDBClient) QueryByExpression(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue) (*dynamodb.QueryOutput, error) {
+	scanIndexForwardValue := false
 	q := &dynamodb.QueryInput{
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
@@ -54,6 +55,25 @@ func (c *DynamoDBClient) QueryByExpression(indexName string, expr *expression.Ex
 		ProjectionExpression:      expr.Projection(),
 		TableName:                 aws.String(c.tableName),
 		ExclusiveStartKey:         exclusiveStartKey,
+		ScanIndexForward:          &scanIndexForwardValue,
+	}
+	return c.dynamo.Query(q)
+}
+
+// QueryByExpressionWithLimit 検索してレコードを取得する関数(ページネーションのためLimit付き)
+func (c *DynamoDBClient) QueryByExpressionWithLimit(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue, limit *int64) (*dynamodb.QueryOutput, error) {
+	scanIndexForwardValue := false
+	q := &dynamodb.QueryInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		IndexName:                 aws.String(indexName),
+		KeyConditionExpression:    expr.KeyCondition(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(c.tableName),
+		ExclusiveStartKey:         exclusiveStartKey,
+		Limit:                     limit,
+		ScanIndexForward:          &scanIndexForwardValue,
 	}
 	return c.dynamo.Query(q)
 }

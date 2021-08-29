@@ -23,6 +23,22 @@ func (dm dMock) QueryByExpression(indexName string, expr *expression.Expression,
 	return dm.debugQueryOutput, err
 }
 
+func (dm dMock) QueryByExpressionWithLimit(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue, limit *int64) (*dynamodb.QueryOutput, error) {
+	var err error
+	if dm.debugError != "" {
+		err = errors.New(dm.debugError)
+	}
+	return dm.debugQueryOutput, err
+}
+
+func (dm dMock) QueryByExpressionNoindex(expr *expression.Expression) (*dynamodb.QueryOutput, error) {
+	var err error
+	if dm.debugError != "" {
+		err = errors.New(dm.debugError)
+	}
+	return dm.debugQueryOutput, err
+}
+
 func TestFetchMyDiaryFromDynamoDB(t *testing.T) {
 	a := assert.New(t)
 
@@ -41,7 +57,7 @@ func TestFetchMyDiaryFromDynamoDB(t *testing.T) {
 		debugQueryOutput: &dynamodb.QueryOutput{Count: &count, Items: items},
 	}
 
-	res, err := gd.FetchMyDiaryFromDynamoDB(&dm)
+	res, err := gd.FetchMyDiaryFromDynamoDB(&dm, nil, "nil")
 	a.Nil(err, "エラーが発生しないこと")
 
 	a.Equal("bar", *res.Items[0]["foo"].S,

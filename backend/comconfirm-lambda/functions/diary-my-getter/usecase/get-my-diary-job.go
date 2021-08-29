@@ -4,14 +4,18 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-my-getter/adapter"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-my-getter/domain"
 )
 
 // GetterJob は、受け取ったポストデータをを処理するジョブを表すレポジトリです
 type GetterJob struct {
-	DynamoDBClientRepo adapter.DynamoDBClientRepository
-	DiaryGetter        string
+	DynamoDBClientRepo     adapter.DynamoDBClientRepository
+	DiaryGetter            string
+	DiaryLimit             string
+	DiaryExclusiveStartKey string
 
 	diaries *domain.GetDiaries
 }
@@ -21,17 +25,31 @@ type ResultDiaries struct {
 	Diaries []domain.Diary
 }
 
-func (gj *GetterJob) featchDiaries(ctx context.Context) ([]domain.Diary, error) {
+func (gj *GetterJob) featchDiaries(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) ([]domain.Diary, error) {
+	var res *dynamodb.QueryOutput
 
 	// GetDiaries を初期化
 	gj.diaries = &domain.GetDiaries{
 		DiariesGetter: gj.DiaryGetter,
 	}
 
-	// DynamoDB からデータ取得
-	res, err := gj.diaries.FetchMyDiaryFromDynamoDB(gj.DynamoDBClientRepo)
+	// apiGWEvent のヘッダ、queryString から item を生成
+	item, limit, err := domain.SetPaginationData(apiGWEvent, gj.DynamoDBClientRepo)
 	if err != nil {
-		fmt.Printf("fetch: %v \n", err)
+		return []domain.Diary{}, err
+	}
+
+	// DynamoDB からデータ取得limitありなしによって分岐
+	if *limit == "" {
+		res, err = gj.diaries.FetchAllMyDiaryFromDynamoDB(gj.DynamoDBClientRepo)
+		if err != nil {
+			fmt.Printf("fetch: %v \n", err)
+		}
+	} else {
+		res, err = gj.diaries.FetchMyDiaryFromDynamoDB(gj.DynamoDBClientRepo, item, *limit)
+		if err != nil {
+			fmt.Printf("fetch: %v \n", err)
+		}
 	}
 
 	// DynamoDB データを Diaries に登録
@@ -44,12 +62,12 @@ func (gj *GetterJob) featchDiaries(ctx context.Context) ([]domain.Diary, error) 
 }
 
 // Run は実際の処理を行うメソッドです
-func (gj *GetterJob) Run(ctx context.Context) (ResultDiaries, error) {
+func (gj *GetterJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (ResultDiaries, error) {
 	var err error
 
 	resultDiaries := ResultDiaries{}
 
-	getItems, err := gj.featchDiaries(ctx)
+	getItems, err := gj.featchDiaries(ctx, apiGWEvent)
 	if err != nil {
 		fmt.Printf("getItems: %v \n", err)
 	}
