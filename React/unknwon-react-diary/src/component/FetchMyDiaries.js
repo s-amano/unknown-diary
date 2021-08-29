@@ -34,7 +34,6 @@ const FetchMyDiaries = (props) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [myDiaries, setMyDiaries] = useState([]);
-  const [lastDiaryID, setLastDiaryID] = useState('');
 
   const sliceByNumber = (array, number) => {
     const length = Math.ceil(array.length / number);
@@ -70,8 +69,6 @@ const FetchMyDiaries = (props) => {
       await API.get(apiName, path, myInit)
         .then((response) => {
           setMyDiaries(response.Diaries);
-          setLastDiaryID(response.Diaries.slice(-1)[0].id);
-          // setPrevPrevDiaryID(response.Diaries.slice(-1)[0].id);/
           setPage(1);
         })
         .catch((err) => {
