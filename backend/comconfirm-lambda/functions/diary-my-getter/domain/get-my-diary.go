@@ -32,6 +32,10 @@ func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoD
 	var err error
 
 	fmt.Printf("string request Query id: %+v\n", request.QueryStringParameters["id"])
+	id := request.QueryStringParameters["id"]
+	if id == "" {
+		return nil, err
+	}
 
 	// キー条件の生成
 	keyCond := expression.Key("id").Equal(expression.Value(request.QueryStringParameters["id"]))
@@ -61,20 +65,25 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 		return nil, err
 	}
 
-	exclusiveStartKey := map[string]*dynamodb.AttributeValue{
-		"id": {
-			S: aws.String(*item["id"].S),
-		},
-		"post_at": {
-			N: aws.String(*item["post_at"].N),
-		},
-		"author": {
-			S: aws.String(*item["author"].S),
-		},
-		"status_post_at": {
-			S: aws.String(*item["status_post_at"].S),
-		},
+	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
+
+	if item != nil {
+		exclusiveStartKey = map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(*item["id"].S),
+			},
+			"post_at": {
+				N: aws.String(*item["post_at"].N),
+			},
+			"author": {
+				S: aws.String(*item["author"].S),
+			},
+			"status_post_at": {
+				S: aws.String(*item["status_post_at"].S),
+			},
+		}
 	}
+
 	var limit = int64(6)
 	defaultCount := int64(0)
 	var defaultItems []map[string]*dynamodb.AttributeValue
@@ -84,13 +93,8 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 	if err != nil {
 		return nil, err
 	}
-	responseLastEvaluatedKey, err := json.Marshal(result.LastEvaluatedKey)
-	if err != nil {
-		return nil, err
-	}
 
 	fmt.Printf("result %s\n", result.LastEvaluatedKey)
-	fmt.Printf("response lastkey %s\n", responseLastEvaluatedKey)
 
 	res.Items = append(res.Items, result.Items...)
 
