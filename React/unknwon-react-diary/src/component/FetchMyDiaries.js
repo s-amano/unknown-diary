@@ -41,10 +41,7 @@ const FetchMyDiaries = (props) => {
     return new Array(length).fill().map((_, i) => array.slice(i * number, (i + 1) * number));
   };
 
-  console.log(props.myDiaries);
   const lastDiraryIDList = sliceByNumber(props.myDiaries, 6);
-  console.log(lastDiraryIDList);
-  console.log(lastDiraryIDList[0]);
 
   var maxPageNumber = Math.ceil(props.myDiaries.length / 6);
 
@@ -72,7 +69,6 @@ const FetchMyDiaries = (props) => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          console.log(response.Diaries);
           setMyDiaries(response.Diaries);
           setLastDiaryID(response.Diaries.slice(-1)[0].id);
           // setPrevPrevDiaryID(response.Diaries.slice(-1)[0].id);/
@@ -98,7 +94,6 @@ const FetchMyDiaries = (props) => {
 
     await API.get(apiName, path, myInit)
       .then((response) => {
-        console.log(response.Diaries);
         setMyDiaries(response.Diaries);
       })
       .catch((err) => {
@@ -163,9 +158,9 @@ const FetchMyDiaries = (props) => {
         })}
       </Container>
 
-      <div className="flex px-3 my-12">
+      <div style={{ paddingLeft: '12px', paddingRight: '12px', marginTop: '36px', marginBottom: '48px' }}>
         {page !== 1 && (
-          <Button onClick={() => prevPage()}>
+          <Button style={{ marginRight: '3%' }} onClick={() => prevPage()}>
             <a>&lt; Previous</a>
           </Button>
         )}
