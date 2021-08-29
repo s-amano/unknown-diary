@@ -21,7 +21,7 @@ const MyProfile = () => {
 
     const fetchMyDiaries = async () => {
       const apiName = envAPI();
-      const path = '';
+      const path = '/?id=c6774e5a-1449-4ffc-8d92-a48b2feb1245';
 
       const myInit = {
         headers: {

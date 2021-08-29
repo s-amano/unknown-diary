@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-my-getter/adapter"
@@ -25,8 +27,32 @@ type GetDiaries struct {
 	Diaries       []Diary
 }
 
+// SetPaginationData - ページネーションに必要なデータを取得する
+func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, error) {
+	var err error
+
+	fmt.Printf("string request Query id: %+v\n", request.QueryStringParameters["id"])
+
+	// キー条件の生成
+	keyCond := expression.Key("id").Equal(expression.Value(request.QueryStringParameters["id"]))
+	// クエリ用 expression の生成
+	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
+	if err != nil {
+		fmt.Printf("exp create err %v\n", err)
+		return nil, err
+	}
+	res, err := dc.QueryByExpressionNoindex(&expr)
+	if err != nil {
+		return nil, err
+	}
+
+	item := res.Items[0]
+
+	return item, err
+}
+
 // FetchMyDiaryFromDynamoDB - DynamoDB から該当するレコードを取得する
-func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (*dynamodb.QueryOutput, error) {
+func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository, item map[string]*dynamodb.AttributeValue) (*dynamodb.QueryOutput, error) {
 	// DynamoDB クエリ作成
 	keyCond := expression.Key("author").Equal(expression.Value(gd.DiariesGetter))
 
@@ -35,30 +61,40 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 		return nil, err
 	}
 
-	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
-	var limit = int64(100)
+	exclusiveStartKey := map[string]*dynamodb.AttributeValue{
+		"id": {
+			S: aws.String(*item["id"].S),
+		},
+		"post_at": {
+			N: aws.String(*item["post_at"].N),
+		},
+		"author": {
+			S: aws.String(*item["author"].S),
+		},
+		"status_post_at": {
+			S: aws.String(*item["status_post_at"].S),
+		},
+	}
+	var limit = int64(6)
 	defaultCount := int64(0)
 	var defaultItems []map[string]*dynamodb.AttributeValue
 	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
 
-	// LastEvaluatedKeyがある間,データを取得し続ける
-	for {
-		result, err := dc.QueryByExpression("author-status_post_at-index", &expr, exclusiveStartKey, limit)
-		if err != nil {
-			return nil, err
-		}
-
-		res.Items = append(res.Items, result.Items...)
-
-		*res.Count = *res.Count + *result.Count
-
-		exclusiveStartKey = result.LastEvaluatedKey
-
-		if result.LastEvaluatedKey == nil {
-			break
-		}
-
+	result, err := dc.QueryByExpressionWithLimit("author-status_post_at-index", &expr, exclusiveStartKey, &limit)
+	if err != nil {
+		return nil, err
 	}
+	responseLastEvaluatedKey, err := json.Marshal(result.LastEvaluatedKey)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("result %s\n", result.LastEvaluatedKey)
+	fmt.Printf("response lastkey %s\n", responseLastEvaluatedKey)
+
+	res.Items = append(res.Items, result.Items...)
+
+	*res.Count = *res.Count + *result.Count
 
 	return res, nil
 }

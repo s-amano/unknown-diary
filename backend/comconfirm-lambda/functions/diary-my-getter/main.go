@@ -46,7 +46,7 @@ func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (eve
 		DiaryGetter:        diaryGetter,
 	}
 
-	items, err := src.Run(context.Background())
+	items, err := src.Run(context.Background(), apiGWEvent)
 	if err != nil {
 		fmt.Printf("items作成 : %v\n", err)
 	}

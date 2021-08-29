@@ -9,4 +9,5 @@ import (
 // infraから使用するメソッドを列挙
 type DynamoDBClientRepository interface {
 	QueryByExpressionWithLimit(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue, limit *int64) (*dynamodb.QueryOutput, error)
+	QueryByExpressionNoindex(expr *expression.Expression) (*dynamodb.QueryOutput, error)
 }
