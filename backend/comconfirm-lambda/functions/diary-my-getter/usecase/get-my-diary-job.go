@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-my-getter/adapter"
 	"github.com/s-amano/unknown-diary/backend/comconfirm-lambda/functions/diary-my-getter/domain"
 )
@@ -25,6 +26,7 @@ type ResultDiaries struct {
 }
 
 func (gj *GetterJob) featchDiaries(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) ([]domain.Diary, error) {
+	var res *dynamodb.QueryOutput
 
 	// GetDiaries を初期化
 	gj.diaries = &domain.GetDiaries{
@@ -37,10 +39,17 @@ func (gj *GetterJob) featchDiaries(ctx context.Context, apiGWEvent events.APIGat
 		return []domain.Diary{}, err
 	}
 
-	// DynamoDB からデータ取得
-	res, err := gj.diaries.FetchMyDiaryFromDynamoDB(gj.DynamoDBClientRepo, item, *limit)
-	if err != nil {
-		fmt.Printf("fetch: %v \n", err)
+	// DynamoDB からデータ取得limitありなしによって分岐
+	if *limit == "" {
+		res, err = gj.diaries.FetchAllMyDiaryFromDynamoDB(gj.DynamoDBClientRepo)
+		if err != nil {
+			fmt.Printf("fetch: %v \n", err)
+		}
+	} else {
+		res, err = gj.diaries.FetchMyDiaryFromDynamoDB(gj.DynamoDBClientRepo, item, *limit)
+		if err != nil {
+			fmt.Printf("fetch: %v \n", err)
+		}
 	}
 
 	// DynamoDB データを Diaries に登録

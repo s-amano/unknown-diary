@@ -32,17 +32,16 @@ type GetDiaries struct {
 func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, *string, error) {
 	var err error
 
-	fmt.Printf("string request Query id: %+v\n", request.QueryStringParameters["id"])
 	id := request.QueryStringParameters["id"]
+	fmt.Printf("string request Query id: %v, type:%T\n", id, id)
+
 	limit := request.QueryStringParameters["limit"]
-	if id == "" && limit == "" {
-		return nil, nil, err
-	}
+	fmt.Printf("string request Query id: %v, type:%T\n", limit, limit)
 	if id == "" {
 		return nil, &limit, err
 	}
 	// キー条件の生成
-	keyCond := expression.Key("id").Equal(expression.Value(request.QueryStringParameters["id"]))
+	keyCond := expression.Key("id").Equal(expression.Value(id))
 	// クエリ用 expression の生成
 	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
 	if err != nil {
@@ -57,6 +56,43 @@ func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoD
 	item := res.Items[0]
 
 	return item, &limit, err
+}
+
+// FetchAllMyDiaryFromDynamoDB - DynamoDB から該当するレコードを全て取得する
+func (gd *GetDiaries) FetchAllMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (*dynamodb.QueryOutput, error) {
+	// DynamoDB クエリ作成
+	keyCond := expression.Key("author").Equal(expression.Value(gd.DiariesGetter))
+
+	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
+	if err != nil {
+		return nil, err
+	}
+
+	var exclusiveStartKey map[string]*dynamodb.AttributeValue = nil
+	defaultCount := int64(0)
+	var defaultItems []map[string]*dynamodb.AttributeValue
+	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
+
+	// LastEvaluatedKeyがある間,データを取得し続ける
+	for {
+		result, err := dc.QueryByExpression("author-status_post_at-index", &expr, exclusiveStartKey)
+		if err != nil {
+			return nil, err
+		}
+
+		res.Items = append(res.Items, result.Items...)
+
+		*res.Count = *res.Count + *result.Count
+
+		exclusiveStartKey = result.LastEvaluatedKey
+
+		if result.LastEvaluatedKey == nil {
+			break
+		}
+
+	}
+
+	return res, nil
 }
 
 // FetchMyDiaryFromDynamoDB - DynamoDB から該当するレコードを取得する
@@ -87,8 +123,14 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 			},
 		}
 	}
-	i, _ := strconv.Atoi(limit)
-	intLimit := int64(i)
+
+	var intLimit int64
+
+	if limit != "" {
+		i, _ := strconv.Atoi(limit)
+		intLimit = int64(i)
+	}
+
 	defaultCount := int64(0)
 	var defaultItems []map[string]*dynamodb.AttributeValue
 	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}

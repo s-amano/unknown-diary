@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Auth, API } from 'aws-amplify';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Card from '@material-ui/core/Card';
@@ -32,6 +33,43 @@ const useStyles = makeStyles((theme) => ({
 const FetchMyDiaries = (props) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
+  const [myDiaries, setMyDiaries] = useState([]);
+
+  useEffect(() => {
+    const envAPI = () => {
+      const env = process.env.REACT_APP_ENVIROMENT;
+      console.log(env);
+      if (env === 'prod') {
+        return 'GETMyDiariesAPIProd';
+      } else if (env === 'dev') {
+        return 'GETMyDiariesAPIDev';
+      }
+    };
+
+    const fetchMyDiaries = async () => {
+      const id = 'c6774e5a-1449-4ffc-8d92-a48b2feb1245';
+      const limit = '6';
+      const apiName = envAPI();
+      const path = `?id=${id}&limit=${limit}`;
+
+      const myInit = {
+        headers: {
+          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        },
+      };
+
+      await API.get(apiName, path, myInit)
+        .then((response) => {
+          console.log(response.Diaries);
+          setMyDiaries(response.Diaries);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    fetchMyDiaries();
+  }, [page]);
 
   const Pagination = withStyles({
     root: {
@@ -43,7 +81,7 @@ const FetchMyDiaries = (props) => {
   return (
     <>
       <Container className={classes.cardContainer} maxWidth="md">
-        {props.myDiaries.map((value, key) => {
+        {myDiaries.map((value, key) => {
           const diaryContent = value.content;
           const diaryReaction = value.reaction;
           const diaryTitle = value.title ? value.title : 'タイトルなし';
