@@ -47,7 +47,7 @@ const MyProfile = () => {
         貴方のプロフィール
       </Typography>
       <StatisticalDataCard myDiaries={myDiaries} />
-      <FetchMyDiaries />
+      <FetchMyDiaries myDiaries={myDiaries} />
     </Container>
   );
 };

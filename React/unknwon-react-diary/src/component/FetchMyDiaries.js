@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import MuiPagination from '@material-ui/lab/Pagination';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
   cardContainer: {
@@ -34,23 +34,35 @@ const FetchMyDiaries = (props) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [myDiaries, setMyDiaries] = useState([]);
+  const [lastDiaryID, setLastDiaryID] = useState('');
+
+  const sliceByNumber = (array, number) => {
+    const length = Math.ceil(array.length / number);
+    return new Array(length).fill().map((_, i) => array.slice(i * number, (i + 1) * number));
+  };
+
+  console.log(props.myDiaries);
+  const lastDiraryIDList = sliceByNumber(props.myDiaries, 6);
+  console.log(lastDiraryIDList);
+  console.log(lastDiraryIDList[0]);
+
+  var maxPageNumber = Math.ceil(props.myDiaries.length / 6);
+
+  const envAPI = () => {
+    const env = process.env.REACT_APP_ENVIROMENT;
+    console.log(env);
+    if (env === 'prod') {
+      return 'GETMyDiariesAPIProd';
+    } else if (env === 'dev') {
+      return 'GETMyDiariesAPIDev';
+    }
+  };
 
   useEffect(() => {
-    const envAPI = () => {
-      const env = process.env.REACT_APP_ENVIROMENT;
-      console.log(env);
-      if (env === 'prod') {
-        return 'GETMyDiariesAPIProd';
-      } else if (env === 'dev') {
-        return 'GETMyDiariesAPIDev';
-      }
-    };
-
     const fetchMyDiaries = async () => {
-      const id = 'c6774e5a-1449-4ffc-8d92-a48b2feb1245';
       const limit = '6';
       const apiName = envAPI();
-      const path = `?id=${id}&limit=${limit}`;
+      const path = `?limit=${limit}`;
 
       const myInit = {
         headers: {
@@ -62,22 +74,51 @@ const FetchMyDiaries = (props) => {
         .then((response) => {
           console.log(response.Diaries);
           setMyDiaries(response.Diaries);
+          setLastDiaryID(response.Diaries.slice(-1)[0].id);
+          // setPrevPrevDiaryID(response.Diaries.slice(-1)[0].id);/
+          setPage(1);
         })
         .catch((err) => {
           console.log(err);
         });
     };
+    fetchMyDiaries('');
+  }, []);
 
-    fetchMyDiaries();
-  }, [page]);
+  const fetchMyDiaries = async (id) => {
+    const limit = '6';
+    const apiName = envAPI();
+    const path = `?id=${id}&limit=${limit}`;
 
-  const Pagination = withStyles({
-    root: {
-      display: 'inline-block',
-      marginBottom: '10%',
-    },
-  })(MuiPagination);
+    const myInit = {
+      headers: {
+        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+      },
+    };
 
+    await API.get(apiName, path, myInit)
+      .then((response) => {
+        console.log(response.Diaries);
+        setMyDiaries(response.Diaries);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const prevPage = () => {
+    if (page == 2) {
+      fetchMyDiaries('');
+    } else {
+      fetchMyDiaries(lastDiraryIDList[page - 3].slice(-1)[0].id);
+    }
+    setPage(page - 1);
+  };
+
+  const nextPage = () => {
+    fetchMyDiaries(lastDiraryIDList[page - 1].slice(-1)[0].id);
+    setPage(page + 1);
+  };
   return (
     <>
       <Container className={classes.cardContainer} maxWidth="md">
@@ -121,7 +162,19 @@ const FetchMyDiaries = (props) => {
           );
         })}
       </Container>
-      <Pagination count={10} color="primary" onChange={(e, page) => setPage(page)} page={page} />
+
+      <div className="flex px-3 my-12">
+        {page !== 1 && (
+          <Button onClick={() => prevPage()}>
+            <a>&lt; Previous</a>
+          </Button>
+        )}
+        {page !== maxPageNumber && (
+          <Button onClick={() => nextPage()}>
+            <a className="ml-4">Next &gt;</a>
+          </Button>
+        )}
+      </div>
     </>
   );
 };
