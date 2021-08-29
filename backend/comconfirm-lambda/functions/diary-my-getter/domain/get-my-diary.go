@@ -3,6 +3,7 @@ package domain
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go/aws"
@@ -28,35 +29,38 @@ type GetDiaries struct {
 }
 
 // SetPaginationData - ページネーションに必要なデータを取得する
-func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, error) {
+func SetPaginationData(request events.APIGatewayProxyRequest, dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, *string, error) {
 	var err error
 
 	fmt.Printf("string request Query id: %+v\n", request.QueryStringParameters["id"])
 	id := request.QueryStringParameters["id"]
-	if id == "" {
-		return nil, err
+	limit := request.QueryStringParameters["limit"]
+	if id == "" && limit == "" {
+		return nil, nil, err
 	}
-
+	if id == "" {
+		return nil, &limit, err
+	}
 	// キー条件の生成
 	keyCond := expression.Key("id").Equal(expression.Value(request.QueryStringParameters["id"]))
 	// クエリ用 expression の生成
 	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
 	if err != nil {
 		fmt.Printf("exp create err %v\n", err)
-		return nil, err
+		return nil, &limit, err
 	}
 	res, err := dc.QueryByExpressionNoindex(&expr)
 	if err != nil {
-		return nil, err
+		return nil, &limit, err
 	}
 
 	item := res.Items[0]
 
-	return item, err
+	return item, &limit, err
 }
 
 // FetchMyDiaryFromDynamoDB - DynamoDB から該当するレコードを取得する
-func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository, item map[string]*dynamodb.AttributeValue) (*dynamodb.QueryOutput, error) {
+func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository, item map[string]*dynamodb.AttributeValue, limit string) (*dynamodb.QueryOutput, error) {
 	// DynamoDB クエリ作成
 	keyCond := expression.Key("author").Equal(expression.Value(gd.DiariesGetter))
 
@@ -83,13 +87,13 @@ func (gd *GetDiaries) FetchMyDiaryFromDynamoDB(dc adapter.DynamoDBClientReposito
 			},
 		}
 	}
-
-	var limit = int64(6)
+	i, _ := strconv.Atoi(limit)
+	intLimit := int64(i)
 	defaultCount := int64(0)
 	var defaultItems []map[string]*dynamodb.AttributeValue
 	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
 
-	result, err := dc.QueryByExpressionWithLimit("author-status_post_at-index", &expr, exclusiveStartKey, &limit)
+	result, err := dc.QueryByExpressionWithLimit("author-status_post_at-index", &expr, exclusiveStartKey, &intLimit)
 	if err != nil {
 		return nil, err
 	}

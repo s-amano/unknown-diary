@@ -49,7 +49,7 @@ func TestFetchMyDiaryFromDynamoDB(t *testing.T) {
 		debugQueryOutput: &dynamodb.QueryOutput{Count: &count, Items: items},
 	}
 
-	res, err := gd.FetchMyDiaryFromDynamoDB(&dm, nil)
+	res, err := gd.FetchMyDiaryFromDynamoDB(&dm, nil, "nil")
 	a.Nil(err, "エラーが発生しないこと")
 
 	a.Equal("bar", *res.Items[0]["foo"].S,

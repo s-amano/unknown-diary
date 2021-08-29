@@ -32,13 +32,13 @@ func (gj *GetterJob) featchDiaries(ctx context.Context, apiGWEvent events.APIGat
 	}
 
 	// apiGWEvent のヘッダ、queryString から item を生成
-	item, err := domain.SetPaginationData(apiGWEvent, gj.DynamoDBClientRepo)
+	item, limit, err := domain.SetPaginationData(apiGWEvent, gj.DynamoDBClientRepo)
 	if err != nil {
 		return []domain.Diary{}, err
 	}
 
 	// DynamoDB からデータ取得
-	res, err := gj.diaries.FetchMyDiaryFromDynamoDB(gj.DynamoDBClientRepo, item)
+	res, err := gj.diaries.FetchMyDiaryFromDynamoDB(gj.DynamoDBClientRepo, item, *limit)
 	if err != nil {
 		fmt.Printf("fetch: %v \n", err)
 	}
