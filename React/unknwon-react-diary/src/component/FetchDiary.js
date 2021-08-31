@@ -7,9 +7,20 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
 
   const envFetchAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
@@ -45,6 +56,9 @@ const DiaryFetch = () => {
       .then((response) => {
         console.log(response);
         setDiary(response);
+        if (response.id === '') {
+          handleClickOpen();
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -80,7 +94,7 @@ const DiaryFetch = () => {
 
   return (
     <Container style={{ marginTop: '40px' }} maxWidth="md">
-      {diary.content ? (
+      {diary.id ? (
         <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
           <Typography variant="h5" component="h2" style={{ marginBottom: '2%' }}>
             {diary.title !== '' ? diary.title : 'タイトル'}
@@ -110,6 +124,9 @@ const DiaryFetch = () => {
           <></>
         )}
       </Grid>
+      <Dialog open={dialogOpen} onClose={handleClose}>
+        <DialogTitle id="simple-dialog-title">取得できる日記がありません。</DialogTitle>
+      </Dialog>
     </Container>
   );
 };

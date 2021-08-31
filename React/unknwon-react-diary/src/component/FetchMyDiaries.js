@@ -99,7 +99,7 @@ const FetchMyDiaries = (props) => {
   };
 
   const prevPage = () => {
-    if (page == 2) {
+    if (page === 2) {
       fetchMyDiaries('');
     } else {
       fetchMyDiaries(lastDiraryIDList[page - 3].slice(-1)[0].id);
