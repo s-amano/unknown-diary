@@ -43,11 +43,11 @@ func handler(ctx context.Context, apiGWEvent events.APIGatewayProxyRequest) (eve
 	diaryID := apiGWEvent.QueryStringParameters["id"]
 	if len(diaryID) > 0 {
 		// コントローラの作成(特定の日記取得)
-		fmt.Printf("idとれてる？ : %v\n", diaryID)
+		fmt.Printf("idありパターン : %v\n", diaryID)
 		src.DiaryID = diaryID
 	} else {
 		// コントローラの作成
-		fmt.Printf("idとれてないぱたーん？ : %v\n", diaryID)
+		fmt.Printf("idなしパターン : %v\n", diaryID)
 		// GETしたユーザー名取得
 		diaryGetter = apiGWEvent.RequestContext.Authorizer["claims"].(map[string]interface{})["cognito:username"].(string)
 		fmt.Printf("getter : %v\n", diaryGetter)

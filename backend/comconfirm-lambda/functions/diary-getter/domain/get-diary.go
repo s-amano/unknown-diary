@@ -34,7 +34,14 @@ func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRep
 	var err error
 
 	// author が　getをした当人ではない
-	filter := expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter))
+	// filter := expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter))
+
+	filter := expression.Not(expression.Or(expression.Name("reactioners").Contains(gd.DiaryGetter), expression.ConditionBuilder(expression.Name("author").Equal(expression.Value(gd.DiaryGetter)))))
+
+	// author が reaction済みではない
+	// condition := expression.Not(expression.Or(expression.Name("reactioners").Contains(gd.DiaryGetter), expression.ConditionBuilder(expression.Name("author").Equal(expression.Value(gd.DiaryGetter)))))
+
+	// condition := expression.Not(expression.Name("reactioners").Contains(gd.DiaryGetter))
 
 	// クエリ用 expression の生成
 	expr, err := expression.NewBuilder().WithFilter(filter).Build()
@@ -64,6 +71,10 @@ func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRep
 		if result.LastEvaluatedKey == nil {
 			break
 		}
+	}
+
+	if *res.Count == int64(0) {
+		return nil, err
 	}
 
 	// 返されたres.Itemsのランダム番目を取得
