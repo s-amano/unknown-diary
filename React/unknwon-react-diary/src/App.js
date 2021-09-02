@@ -1,5 +1,7 @@
 import './App.css';
+import React from 'react';
 import { AmplifyAuthenticator } from '@aws-amplify/ui-react';
+import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
 import ApiContextProvider from './context/ApiContext';
 import Navbar from './component/Navbar';
 import Login from './component/Login';
@@ -26,21 +28,35 @@ const theme = createTheme({
 });
 
 function App() {
+  const [authState, setAuthState] = React.useState();
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+    return onAuthUIStateChange((nextAuthState, authData) => {
+      setAuthState(nextAuthState);
+      setUser(authData);
+    });
+  }, []);
   return (
     <ApiContextProvider>
       <MuiThemeProvider theme={theme}>
-        <AmplifyAuthenticator>
-          <BrowserRouter>
+        {authState === AuthState.SignedIn && user ? (
+          <AmplifyAuthenticator>
+            <BrowserRouter>
+              <div className="App">
+                <Navbar />
+                <Route exact path="/mydiary" component={MyProfile} />
+                <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
+                <Route exact path="/diary" component={FetchDiary} />
+                <Route exact path="/" component={PostDiary} />
+              </div>
+            </BrowserRouter>
+          </AmplifyAuthenticator>
+        ) : (
+          <AmplifyAuthenticator>
             <Login />
-            <div className="App">
-              <Navbar />
-              <Route exact path="/mydiary" component={MyProfile} />
-              <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
-              <Route exact path="/diary" component={FetchDiary} />
-              <Route exact path="/" component={PostDiary} />
-            </div>
-          </BrowserRouter>
-        </AmplifyAuthenticator>
+          </AmplifyAuthenticator>
+        )}
       </MuiThemeProvider>
     </ApiContextProvider>
   );
