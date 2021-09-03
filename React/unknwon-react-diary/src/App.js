@@ -12,6 +12,7 @@ import MyProfile from './component/MyProfile';
 import { Route, BrowserRouter } from 'react-router-dom';
 import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+import Lp from './component/Lp';
 
 const theme = createTheme({
   palette: {
@@ -53,9 +54,10 @@ function App() {
             </BrowserRouter>
           </AmplifyAuthenticator>
         ) : (
-          <AmplifyAuthenticator>
-            <Login />
-          </AmplifyAuthenticator>
+          // <AmplifyAuthenticator>
+          <Lp />
+
+          // </AmplifyAuthenticator>
         )}
       </MuiThemeProvider>
     </ApiContextProvider>
