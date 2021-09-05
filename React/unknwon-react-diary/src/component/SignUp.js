@@ -1,10 +1,10 @@
 import React from 'react';
-import { AmplifySignIn } from '@aws-amplify/ui-react';
+import { AmplifySignUp } from '@aws-amplify/ui-react';
 
-const Login = () => {
+const SignUp = () => {
   return (
-    <AmplifySignIn
-      slot="sign-in"
+    <AmplifySignUp
+      slot="sign-up"
       formFields={[
         {
           type: 'username',
@@ -21,4 +21,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
