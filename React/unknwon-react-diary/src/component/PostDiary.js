@@ -171,7 +171,7 @@ const DiaryPost = () => {
             )
           )}
         >
-          <CreateIcon style={{ color: 'white' }} />
+          <p style={{ color: 'white', fontWeight: 'bold', margin: '3px' }}>日記を投稿する</p>
         </Button>
       </Grid>
     </Container>
