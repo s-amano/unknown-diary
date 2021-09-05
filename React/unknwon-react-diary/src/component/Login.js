@@ -1,19 +1,20 @@
 import React from 'react';
-import { AmplifySignUp } from '@aws-amplify/ui-react';
+import { AmplifySignIn } from '@aws-amplify/ui-react';
 
 const Login = () => {
   return (
-    <AmplifySignUp
-      slot="sign-up"
+    <AmplifySignIn
+      slot="sign-in"
       formFields={[
         {
           type: 'username',
           required: true,
-          placeholder: 'Enter your name',
+          placeholder: 'ユーザー名を入力してください',
         },
         {
           type: 'password',
           required: true,
+          placeholder: 'パスワードを入力してください',
         },
       ]}
     />
