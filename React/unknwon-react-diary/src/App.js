@@ -14,7 +14,7 @@ import MyProfile from './component/MyProfile';
 import { Route, BrowserRouter } from 'react-router-dom';
 import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-import Lp from './component/Lp';
+import About from './component/About';
 import { vocabularies } from './vocabularies';
 
 I18n.putVocabularies(vocabularies);
@@ -47,9 +47,9 @@ function App() {
   return (
     <ApiContextProvider>
       <MuiThemeProvider theme={theme}>
-        {authState === AuthState.SignedIn && user ? (
+        <BrowserRouter>
           <AmplifyAuthenticator>
-            <BrowserRouter>
+            {authState === AuthState.SignedIn && user ? (
               <div className="App">
                 <Navbar />
                 <Route exact path="/mydiary" component={MyProfile} />
@@ -57,14 +57,14 @@ function App() {
                 <Route exact path="/diary" component={FetchDiary} />
                 <Route exact path="/" component={PostDiary} />
               </div>
-            </BrowserRouter>
+            ) : (
+              <>
+                <Login />
+                <SignUp />
+              </>
+            )}
           </AmplifyAuthenticator>
-        ) : (
-          <AmplifyAuthenticator>
-            <Login />
-            <SignUp />
-          </AmplifyAuthenticator>
-        )}
+        </BrowserRouter>
       </MuiThemeProvider>
     </ApiContextProvider>
   );

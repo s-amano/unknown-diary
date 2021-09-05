@@ -1,12 +1,12 @@
 import React from 'react';
-import Login from './Login';
+import Container from '@material-ui/core/Container';
 
 const Lp = () => {
   return (
-    <div className="container">
+    <Container>
       <p>fd</p>
       lpです
-    </div>
+    </Container>
   );
 };
 
