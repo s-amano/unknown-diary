@@ -9,11 +9,12 @@ const SignUp = () => {
         {
           type: 'username',
           required: true,
-          placeholder: 'Enter your name',
+          placeholder: 'ユーザー名を入力してください',
         },
         {
           type: 'password',
           required: true,
+          placeholder: 'パスワードを入力してください',
         },
       ]}
     />
