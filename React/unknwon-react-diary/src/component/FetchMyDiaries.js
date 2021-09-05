@@ -158,12 +158,14 @@ const FetchMyDiaries = (props) => {
       <div style={{ paddingLeft: '12px', paddingRight: '12px', marginTop: '36px', marginBottom: '48px' }}>
         {page !== 1 && (
           <Button style={{ marginRight: '3%' }} onClick={() => prevPage()}>
-            <a>&lt; Previous</a>
+            <a href={() => false}>&lt; Previous</a>
           </Button>
         )}
         {page !== maxPageNumber && (
           <Button onClick={() => nextPage()}>
-            <a className="ml-4">Next &gt;</a>
+            <a href={() => false} className="ml-4">
+              Next &gt;
+            </a>
           </Button>
         )}
       </div>

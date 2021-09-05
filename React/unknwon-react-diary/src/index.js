@@ -9,29 +9,12 @@ const env = process.env.REACT_APP_ENVIROMENT;
 
 const region = 'ap-northeast-1';
 
-const userpoolIdEnv = () => {
-  console.log(env);
-  if (env === 'prod') {
-    return process.env.REACT_APP_PROD_USERPOOL;
-  } else if (env === 'dev') {
-    return process.env.REACT_APP_DEV_USERPOOL;
-  }
-};
-
-const userPoolWebClientIdEnv = () => {
-  console.log(env);
-  if (env === 'prod') {
-    return process.env.REACT_APP_PROD_USERPOOL_WEBCLIENT;
-  } else if (env === 'dev') {
-    return process.env.REACT_APP_DEV_USERPOOL_WEBCLIENT;
-  }
-};
-
 Amplify.configure({
   Auth: {
     region: region,
-    userPoolId: userpoolIdEnv(),
-    userPoolWebClientId: userPoolWebClientIdEnv(),
+    userPoolId: env === 'prod' ? process.env.REACT_APP_PROD_USERPOOL : process.env.REACT_APP_DEV_USERPOOL,
+    userPoolWebClientId:
+      env === 'prod' ? process.env.REACT_APP_PROD_USERPOOL_WEBCLIENT : process.env.REACT_APP_DEV_USERPOOL_WEBCLIENT,
   },
   API: {
     endpoints: [
