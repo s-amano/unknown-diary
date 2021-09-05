@@ -112,7 +112,7 @@ const DiaryFetch = () => {
       <TextField style={{ width: '100%', marginBottom: '5%' }} multiline rows={20} value={diary.content} disabled />
       <Grid container justify="flex-end">
         <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
-          <MenuBookIcon style={{ marginRight: '1%', color: 'white' }} />
+          <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
         </Button>
 
         {diary.reaction ? (
