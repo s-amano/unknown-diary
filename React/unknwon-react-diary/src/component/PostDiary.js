@@ -101,7 +101,7 @@ const DiaryPost = () => {
 
   return (
     <Container
-      style={{ marginTop: '40px', marginBottom: '30px', paddingRight: '10%', paddingLeft: '10%' }}
+      style={{ marginTop: '32px', marginBottom: '30px', paddingRight: '10%', paddingLeft: '10%' }}
       maxWidth="md"
     >
       <Collapse in={isSucces}>
@@ -118,6 +118,7 @@ const DiaryPost = () => {
               <CloseIcon fontSize="inherit" />
             </IconButton>
           }
+          style={{ margin: '16px' }}
         >
           日記を送信しました！
         </Alert>
@@ -125,13 +126,18 @@ const DiaryPost = () => {
       <TextField
         style={{ width: '100%' }}
         label="日記のタイトル"
+        variant="filled"
         helperText="30字以下で入力してください"
         error={Boolean(postDiaryTitle.length !== 0 && !(postDiaryTitle.length <= 30))}
         value={postDiaryTitle}
         onChange={updateDiaryTitle()}
       />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid container justifyContent="flex-end" style={{ justifyContent: 'flex-end' }}>
+        <Grid
+          container
+          justifyContent="flex-start"
+          style={{ justifyContent: 'flex-start', marginLeft: '1%', marginBottom: '16px' }}
+        >
           <KeyboardDatePicker
             margin="normal"
             id="date-picker-dialog"
@@ -151,15 +157,16 @@ const DiaryPost = () => {
         style={{ width: '100%', marginBottom: '5%' }}
         label="日記の内容"
         multiline
-        rows={20}
+        rows={15}
         value={postDiary}
         onChange={updateDiary()}
         // postする文字数が17文字未満(初期値は除く),5000文字以上の場合はエラー文表示
         error={Boolean(postDiary.length !== 0 && !(17 <= postDiary.length && postDiary.length < 5000))}
         helperText="17文字以上5000字以下で入力してください"
+        variant="filled"
       />
 
-      <Grid container justify="flex-end">
+      <Grid container justify="flex-start">
         <Button
           variant="contained"
           color="primary"

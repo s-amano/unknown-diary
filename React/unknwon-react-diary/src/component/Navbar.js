@@ -18,10 +18,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bolder',
     fontFamily: 'VAG Rounded Bold,Helvetica Neue,Arial,Liberation Sans,FreeSans,sans-serif',
   },
-  icon: {
+  iconLink: {
     textDecoration: 'none',
-    color: 'white',
-    marginRight: '2%',
+    color: 'hsla(0,0%,100%,.9)',
+    display: 'flex',
+    marginRight: '16px',
+  },
+  icon: {
+    marginRight: '2px',
+    fontSize: '150%',
+    position: 'relative',
   },
 }));
 
@@ -29,20 +35,22 @@ const Navbar = () => {
   const classes = useStyles();
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar style={{ width: '800px', margin: '0 auto' }}>
         <Typography variant="h5" className={classes.title}>
           Unknown Diary
         </Typography>
-        <Link to="/" className={classes.icon}>
-          <CreateIcon />
+        <Link to="/" className={classes.iconLink}>
+          <CreateIcon className={classes.icon} />
+          日記を書く
         </Link>
-        <Link to="/diary" className={classes.icon}>
-          <MenuBookIcon />
+        <Link to="/diary" className={classes.iconLink}>
+          <MenuBookIcon className={classes.icon} style={{ top: '-1px' }} />
+          誰かのあの日
         </Link>
-        <Link to="/mydiary" className={classes.icon}>
+        <Link to="/mydiary" className={classes.iconLink} style={{ marginRight: '4px', marginLeft: '8px' }}>
           <AccountBoxIcon />
         </Link>
-        <ExitToAppIcon className={classes.icon} onClick={() => Auth.signOut()} />
+        <ExitToAppIcon className={classes.iconLink} onClick={() => Auth.signOut()} />
       </Toolbar>
     </AppBar>
   );
