@@ -11,6 +11,7 @@ import PostDiary from './component/PostDiary';
 import FetchDiary from './component/FetchDiary';
 import MyDiaryDetail from './component/MyDiaryDetail';
 import MyProfile from './component/MyProfile';
+import Home from './component/Home';
 import { Route, BrowserRouter } from 'react-router-dom';
 import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
@@ -55,7 +56,8 @@ function App() {
                 <Route exact path="/mydiary" component={MyProfile} />
                 <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
                 <Route exact path="/diary" component={FetchDiary} />
-                <Route exact path="/" component={PostDiary} />
+                <Route exact path="/post" component={PostDiary} />
+                <Route exact path="/" component={Home} />
               </div>
             ) : (
               <>

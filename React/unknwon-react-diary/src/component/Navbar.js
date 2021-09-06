@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconLink: {
     textDecoration: 'none',
-    color: 'hsla(0,0%,100%,.9)',
+    color: 'hsla(0,0%,100%,.8)',
     display: 'flex',
     marginRight: '16px',
   },
@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme) => ({
     marginRight: '2px',
     fontSize: '150%',
     position: 'relative',
+  },
+  iconText: {
+    padding: 0,
+    margin: 0,
+    fontWeight: '600',
   },
 }));
 
@@ -39,13 +44,13 @@ const Navbar = () => {
         <Typography variant="h5" className={classes.title}>
           Unknown Diary
         </Typography>
-        <Link to="/" className={classes.iconLink}>
+        <Link to="/post" className={classes.iconLink}>
           <CreateIcon className={classes.icon} />
-          日記を書く
+          <p className={classes.iconText}>日記を書く</p>
         </Link>
         <Link to="/diary" className={classes.iconLink}>
           <MenuBookIcon className={classes.icon} style={{ top: '-1px' }} />
-          誰かのあの日
+          <p className={classes.iconText}>誰かのあの日</p>
         </Link>
         <Link to="/mydiary" className={classes.iconLink} style={{ marginRight: '4px', marginLeft: '8px' }}>
           <AccountBoxIcon />
