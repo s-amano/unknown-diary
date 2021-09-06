@@ -22,15 +22,16 @@ I18n.setLanguage('ja');
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#81c784',
+      main: '#6e7d84',
     },
     secondary: {
-      main: '#f44336',
+      main: 'rgba(67, 56, 202)',
     },
   },
   typography: {
     fontFamily: 'Comic Neue',
   },
+  shadows: ['none'],
 });
 
 function App() {

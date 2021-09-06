@@ -8,7 +8,6 @@ import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
-import CreateIcon from '@material-ui/icons/Create';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
@@ -101,7 +100,10 @@ const DiaryPost = () => {
   };
 
   return (
-    <Container style={{ marginTop: '40px', marginBottom: '30px' }} maxWidth="md">
+    <Container
+      style={{ marginTop: '40px', marginBottom: '30px', paddingRight: '10%', paddingLeft: '10%' }}
+      maxWidth="md"
+    >
       <Collapse in={isSucces}>
         <Alert
           action={

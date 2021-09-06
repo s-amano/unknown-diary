@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
@@ -93,10 +92,10 @@ const DiaryFetch = () => {
   };
 
   return (
-    <Container style={{ marginTop: '40px' }} maxWidth="md">
+    <Container style={{ marginTop: '40px', paddingRight: '10%', paddingLeft: '10%' }} maxWidth="md">
       {diary.id ? (
         <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
-          <Typography variant="h5" component="h2" style={{ marginBottom: '2%' }}>
+          <Typography variant="h5" component="h2" style={{ marginBottom: '2%', paddingRight: '5%', paddingLeft: '5%' }}>
             {diary.title !== '' ? diary.title : 'タイトル'}
           </Typography>
           <Typography variant="subtitle1" component="h2">
@@ -109,7 +108,14 @@ const DiaryFetch = () => {
         </Typography>
       )}
 
-      <TextField style={{ width: '100%', marginBottom: '5%' }} multiline rows={20} value={diary.content} disabled />
+      <TextField
+        style={{ width: '100%', marginBottom: '5%', paddingRight: '5%', paddingLeft: '5%' }}
+        multiline
+        rows={20}
+        value={diary.content}
+        disabled
+      />
+      {/* <div>{diary.content}</div> */}
       <Grid container justify="flex-end">
         <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
           <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>

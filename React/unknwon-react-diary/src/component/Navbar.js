@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'left',
     color: 'white',
     fontWeight: 'bolder',
+    fontFamily: 'VAG Rounded Bold,Helvetica Neue,Arial,Liberation Sans,FreeSans,sans-serif',
   },
   icon: {
     textDecoration: 'none',
