@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -34,28 +34,70 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     fontWeight: '600',
   },
+  iconLinkSm: {
+    textDecoration: 'none',
+    color: 'hsla(0,0%,100%,.8)',
+    display: 'flex',
+    marginRight: '4px',
+  },
 }));
 
 const Navbar = () => {
+  const [width, setWidth] = useState(null);
+  const updateWidth = (event) => {
+    setWidth(window.innerWidth);
+  };
+
+  const sm = 640;
+
+  useEffect(() => {
+    window.addEventListener(`resize`, updateWidth, {
+      capture: false,
+      passive: true,
+    });
+
+    return () => window.removeEventListener(`resize`, updateWidth);
+  }, [width]);
+
   const classes = useStyles();
+
   return (
     <AppBar position="static">
-      <Toolbar style={{ width: '800px', margin: '0 auto' }}>
-        <Typography variant="h5" className={classes.title}>
-          Unknown Diary
-        </Typography>
-        <Link to="/post" className={classes.iconLink}>
-          <CreateIcon className={classes.icon} />
-          <p className={classes.iconText}>日記を書く</p>
+      <Toolbar className="sm:max-w-full md:w-9/12 lg:w-8/12" style={{ margin: '0 auto' }}>
+        <Link to="/" className={classes.title}>
+          <Typography variant="h5" className={classes.title}>
+            Unknown Diary
+          </Typography>
         </Link>
-        <Link to="/diary" className={classes.iconLink}>
-          <MenuBookIcon className={classes.icon} style={{ top: '-1px' }} />
-          <p className={classes.iconText}>誰かのあの日</p>
-        </Link>
-        <Link to="/mydiary" className={classes.iconLink} style={{ marginRight: '4px', marginLeft: '8px' }}>
-          <AccountBoxIcon />
-        </Link>
-        <ExitToAppIcon className={classes.iconLink} onClick={() => Auth.signOut()} />
+        {width > sm || width == null ? (
+          <>
+            <Link to="/post" className={classes.iconLink}>
+              <CreateIcon className={classes.icon} />
+              <p className={classes.iconText}>日記を書く</p>
+            </Link>
+            <Link to="/diary" className={classes.iconLink}>
+              <MenuBookIcon className={classes.icon} style={{ top: '-1px' }} />
+              <p className={classes.iconText}>誰かのあの日</p>
+            </Link>
+            <Link to="/mydiary" className={classes.iconLink} style={{ marginRight: '4px', marginLeft: '8px' }}>
+              <AccountBoxIcon />
+            </Link>
+            <ExitToAppIcon className={classes.iconLink} onClick={() => Auth.signOut()} />
+          </>
+        ) : (
+          <>
+            <Link to="/post" className={classes.iconLinkSm}>
+              <CreateIcon className="ml-3" />
+            </Link>
+            <Link to="/diary" className={classes.iconLinkSm}>
+              <MenuBookIcon />
+            </Link>
+            <Link to="/mydiary" className={classes.iconLinkSm}>
+              <AccountBoxIcon />
+            </Link>
+            <ExitToAppIcon className={classes.iconLinkSm} onClick={() => Auth.signOut()} />
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );
