@@ -25,9 +25,9 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "REACT_APP_ENVIROMENT=dev react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "REACT_APP_ENVIROMENT=dev craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "dev": "REACT_APP_ENVIROMENT=dev react-scripts build",
     "prod": "REACT_APP_ENVIROMENT=prod react-scripts build"
@@ -49,5 +49,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.36",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.9"
   }
 }
