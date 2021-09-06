@@ -29,8 +29,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "dev": "REACT_APP_ENVIROMENT=dev react-scripts build",
-    "prod": "REACT_APP_ENVIROMENT=prod react-scripts build"
+    "dev": "REACT_APP_ENVIROMENT=dev craco build",
+    "prod": "REACT_APP_ENVIROMENT=prod craco build"
   },
   "eslintConfig": {
     "extends": [

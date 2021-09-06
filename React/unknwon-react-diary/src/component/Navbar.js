@@ -43,12 +43,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = () => {
-  const [width, setWidth] = useState(null);
+  const [width, setWidth] = useState(window.innerWidth);
   const updateWidth = (event) => {
     setWidth(window.innerWidth);
   };
-
-  const sm = 640;
 
   useEffect(() => {
     window.addEventListener(`resize`, updateWidth, {
@@ -57,19 +55,21 @@ const Navbar = () => {
     });
 
     return () => window.removeEventListener(`resize`, updateWidth);
-  }, [width]);
+  }, []);
 
   const classes = useStyles();
 
+  const sm = 640;
+
   return (
     <AppBar position="static">
-      <Toolbar className="sm:max-w-full md:w-9/12 lg:w-8/12" style={{ margin: '0 auto' }}>
+      <Toolbar className="sm:max-w-full md:w-9/12 lg:w-8/12 xl:w-1/2" style={{ margin: '0 auto' }}>
         <Link to="/" className={classes.title}>
           <Typography variant="h5" className={classes.title}>
             Unknown Diary
           </Typography>
         </Link>
-        {width > sm || width == null ? (
+        {width > sm ? (
           <>
             <Link to="/post" className={classes.iconLink}>
               <CreateIcon className={classes.icon} />
