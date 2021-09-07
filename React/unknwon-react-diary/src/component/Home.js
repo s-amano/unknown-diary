@@ -6,9 +6,9 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 const Home = () => {
   return (
-    <div className="flex flex-1 justify-center items-center flex-col w-screen">
+    <div className="flex justify-center items-center flex-col w-screen pt-8">
       <div className="bg-white text-center shadow-xl py-4 px-8 w-10/12 max-w-2xl rounded-md m-6">
-        <p className="text-xl mb-3 text-black font-bold text-gray-600">
+        <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
           UnknownDiaryで誰かの人生の1ページを覗いてみよう
         </p>
         <p className="text-left">
@@ -25,7 +25,7 @@ const Home = () => {
         </Link>
       </div>
       <div className="bg-white text-center shadow-xl py-4 px-8 w-10/12 max-w-2xl rounded-md m-6">
-        <p className="text-xl mb-3 text-black font-bold text-gray-600">貴方の人生の1ページを共有しよう</p>
+        <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">貴方の人生の1ページを共有しよう</p>
         <p className="text-left">
           貴方の感動した日、人生の転機になった日、失恋した日、思い出の日、または自分の今の感情やポエムをインターネットの海に流してみてください。
         </p>
