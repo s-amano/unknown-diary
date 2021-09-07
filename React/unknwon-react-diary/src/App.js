@@ -12,6 +12,7 @@ import FetchDiary from './component/FetchDiary';
 import MyDiaryDetail from './component/MyDiaryDetail';
 import MyProfile from './component/MyProfile';
 import Home from './component/Home';
+import Footer from './component/Footer';
 import { Route, BrowserRouter } from 'react-router-dom';
 import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
@@ -58,6 +59,7 @@ function App() {
                 <Route exact path="/diary" component={FetchDiary} />
                 <Route exact path="/post" component={PostDiary} />
                 <Route exact path="/" component={Home} />
+                <Footer />
               </div>
             ) : (
               <>
