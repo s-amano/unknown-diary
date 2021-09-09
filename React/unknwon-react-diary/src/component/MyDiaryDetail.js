@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';

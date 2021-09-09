@@ -1,37 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { makeStyles } from '@material-ui/core/styles';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
-import Container from '@material-ui/core/Container';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Button from '@material-ui/core/Button';
 
-const useStyles = makeStyles((theme) => ({
-  cardContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    marginTop: '40px',
-  },
-  card: {
-    justifyContent: 'flex-start',
-    height: '100%',
-    width: '100%',
-    marginBottom: '4%',
-    maxWidth: 345,
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-}));
-
 const FetchMyDiaries = (props) => {
-  const classes = useStyles();
   const [page, setPage] = useState(1);
   const [myDiaries, setMyDiaries] = useState([]);
 
@@ -113,7 +87,7 @@ const FetchMyDiaries = (props) => {
   };
   return (
     <>
-      <Container className={classes.cardContainer} maxWidth="md">
+      <div className="flex flex-wrap content-between justify-center">
         {myDiaries.map((value, key) => {
           const diaryContent = value.content;
           const diaryReaction = value.reaction;
@@ -128,32 +102,26 @@ const FetchMyDiaries = (props) => {
           }
 
           return (
-            <Card className={classes.card} key={key}>
-              <Link
-                to={{ pathname: '/mydiary-detail', search: `?id=${value.id}` }}
-                // onClick={() => fetchMyDiary(value.id)
-                style={{ textDecoration: 'none' }}
-              >
-                <CardActionArea>
-                  <CardContent className={classes.cardContent}>
-                    <Typography style={{ textAlign: 'left' }} gutterBottom variant="h5" component="h2">
-                      {diaryTitle}
-                    </Typography>
+            <div key={key} className="shadow-xl rounded-md bg-white w-80 m-6">
+              <Link to={{ pathname: '/mydiary-detail', search: `?id=${value.id}` }} style={{ textDecoration: 'none' }}>
+                <div className="flex flex-col h-full content-between">
+                  <div className="p-4 mb-auto">
+                    <p className="text-left text-xl font-semibold text-gray-600">{diaryTitle}</p>
                     <Typography style={{ textAlign: 'left' }} variant="body2" color="textSecondary" component="p">
                       {modifiedDiaryContent}
                     </Typography>
-                  </CardContent>
-                  <CardActions style={{ paddingTop: '0px' }}>
+                  </div>
+                  <div className="flex px-2 pb-2 items-center">
                     <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
                     <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{diaryReaction}</p>
-                    <Typography style={{ marginLeft: 'auto' }}>{diaryDate}</Typography>
-                  </CardActions>
-                </CardActionArea>
+                    <p className="text-gray-500 text-lg ml-auto">{diaryDate}</p>
+                  </div>
+                </div>
               </Link>
-            </Card>
+            </div>
           );
         })}
-      </Container>
+      </div>
 
       <div style={{ paddingLeft: '12px', paddingRight: '12px', marginTop: '36px', marginBottom: '48px' }}>
         {page !== 1 && (
