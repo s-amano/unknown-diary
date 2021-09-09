@@ -146,17 +146,23 @@ const MyDiaryDetail = () => {
       </Grid>
       {editMode ? (
         <>
-          <Grid container justifyContent="space-around" style={{ marginTop: '4%', marginBottom: '5%' }}>
+          <Grid container justifyContent="space-around" style={{ marginTop: '4%' }}>
             <TextField
+              className="w-full"
               value={editDiaryTitle}
               onChange={updateDiaryTitle()}
-              style={{ width: '100%' }}
+              variant="filled"
               label="日記のタイトル"
               helperText="30字以下で入力してください"
               error={Boolean(editDiaryTitle.length !== 0 && !(editDiaryTitle.length <= 30))}
             />
+
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container justifyContent="flex-end" style={{ justifyContent: 'flex-end' }}>
+              <Grid
+                container
+                justifyContent="flex-start"
+                style={{ justifyContent: 'flex-start', marginLeft: '1%', marginBottom: '16px' }}
+              >
                 <KeyboardDatePicker
                   margin="normal"
                   id="date-picker-dialog"
@@ -175,14 +181,16 @@ const MyDiaryDetail = () => {
           </Grid>
           <TextField
             style={{ width: '100%', marginBottom: '5%' }}
+            label="日記の内容"
             onChange={updateDiaryContent()}
             multiline
-            rows={20}
+            rows={15}
             value={editDiaryContent}
             error={Boolean(
               editDiaryContent.length !== 0 && !(17 <= editDiaryContent.length && editDiaryContent.length < 5000)
             )}
             helperText="17文字以上5000字以下で入力してください"
+            variant="filled"
           />
           <Grid container justify="flex-end" style={{ marginBottom: '8%' }}>
             <Button
