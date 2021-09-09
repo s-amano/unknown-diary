@@ -135,6 +135,15 @@ const DiaryFetch = () => {
           <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
         </Button>
       </Grid>
+      <div className="flex flex-col w-9/12 pl-8 mt-4">
+        <p className="text-xl text-gray-800 font-semibold mb-3 text-left">コメント</p>
+        <div className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
+          <p className="ml-3">リプライ1</p>
+        </div>
+        <div className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
+          <p className="ml-3">リプライ2</p>
+        </div>
+      </div>
       <Dialog open={dialogOpen} onClose={handleClose}>
         <DialogTitle id="simple-dialog-title">取得できる日記がありません。</DialogTitle>
       </Dialog>
