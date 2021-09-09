@@ -28,7 +28,6 @@ const DiaryPost = () => {
   const [isSucces, setIsSucces] = useState(false);
 
   const isDateValid = (strDate) => {
-    console.log(strDate);
     if (!strDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
       return false;
     }
@@ -36,7 +35,7 @@ const DiaryPost = () => {
     var m = strDate.split('/')[1] - 1;
     var d = strDate.split('/')[2];
     var date = new Date(y, m, d);
-    console.log(date);
+
     if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
       return false;
     }

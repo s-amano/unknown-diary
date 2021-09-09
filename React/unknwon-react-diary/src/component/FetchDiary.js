@@ -123,7 +123,7 @@ const DiaryFetch = () => {
         <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
           {diary.title !== '' ? diary.title : 'タイトルなし'}
         </p>
-        <p className="text-left mb-4 pl-3">{diary.content}</p>
+        <p className="text-left mb-4 pl-3 whitespace-pre-wrap">{diary.content}</p>
         <div className="flex justify-end">
           <FavoriteIcon className="mr-1" color="error" onClick={() => upadteDiary()} />
           <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{diary.reaction}</p>
