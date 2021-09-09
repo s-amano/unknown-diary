@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -40,6 +40,32 @@ const DiaryFetch = () => {
       return 'REACTIONDiaryAPIDev';
     }
   };
+
+  useEffect(() => {
+    const fetchDiary = async () => {
+      const apiName = envFetchAPI();
+      const path = '';
+
+      const myInit = {
+        headers: {
+          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        },
+      };
+
+      await API.get(apiName, path, myInit)
+        .then((response) => {
+          console.log(response);
+          setDiary(response);
+          if (response.id === '') {
+            handleClickOpen();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    fetchDiary();
+  }, []);
 
   const fetchDiary = async () => {
     const apiName = envFetchAPI();
@@ -92,29 +118,22 @@ const DiaryFetch = () => {
   };
 
   return (
-    <Container style={{ marginTop: '40px', paddingRight: '10%', paddingLeft: '10%' }} maxWidth="md">
+    <Container className="sm:w-full md:w-700 mt-6">
       {diary.id ? (
-        <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
-          <Typography variant="h5" component="h2" style={{ marginBottom: '2%', paddingRight: '5%', paddingLeft: '5%' }}>
-            {diary.title !== '' ? diary.title : 'タイトル'}
-          </Typography>
-          <Typography variant="subtitle1" component="h2">
-            {diary.date ? diary.date : '日付'}
-          </Typography>
-        </Grid>
+        <div className="text-right mr-12 mb-1">
+          <p className="text-gray-500 text-lg ml-auto">{diary.date ? diary.date : '日付なし'}</p>
+        </div>
       ) : (
-        <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '5%' }} variant="h6">
-          誰かのある日
-        </Typography>
+        <></>
       )}
 
-      <TextField
-        style={{ width: '100%', marginBottom: '5%', paddingRight: '5%', paddingLeft: '5%' }}
-        multiline
-        rows={20}
-        value={diary.content}
-        disabled
-      />
+      <div className="bg-white text-center shadow-xl py-4 px-3 w-10/12 max-w-2xl rounded-md m-6">
+        <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
+          {diary.title !== '' ? diary.title : 'タイトルなし'}
+        </p>
+        <p className="text-left mb-4 pl-3">{diary.content}</p>
+      </div>
+
       {/* <div>{diary.content}</div> */}
       <Grid container justify="flex-end">
         <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
