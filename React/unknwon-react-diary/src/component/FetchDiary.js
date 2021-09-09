@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
@@ -119,13 +117,9 @@ const DiaryFetch = () => {
 
   return (
     <Container className="sm:w-full md:w-700 mt-6">
-      {diary.id ? (
-        <div className="text-right mr-12 mb-1">
-          <p className="text-gray-500 text-lg ml-auto">{diary.date ? diary.date : '日付なし'}</p>
-        </div>
-      ) : (
-        <></>
-      )}
+      <div className="text-right mr-12 mb-1">
+        <p className="text-gray-500 text-lg ml-auto">{diary.date ? diary.date : '日付なし'}</p>
+      </div>
 
       <div className="bg-white text-center shadow-xl py-4 px-3 w-10/12 max-w-2xl rounded-md m-6">
         <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
@@ -134,20 +128,15 @@ const DiaryFetch = () => {
         <p className="text-left mb-4 pl-3">{diary.content}</p>
       </div>
 
-      {/* <div>{diary.content}</div> */}
       <Grid container justify="flex-end">
         <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
           <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
         </Button>
 
-        {diary.reaction ? (
-          <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
-            <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
-            <p style={{ margin: 0, fontWeight: 'bold', color: 'white', fontSize: '16px' }}>{diary.reaction}</p>
-          </Button>
-        ) : (
-          <></>
-        )}
+        <Button variant="contained" color="primary" onClick={() => upadteDiary()}>
+          <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
+          <p style={{ margin: 0, fontWeight: 'bold', color: 'white', fontSize: '16px' }}>{diary.reaction}</p>
+        </Button>
       </Grid>
       <Dialog open={dialogOpen} onClose={handleClose}>
         <DialogTitle id="simple-dialog-title">取得できる日記がありません。</DialogTitle>
