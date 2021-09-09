@@ -1,9 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -38,24 +35,20 @@ const StatisticalDataCard = (props) => {
   });
   return (
     <Grid container className={classes.grid}>
-      <Card className={classes.card}>
+      <div className="flex shadow-xl rounded-md bg-white w-96 my-6 p-2">
         <div className={classes.numOfPost}>
-          <CardContent className={classes.number}>
-            <Typography variant="h6">{numberOfMyDiaries}</Typography>
-            <Typography component="h5" variant="h5">
-              YourPost
-            </Typography>
-          </CardContent>
+          <div className="p-3">
+            <p className="text-xl text-gray-800 font-medium">{numberOfMyDiaries}</p>
+            <p className="text-xl text-gray-600 font-semibold">ポストした日記</p>
+          </div>
         </div>
         <div className={classes.numOfGotLike}>
-          <CardContent className={classes.number}>
-            <Typography variant="h6">{numberOfMydieriesReaction}</Typography>
-            <Typography component="h5" variant="h5">
-              Like
-            </Typography>
-          </CardContent>
+          <div className="p-3">
+            <p className="text-xl text-gray-800 font-medium">{numberOfMydieriesReaction}</p>
+            <p className="text-xl text-gray-600 font-semibold">貰ったいいね</p>
+          </div>
         </div>
-      </Card>
+      </div>
     </Grid>
   );
 };

@@ -43,7 +43,7 @@ const MyProfile = () => {
   }, []);
   return (
     <Container style={{ marginTop: '40px' }} maxWidth="md">
-      <Typography style={{ marginTop: '30px', color: 'black', marginBottom: '10%' }} variant="h6">
+      <Typography style={{ marginTop: '30px', color: 'black' }} variant="h6">
         貴方のプロフィール
       </Typography>
       <StatisticalDataCard myDiaries={myDiaries} />
