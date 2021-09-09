@@ -52,7 +52,6 @@ const DiaryFetch = () => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          console.log(response);
           setDiary(response);
           if (response.id === '') {
             handleClickOpen();
@@ -77,7 +76,6 @@ const DiaryFetch = () => {
 
     await API.get(apiName, path, myInit)
       .then((response) => {
-        console.log(response);
         setDiary(response);
         if (response.id === '') {
           handleClickOpen();
