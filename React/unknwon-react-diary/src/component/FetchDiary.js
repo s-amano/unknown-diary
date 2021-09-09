@@ -6,10 +6,15 @@ import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import AddIcon from '@material-ui/icons/Add';
+import TextField from '@material-ui/core/TextField';
+import AddCommentIcon from '@material-ui/icons/AddComment';
 
 const DiaryFetch = () => {
   const [diary, setDiary] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isEditComment, setIsEditComment] = useState(false);
+  const [leaveComment, setLeaveComment] = useState('');
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -17,6 +22,18 @@ const DiaryFetch = () => {
 
   const handleClose = () => {
     setDialogOpen(false);
+  };
+
+  const handleEditComment = () => {
+    setIsEditComment(true);
+  };
+
+  const handleLeaveComment = () => {
+    setIsEditComment(false);
+  };
+
+  const updateLeaveComment = () => (event) => {
+    setLeaveComment(event.target.value);
   };
 
   const envFetchAPI = () => {
@@ -142,6 +159,26 @@ const DiaryFetch = () => {
         </div>
         <div className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
           <p className="ml-3">リプライ2</p>
+        </div>
+        <div className="flex-start w-1/2 mt-2">
+          {isEditComment ? (
+            <div className="flex">
+              <TextField
+                className="ml-1"
+                value={leaveComment}
+                onChange={updateLeaveComment()}
+                helperText="10文字以下"
+                error={Boolean(leaveComment.length >= 10)}
+              />
+              <Button onClick={() => handleLeaveComment()}>
+                <AddCommentIcon />
+              </Button>
+            </div>
+          ) : (
+            <Button onClick={() => handleEditComment()}>
+              <AddIcon />
+            </Button>
+          )}
         </div>
       </div>
       <Dialog open={dialogOpen} onClose={handleClose}>
