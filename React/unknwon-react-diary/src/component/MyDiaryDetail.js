@@ -138,9 +138,9 @@ const MyDiaryDetail = () => {
   };
 
   return (
-    <Container style={{ marginTop: '20px' }} maxWidth="md">
+    <Container className="sm:w-full md:w-700">
       <Grid container justify="flex-end" style={{ marginTop: '5%' }}>
-        <Button onClick={() => setEditMode(!editMode)} color="primary" variant="contained">
+        <Button className="mb-3" onClick={() => setEditMode(!editMode)} color="primary" variant="contained">
           <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>編集モード</p>
         </Button>
       </Grid>
@@ -204,29 +204,20 @@ const MyDiaryDetail = () => {
         </>
       ) : (
         <>
-          <Grid container justifyContent="space-around" style={{ marginTop: '8%', marginBottom: '5%' }}>
-            <Typography variant="h5" component="h2" style={{ marginBottom: '2%' }}>
-              {myDiaryDetail.title ? myDiaryDetail.title : 'タイトル'}
-            </Typography>
-            <Typography variant="subtitle1" component="h2">
-              {myDiaryDetail.date ? myDiaryDetail.date : '日付'}
-            </Typography>
-          </Grid>
-          <TextField
-            style={{ width: '100%', marginBottom: '5%' }}
-            multiline
-            rows={20}
-            value={myDiaryDetail.content}
-            disabled
-          />
-          <Grid container justify="flex-end">
-            <Button variant="contained" color="primary">
-              <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
-              <p style={{ margin: 0, fontWeight: 'bold', color: 'white', fontSize: '16px' }}>
-                {myDiaryDetail.reaction}
-              </p>
-            </Button>
-          </Grid>
+          <div className="text-right mr-12 mb-1">
+            <p className="text-gray-500 text-lg ml-auto">{myDiaryDetail.date ? myDiaryDetail.date : '日付なし'}</p>
+          </div>
+
+          <div className="bg-white text-center shadow-xl py-4 px-3 w-10/12 max-w-2xl rounded-md mx-6 mb-6">
+            <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
+              {myDiaryDetail.title !== '' ? myDiaryDetail.title : 'タイトルなし'}
+            </p>
+            <p className="text-left mb-4 pl-3 whitespace-pre-wrap">{myDiaryDetail.content}</p>
+            <div className="flex justify-end">
+              <FavoriteIcon className="mr-1" color="error" />
+              <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{myDiaryDetail.reaction}</p>
+            </div>
+          </div>
         </>
       )}
     </Container>
