@@ -62,7 +62,7 @@ const Navbar = () => {
   const sm = 640;
 
   return (
-    <AppBar position="static" className="mb-20">
+    <AppBar position="static" className="mb-10">
       <Toolbar className="sm:max-w-full md:w-9/12 lg:w-8/12 xl:w-1/2" style={{ margin: '0 auto' }}>
         <Link to="/" className={classes.title}>
           <Typography variant="h5" className={classes.title}>
