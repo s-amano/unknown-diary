@@ -18,9 +18,9 @@ type CommentJob struct {
 
 // ResultDiary はAPIのresponse内に格納する日記を格納する構造体です
 type ResultDiary struct {
-	ID      string `json:"id"`
-	PostAt  string `json:"post_at"`
-	Comment string `json:"comment"`
+	ID      string   `json:"id"`
+	PostAt  string   `json:"post_at"`
+	Comment []string `json:"comment"`
 }
 
 // Run メソッドは、受け取ったポストデータを実際に処理します

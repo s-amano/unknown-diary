@@ -57,6 +57,7 @@ functions:
   - ${file(./resources/getter-my-diaries.yml)}
   - ${file(./resources/reaction-diary.yml)}
   - ${file(./resources/update-diary.yml)}
+  - ${file(./resources/comment-diary.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}

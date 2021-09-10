@@ -7,7 +7,7 @@ GO_LDFLAGS  = -ldflags="-s -w"
 GOOS        = linux
 
 ### ターゲットパラメーター
-TARGETS = bin/receiver bin/getter bin/getter-my-diaries bin/reaction-diary bin/update-diary
+TARGETS = bin/receiver bin/getter bin/getter-my-diaries bin/reaction-diary bin/update-diary bin/comment-diary
 
 ### 環境 dev or prod prodの場合は 手動で指定
 STAGE=dev
@@ -37,4 +37,7 @@ bin/reaction-diary: functions/diary-reaction/main.go
 	GOOS=$(GOOS) $(GO_BUILD) $(GO_LDFLAGS) -o $@ $<
 
 bin/update-diary: functions/diary-update/main.go
+	GOOS=$(GOOS) $(GO_BUILD) $(GO_LDFLAGS) -o $@ $<
+
+bin/comment-diary: functions/diary-comment/main.go
 	GOOS=$(GOOS) $(GO_BUILD) $(GO_LDFLAGS) -o $@ $<

@@ -1,0 +1,11 @@
+comment-diary:
+  handler: bin/comment-diary
+  name: '${self:service}-${self:provider.stage}-comment-diary'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /comment
+        method: post
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer
