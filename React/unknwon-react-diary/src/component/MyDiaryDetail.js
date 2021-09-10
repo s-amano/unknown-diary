@@ -225,6 +225,18 @@ const MyDiaryDetail = () => {
               <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{myDiaryDetail.reaction}</p>
             </div>
           </div>
+          <div className="flex flex-col w-9/12 pl-8 mt-4">
+            <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
+            {myDiaryDetail.comments ? (
+              myDiaryDetail.comments.map((comment, index) => (
+                <div key={index} className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
+                  <p className="ml-3">{comment}</p>
+                </div>
+              ))
+            ) : (
+              <></>
+            )}
+          </div>
         </>
       )}
     </Container>
