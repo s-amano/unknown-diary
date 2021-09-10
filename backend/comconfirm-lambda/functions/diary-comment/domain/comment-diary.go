@@ -57,6 +57,7 @@ func (cd *CommentDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepos
 		cd.ID = postForm["id"].(string)
 		cd.PostAt = postForm["post_at"].(string)
 		cd.ThisComment = postForm["comment"].(string)
+		fmt.Printf("thiscomment : %v\n", cd.ThisComment)
 	default:
 		fmt.Printf("postDiary.PostFormの型にミスがあります : %T\n", postDiary.PostForm)
 	}
@@ -84,11 +85,15 @@ func (cd *CommentDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepos
 	if !ok {
 		cd.CommentArray = []string{}
 		cd.Commenters = []string{}
-		fmt.Printf("既存リアクションがない")
+		fmt.Printf("既存コメントがない %+v\n", cd)
 	} else {
 		fmt.Printf("commentersSlice L %+v\n", commenters.L)
 		for _, v := range commenters.L {
 			cd.Commenters = append(cd.Commenters, *v.S)
+		}
+		comments := item["comments"]
+		for _, v := range comments.L {
+			cd.CommentArray = append(cd.CommentArray, *v.S)
 		}
 	}
 
@@ -117,7 +122,8 @@ func (cd *CommentDiary) UpdateDiaryComment(item map[string]*dynamodb.AttributeVa
 	cd.CommenterFlag = false
 
 	for _, v := range cd.Commenters {
-		// fmt.Printf("rectioner for %v\n", v)
+		fmt.Printf("commenter for %v\n", v)
+		fmt.Printf("this-commenter for %v\n", cd.ThisCommenter)
 		if v == cd.ThisCommenter {
 			cd.CommenterFlag = true
 			continue
@@ -128,6 +134,7 @@ func (cd *CommentDiary) UpdateDiaryComment(item map[string]*dynamodb.AttributeVa
 		// コメント者に名前を追加する
 		cd.Commenters = append(cd.Commenters, cd.ThisCommenter)
 		cd.CommentArray = append(cd.CommentArray, cd.ThisComment)
+		fmt.Printf("!cd.cmmenterflagのやつ : %+v\n", cd.CommentArray)
 	}
 
 	// 更新情報をitemとして生成
@@ -145,13 +152,14 @@ func (cd *CommentDiary) UpdateDiaryComment(item map[string]*dynamodb.AttributeVa
 	responseitem := res.Attributes
 	commentArray := []string{}
 
-	for _, v := range responseitem["comment"].L {
+	for _, v := range responseitem["comments"].L {
 		commentArray = append(commentArray, *v.S)
 	}
 	responseDiary := CommentDiary{
-		ID:           cd.ID,
-		PostAt:       cd.PostAt,
-		CommentArray: commentArray,
+		ID:            cd.ID,
+		PostAt:        cd.PostAt,
+		CommentArray:  commentArray,
+		CommenterFlag: cd.CommenterFlag,
 	}
 
 	fmt.Printf("updateItemのres : %+v\n", res.Attributes)

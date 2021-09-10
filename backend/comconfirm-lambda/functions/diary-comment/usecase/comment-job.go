@@ -18,9 +18,10 @@ type CommentJob struct {
 
 // ResultDiary はAPIのresponse内に格納する日記を格納する構造体です
 type ResultDiary struct {
-	ID      string   `json:"id"`
-	PostAt  string   `json:"post_at"`
-	Comment []string `json:"comment"`
+	ID            string   `json:"id"`
+	PostAt        string   `json:"post_at"`
+	Comments      []string `json:"comments"`
+	CommenterFlag bool     `json:"is_comment"`
 }
 
 // Run メソッドは、受け取ったポストデータを実際に処理します
@@ -59,7 +60,8 @@ func (cj *CommentJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxy
 	}
 	ResultDiary.ID = responseDiary.ID
 	ResultDiary.PostAt = responseDiary.PostAt
-	ResultDiary.Comment = responseDiary.CommentArray
+	ResultDiary.Comments = responseDiary.CommentArray
+	ResultDiary.CommenterFlag = responseDiary.CommenterFlag
 
 	return ResultDiary, nil
 }

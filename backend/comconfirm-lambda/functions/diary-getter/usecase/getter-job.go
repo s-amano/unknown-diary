@@ -80,6 +80,7 @@ func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 	ResultDiary.Reaction = getItem.Reaction
 	ResultDiary.Date = getItem.Date
 	ResultDiary.Title = getItem.Title
+	ResultDiary.Comments = getItem.Comments
 
 	return ResultDiary, nil
 
