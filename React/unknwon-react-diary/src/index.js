@@ -75,7 +75,7 @@ Amplify.configure({
       },
       {
         name: 'COMMENTDiaryAPIProd',
-        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'comment',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'comment',
         region: region,
       },
     ],
