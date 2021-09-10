@@ -15,6 +15,7 @@ const DiaryFetch = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditComment, setIsEditComment] = useState(false);
   const [leaveComment, setLeaveComment] = useState('');
+  const [alreadyCommentedDialog, setAlreadyCommentedDialog] = useState(false);
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -22,6 +23,7 @@ const DiaryFetch = () => {
 
   const handleClose = () => {
     setDialogOpen(false);
+    setAlreadyCommentedDialog(false);
   };
 
   const handleEditComment = () => {
@@ -159,6 +161,9 @@ const DiaryFetch = () => {
       .then((response) => {
         console.log('成功');
         console.log(response);
+        if (response.is_comment) {
+          setAlreadyCommentedDialog(true);
+        }
         setDiary({ ...diary, comments: response.comments });
         setIsEditComment(false);
         setLeaveComment('');
@@ -189,7 +194,7 @@ const DiaryFetch = () => {
         </Button>
       </Grid>
       <div className="flex flex-col w-9/12 pl-8 mt-4">
-        <p className="text-xl text-gray-800 font-semibold mb-3 text-left">コメント</p>
+        <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
         {diary.comments ? (
           diary.comments.map((comment) => (
             <div className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
@@ -207,10 +212,13 @@ const DiaryFetch = () => {
                 className="ml-1"
                 value={leaveComment}
                 onChange={updateLeaveComment()}
-                helperText="10文字以下"
-                error={Boolean(leaveComment.length >= 10)}
+                helperText="13文字以下"
+                error={Boolean(!(leaveComment.length > 0 && leaveComment.length <= 13))}
               />
-              <Button onClick={() => commentDiary()}>
+              <Button
+                onClick={() => commentDiary()}
+                disabled={Boolean(!(leaveComment.length > 0 && leaveComment.length <= 13))}
+              >
                 <AddCommentIcon />
               </Button>
             </div>
@@ -223,7 +231,11 @@ const DiaryFetch = () => {
       </div>
 
       <Dialog open={dialogOpen} onClose={handleClose}>
-        <DialogTitle id="simple-dialog-title">取得できる日記がありません。</DialogTitle>
+        <DialogTitle id="simple-dialog-title">取得できる日記がありません</DialogTitle>
+      </Dialog>
+
+      <Dialog open={alreadyCommentedDialog} onClose={handleClose}>
+        <DialogTitle id="simple-dialog-title">足跡は1つまでしか残せません</DialogTitle>
       </Dialog>
     </Container>
   );
