@@ -14,12 +14,13 @@ import (
 
 // Diary - 日記の内容を表現する構造体です
 type Diary struct {
-	ID       string  `json:"id"`      // id
-	PostAt   string  `json:"post_at"` // ポストされた日時
-	Title    string  `json:"title"`   // 日記のタイトル
-	Content  string  `json:"content"` // 日記の本文
-	Date     *string `json:"date"`    // 日記の日付
-	Reaction string  `json:"reaction"`
+	ID       string   `json:"id"`      // id
+	PostAt   string   `json:"post_at"` // ポストされた日時
+	Title    string   `json:"title"`   // 日記のタイトル
+	Content  string   `json:"content"` // 日記の本文
+	Date     *string  `json:"date"`    // 日記の日付
+	Reaction string   `json:"reaction"`
+	Comments []string `json:"comments"`
 }
 
 // GetDiary - 日記を表現する構造体です
@@ -127,6 +128,16 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 		diary.Reaction = "0"
 	} else {
 		diary.Reaction = *reaction.S
+	}
+
+	//　コメントがない場合とある場合で条件分岐
+	comments, ok := item["comments"]
+	if !ok {
+		diary.Comments = []string{}
+	} else {
+		for _, v := range comments.L {
+			diary.Comments = append(diary.Comments, *v.S)
+		}
 	}
 
 	diary.ID = *item["id"].S

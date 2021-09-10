@@ -44,6 +44,11 @@ Amplify.configure({
         region: region,
       },
       {
+        name: 'COMMENTDiaryAPIDev',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'comment',
+        region: region,
+      },
+      {
         name: 'POSTStoreAPIProd',
         endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'post',
         region: region,
@@ -66,6 +71,11 @@ Amplify.configure({
       {
         name: 'UPDATEDiaryAPIProd',
         endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'update',
+        region: region,
+      },
+      {
+        name: 'COMMENTDiaryAPIProd',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'comment',
         region: region,
       },
     ],
