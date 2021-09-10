@@ -91,9 +91,13 @@ func (cd *CommentDiary) FetchOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepos
 		for _, v := range commenters.L {
 			cd.Commenters = append(cd.Commenters, *v.S)
 		}
-		comments := item["comments"]
-		for _, v := range comments.L {
-			cd.CommentArray = append(cd.CommentArray, *v.S)
+		comments, ok := item["comments"]
+		if !ok {
+			cd.CommentArray = []string{}
+		} else {
+			for _, v := range comments.L {
+				cd.CommentArray = append(cd.CommentArray, *v.S)
+			}
 		}
 	}
 
