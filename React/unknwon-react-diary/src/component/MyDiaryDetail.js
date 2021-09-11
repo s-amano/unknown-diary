@@ -94,9 +94,10 @@ const MyDiaryDetail = () => {
           }
           console.log(response.author);
           console.log(thisUser);
-          // if (response.author !== thisUser) {
-          //   window.location.href = '/diary';
-          // }
+          if (response.author !== thisUser) {
+            setDialogOpen(true);
+            window.location.href = '/diary';
+          }
           setMyDiaryDetail(response);
           setEditDiaryTitle(response.title);
           setEditDiaryContent(response.content);
