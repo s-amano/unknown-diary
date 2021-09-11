@@ -49,6 +49,11 @@ Amplify.configure({
         region: region,
       },
       {
+        name: 'FAVORITESDiaryAPIDev',
+        endpoint: process.env.REACT_APP_DEV_API_ENDPOINT + 'get/favorites',
+        region: region,
+      },
+      {
         name: 'POSTStoreAPIProd',
         endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'post',
         region: region,

@@ -8,6 +8,7 @@ import Container from '@material-ui/core/Container';
 
 const FetchMyFavoritesDiaries = () => {
   const [page, setPage] = useState(1);
+  const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useState([]);
   const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
 
   const sliceByNumber = (array, number) => {
@@ -15,9 +16,9 @@ const FetchMyFavoritesDiaries = () => {
     return new Array(length).fill().map((_, i) => array.slice(i * number, (i + 1) * number));
   };
 
-  const lastDiraryIDList = sliceByNumber(myFavoritesDiaries, 6);
+  const lastDiraryIDList = sliceByNumber(myAllFavoritesDiaries, 6);
 
-  let maxPageNumber = Math.ceil(myFavoritesDiaries.length / 6);
+  let maxPageNumber = Math.ceil(myAllFavoritesDiaries.length / 6);
 
   const envAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
@@ -25,15 +26,14 @@ const FetchMyFavoritesDiaries = () => {
     if (env === 'prod') {
       return 'GETMyDiariesAPIProd';
     } else if (env === 'dev') {
-      return 'GETMyDiariesAPIDev';
+      return 'FAVORITESDiaryAPIDev';
     }
   };
 
   useEffect(() => {
     const fetchMyFavoritesDiaries = async () => {
-      const limit = '6';
       const apiName = envAPI();
-      const path = `?limit=${limit}`;
+      const path = ``;
 
       const myInit = {
         headers: {
@@ -43,7 +43,8 @@ const FetchMyFavoritesDiaries = () => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          setMyFavoritesDiaries(response.Diaries);
+          setMyAllFavoritesDiaries(response.Diaries);
+          setMyFavoritesDiaries(response.Diaries.slice(0, 6));
           setPage(1);
         })
         .catch((err) => {
@@ -107,7 +108,7 @@ const FetchMyFavoritesDiaries = () => {
 
           return (
             <div key={key} className="shadow-xl rounded-md bg-white w-80 m-6">
-              <Link to={{ pathname: '/mydiary-detail', search: `?id=${value.id}` }} style={{ textDecoration: 'none' }}>
+              <Link to={{ pathname: '/diary', search: `?id=${value.id}` }} style={{ textDecoration: 'none' }}>
                 <div className="flex flex-col h-full content-between">
                   <div className="p-4 mb-auto">
                     <p className="text-left text-xl font-semibold text-gray-600">{diaryTitle}</p>
