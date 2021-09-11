@@ -9,6 +9,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     color: 'hsla(0,0%,100%,.8)',
     display: 'flex',
-    marginRight: '16px',
+    marginRight: '8px',
   },
   icon: {
     marginRight: '2px',
@@ -63,7 +64,7 @@ const Navbar = () => {
 
   return (
     <AppBar position="static" className="mb-10">
-      <Toolbar className="sm:max-w-full md:w-9/12 lg:w-8/12 xl:w-1/2" style={{ margin: '0 auto' }}>
+      <Toolbar className="sm:max-w-full md:w-10/12 lg:w-8/12 xl:w-1/2" style={{ margin: '0 auto' }}>
         <Link to="/" className={classes.title}>
           <Typography variant="h5" className={classes.title}>
             Unknown Diary
@@ -79,6 +80,10 @@ const Navbar = () => {
               <MenuBookIcon className={classes.icon} style={{ top: '-1px' }} />
               <p className={classes.iconText}>誰かのあの日</p>
             </Link>
+            <Link to="/diary" className={classes.iconLink}>
+              <FavoriteIcon className={classes.icon} />
+              <p className={classes.iconText}>いいねした日記</p>
+            </Link>
             <Link to="/mydiary" className={classes.iconLink} style={{ marginRight: '4px', marginLeft: '8px' }}>
               <AccountBoxIcon />
             </Link>
@@ -91,6 +96,9 @@ const Navbar = () => {
             </Link>
             <Link to="/diary" className={classes.iconLinkSm}>
               <MenuBookIcon />
+            </Link>
+            <Link to="/diary" className={classes.iconLinkSm}>
+              <FavoriteIcon />
             </Link>
             <Link to="/mydiary" className={classes.iconLinkSm}>
               <AccountBoxIcon />
