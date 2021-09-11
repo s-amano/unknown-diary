@@ -1,0 +1,11 @@
+getterMyFavoritesDiaries:
+  handler: bin/getter-my-favorites-diaries
+  name: '${self:service}-${self:provider.stage}-getter-my-favorites-diaries'
+  events:
+    # API Gateway にて起動
+    - http:
+        path: /get/favorites
+        method: get
+        authorizer:
+          type: COGNITO_USER_POOLS
+          authorizerId: !Ref UnknownDiaryAuthorizer
