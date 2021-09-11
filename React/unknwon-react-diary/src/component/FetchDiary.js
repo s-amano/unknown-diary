@@ -208,8 +208,8 @@ const DiaryFetch = () => {
         )}
 
         {diary.comments ? (
-          diary.comments.map((comment) => (
-            <div className="bg-white shadow-xl rounded-2xl mb-2 sm:w-9/12 md:w-1/2 text-left">
+          diary.comments.map((comment, index) => (
+            <div key={index} className="bg-white shadow-xl rounded-2xl mb-2 sm:w-9/12 md:w-1/2 text-left">
               <p className="ml-3">{comment}</p>
             </div>
           ))
