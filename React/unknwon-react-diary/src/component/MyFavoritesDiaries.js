@@ -4,19 +4,20 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
-const FetchMyFavoriteDiaries = (props) => {
+const FetchMyFavoritesDiaries = () => {
   const [page, setPage] = useState(1);
-  const [myFavoriteDiaries, setMyFavoriteDiaries] = useState([]);
+  const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
 
   const sliceByNumber = (array, number) => {
     const length = Math.ceil(array.length / number);
     return new Array(length).fill().map((_, i) => array.slice(i * number, (i + 1) * number));
   };
 
-  const lastDiraryIDList = sliceByNumber(myFavoriteDiaries, 6);
+  const lastDiraryIDList = sliceByNumber(myFavoritesDiaries, 6);
 
-  let maxPageNumber = Math.ceil(myFavoriteDiaries.length / 6);
+  let maxPageNumber = Math.ceil(myFavoritesDiaries.length / 6);
 
   const envAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
@@ -29,7 +30,7 @@ const FetchMyFavoriteDiaries = (props) => {
   };
 
   useEffect(() => {
-    const fetchMyFavoriteDiaries = async () => {
+    const fetchMyFavoritesDiaries = async () => {
       const limit = '6';
       const apiName = envAPI();
       const path = `?limit=${limit}`;
@@ -42,17 +43,17 @@ const FetchMyFavoriteDiaries = (props) => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          setMyFavoriteDiaries(response.Diaries);
+          setMyFavoritesDiaries(response.Diaries);
           setPage(1);
         })
         .catch((err) => {
           console.log(err);
         });
     };
-    fetchMyFavoriteDiaries('');
+    fetchMyFavoritesDiaries('');
   }, []);
 
-  const fetchMyFavoriteDiaries = async (id) => {
+  const fetchMyFavoritesDiaries = async (id) => {
     const limit = '6';
     const apiName = envAPI();
     const path = `?id=${id}&limit=${limit}`;
@@ -65,7 +66,7 @@ const FetchMyFavoriteDiaries = (props) => {
 
     await API.get(apiName, path, myInit)
       .then((response) => {
-        setMyFavoriteDiaries(response.Diaries);
+        setMyFavoritesDiaries(response.Diaries);
       })
       .catch((err) => {
         console.log(err);
@@ -74,24 +75,24 @@ const FetchMyFavoriteDiaries = (props) => {
 
   const prevPage = () => {
     if (page === 2) {
-      fetchMyFavoriteDiaries('');
+      fetchMyFavoritesDiaries('');
     } else {
-      fetchMyFavoriteDiaries(lastDiraryIDList[page - 3].slice(-1)[0].id);
+      fetchMyFavoritesDiaries(lastDiraryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
   };
 
   const nextPage = () => {
-    fetchMyFavoriteDiaries(lastDiraryIDList[page - 1].slice(-1)[0].id);
+    fetchMyFavoritesDiaries(lastDiraryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
   };
   return (
-    <>
+    <Container style={{ marginTop: '40px' }} maxWidth="md">
       <Typography style={{ marginTop: '30px', color: 'black' }} variant="h6">
         いいねした日記
       </Typography>
       <div className="flex flex-wrap content-between justify-center">
-        {myFavoriteDiaries.map((value, key) => {
+        {myFavoritesDiaries.map((value, key) => {
           const diaryContent = value.content;
           const diaryReaction = value.reaction;
           const diaryTitle = value.title ? value.title : 'タイトルなし';
@@ -140,8 +141,8 @@ const FetchMyFavoriteDiaries = (props) => {
           </Button>
         )}
       </div>
-    </>
+    </Container>
   );
 };
 
-export default FetchMyFavoriteDiaries;
+export default FetchMyFavoritesDiaries;
