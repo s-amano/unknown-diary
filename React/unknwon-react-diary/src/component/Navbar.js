@@ -80,7 +80,7 @@ const Navbar = () => {
               <MenuBookIcon className={classes.icon} style={{ top: '-1px' }} />
               <p className={classes.iconText}>誰かのあの日</p>
             </Link>
-            <Link to="/diary" className={classes.iconLink}>
+            <Link to="/favorites" className={classes.iconLink}>
               <FavoriteIcon className={classes.icon} />
               <p className={classes.iconText}>いいねした日記</p>
             </Link>
@@ -97,7 +97,7 @@ const Navbar = () => {
             <Link to="/diary" className={classes.iconLinkSm}>
               <MenuBookIcon />
             </Link>
-            <Link to="/diary" className={classes.iconLinkSm}>
+            <Link to="/favorites" className={classes.iconLinkSm}>
               <FavoriteIcon />
             </Link>
             <Link to="/mydiary" className={classes.iconLinkSm}>
