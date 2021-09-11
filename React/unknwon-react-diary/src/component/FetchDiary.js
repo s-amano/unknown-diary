@@ -197,7 +197,7 @@ const DiaryFetch = () => {
         <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
         {diary.comments ? (
           diary.comments.map((comment) => (
-            <div className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
+            <div className="bg-white shadow-xl rounded-2xl mb-2 sm:w-9/12 md:w-1/2 text-left">
               <p className="ml-3">{comment}</p>
             </div>
           ))
@@ -205,8 +205,8 @@ const DiaryFetch = () => {
           <></>
         )}
 
-        <div className="flex-start w-1/2 mt-2">
-          {isEditComment ? (
+        {isEditComment ? (
+          <div className="flex-start mt-2">
             <div className="flex">
               <TextField
                 className="ml-1"
@@ -222,12 +222,14 @@ const DiaryFetch = () => {
                 <AddCommentIcon />
               </Button>
             </div>
-          ) : (
+          </div>
+        ) : (
+          <div className="flex-start sm:w-9/12 md:w-1/2 mt-2">
             <Button onClick={() => handleEditComment()}>
               <AddIcon />
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <Dialog open={dialogOpen} onClose={handleClose}>
