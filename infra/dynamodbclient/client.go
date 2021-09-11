@@ -43,6 +43,21 @@ func (c *DynamoDBClient) GetAllRecords(expr *expression.Expression, exclusiveSta
 	return c.dynamo.Scan(s)
 }
 
+// GetAllRecordsWithLimit dynamoDBのレコードを指定件数取得する関数
+func (c *DynamoDBClient) GetAllRecordsWithLimit(expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue, limit *int64) (*dynamodb.ScanOutput, error) {
+	s := &dynamodb.ScanInput{
+		// AttributesToGet:   attributesToGet,
+		TableName:                 aws.String(c.tableName),
+		FilterExpression:          expr.Filter(),
+		ExclusiveStartKey:         exclusiveStartKey,
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		ProjectionExpression:      expr.Projection(),
+		Limit:                     limit,
+	}
+	return c.dynamo.Scan(s)
+}
+
 // QueryByExpression 検索してレコードを取得する関数
 func (c *DynamoDBClient) QueryByExpression(indexName string, expr *expression.Expression, exclusiveStartKey map[string]*dynamodb.AttributeValue) (*dynamodb.QueryOutput, error) {
 	scanIndexForwardValue := false

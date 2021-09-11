@@ -11,6 +11,7 @@ import PostDiary from './component/PostDiary';
 import FetchDiary from './component/FetchDiary';
 import MyDiaryDetail from './component/MyDiaryDetail';
 import MyProfile from './component/MyProfile';
+import MyFavoritesDiaries from './component/MyFavoritesDiaries';
 import Home from './component/Home';
 import Footer from './component/Footer';
 import { Route, BrowserRouter } from 'react-router-dom';
@@ -59,6 +60,7 @@ function App() {
                 <Route exact path="/diary" component={FetchDiary} />
                 <Route exact path="/post" component={PostDiary} />
                 <Route exact path="/" component={Home} />
+                <Route exact path="/favorites" component={MyFavoritesDiaries} />
                 <Footer />
               </div>
             ) : (

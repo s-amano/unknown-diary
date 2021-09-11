@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -11,6 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 
 const DiaryFetch = () => {
+  const location = useLocation();
   const [diary, setDiary] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditComment, setIsEditComment] = useState(false);
@@ -67,7 +69,7 @@ const DiaryFetch = () => {
   useEffect(() => {
     const fetchDiary = async () => {
       const apiName = envFetchAPI();
-      const path = '';
+      const path = `${location.search}`;
 
       const myInit = {
         headers: {
@@ -88,11 +90,11 @@ const DiaryFetch = () => {
         });
     };
     fetchDiary();
-  }, []);
+  }, [location.search]);
 
   const fetchDiary = async () => {
     const apiName = envFetchAPI();
-    const path = '';
+    const path = ``;
 
     const myInit = {
       headers: {
@@ -188,13 +190,23 @@ const DiaryFetch = () => {
           <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{diary.reaction}</p>
         </div>
       </div>
-      <Grid container justify="flex-end">
-        <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
-          <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
-        </Button>
-      </Grid>
+      {location.search ? (
+        <></>
+      ) : (
+        <Grid container justify="flex-end">
+          <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
+            <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
+          </Button>
+        </Grid>
+      )}
+
       <div className="flex flex-col w-9/12 pl-8 mt-4">
-        <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
+        {location.search ? (
+          <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡</p>
+        ) : (
+          <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
+        )}
+
         {diary.comments ? (
           diary.comments.map((comment) => (
             <div className="bg-white shadow-xl rounded-2xl mb-2 sm:w-9/12 md:w-1/2 text-left">

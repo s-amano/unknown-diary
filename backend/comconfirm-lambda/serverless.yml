@@ -58,6 +58,7 @@ functions:
   - ${file(./resources/reaction-diary.yml)}
   - ${file(./resources/update-diary.yml)}
   - ${file(./resources/comment-diary.yml)}
+  - ${file(./resources/getter-my-favorites-diary.yml)}
 
 resources:
   - ${file(./resources/dynamodb.yml)}
