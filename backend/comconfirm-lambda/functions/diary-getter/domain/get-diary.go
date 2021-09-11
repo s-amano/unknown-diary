@@ -21,6 +21,7 @@ type Diary struct {
 	Date     *string  `json:"date"`    // 日記の日付
 	Reaction string   `json:"reaction"`
 	Comments []string `json:"comments"`
+	Author   string   `json:"author"`
 }
 
 // GetDiary - 日記を表現する構造体です
@@ -142,6 +143,7 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 
 	diary.ID = *item["id"].S
 	diary.PostAt = *item["post_at"].N
+	diary.Author = *item["author"].S
 
 	return diary, nil
 }

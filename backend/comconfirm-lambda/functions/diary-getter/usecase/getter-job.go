@@ -77,6 +77,7 @@ func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 	ResultDiary.Date = getItem.Date
 	ResultDiary.Title = getItem.Title
 	ResultDiary.Comments = getItem.Comments
+	ResultDiary.Author = getItem.Author
 
 	return ResultDiary, nil
 

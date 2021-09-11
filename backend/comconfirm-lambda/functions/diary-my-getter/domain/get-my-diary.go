@@ -20,6 +20,7 @@ type Diary struct {
 	Content  string  `json:"content"` // 日記の本文
 	Date     *string `json:"date"`    // 日記の日付
 	Reaction string  `json:"reaction"`
+	Author   string  `json:"author"`
 }
 
 // GetDiaries - 日記を格納する構造体
@@ -173,6 +174,7 @@ func (gd *GetDiaries) AddDiaries(res *dynamodb.QueryOutput) ([]Diary, error) {
 
 		diary.ID = *item["id"].S
 		diary.PostAt = *item["post_at"].N
+		diary.Author = *item["author"].S
 
 		gd.Diaries = append(gd.Diaries, diary)
 	}
