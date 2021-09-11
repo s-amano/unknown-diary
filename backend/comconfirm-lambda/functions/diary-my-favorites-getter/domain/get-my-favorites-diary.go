@@ -115,12 +115,6 @@ func (gd *GetDiaries) FetchMyFavoritesDiaryFromDynamoDB(dc adapter.DynamoDBClien
 			"post_at": {
 				N: aws.String(*item["post_at"].N),
 			},
-			"author": {
-				S: aws.String(*item["author"].S),
-			},
-			"status_post_at": {
-				S: aws.String(*item["status_post_at"].S),
-			},
 		}
 	}
 
@@ -135,16 +129,29 @@ func (gd *GetDiaries) FetchMyFavoritesDiaryFromDynamoDB(dc adapter.DynamoDBClien
 	var defaultItems []map[string]*dynamodb.AttributeValue
 	var res = &dynamodb.QueryOutput{Count: &defaultCount, Items: defaultItems}
 
-	result, err := dc.GetAllRecordsWithLimit(&expr, exclusiveStartKey, &intLimit)
-	if err != nil {
-		return nil, err
+	// LastEvaluatedKeyがある間,データを取得し続ける
+	for {
+		result, err := dc.GetAllRecordsWithLimit(&expr, exclusiveStartKey, &intLimit)
+		if err != nil {
+			return nil, err
+		}
+
+		res.Items = append(res.Items, result.Items...)
+
+		*res.Count = *res.Count + *result.Count
+
+		exclusiveStartKey = result.LastEvaluatedKey
+
+		if result.LastEvaluatedKey == nil {
+			break
+		}
 	}
 
-	fmt.Printf("result %s\n", result.LastEvaluatedKey)
-
-	res.Items = append(res.Items, result.Items...)
-
-	*res.Count = *res.Count + *result.Count
+	if *res.Count > 6 {
+		res.Items = res.Items[0:6]
+		*res.Count = 6
+		return res, nil
+	}
 
 	return res, nil
 }
