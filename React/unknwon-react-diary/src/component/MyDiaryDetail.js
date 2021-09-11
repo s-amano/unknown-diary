@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
@@ -10,10 +10,12 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { ApiContext } from '../context/ApiContext';
 
 const MyDiaryDetail = () => {
+  const { thisUserName } = useContext(ApiContext);
+
   const location = useLocation();
-  const [thisUser, setThisUser] = useState('');
   const [myDiaryDetail, setMyDiaryDetail] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editDiaryTitle, setEditDiaryTitle] = useState('');
@@ -58,14 +60,6 @@ const MyDiaryDetail = () => {
   };
 
   useEffect(() => {
-    Auth.currentUserInfo()
-      .then((response) => {
-        setThisUser(response.username);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     const envFetchAPI = () => {
       const env = process.env.REACT_APP_ENVIROMENT;
       console.log(env);
@@ -92,9 +86,9 @@ const MyDiaryDetail = () => {
           if (response.id === '') {
             window.location.href = '/mydiary';
           }
-          console.log(response.author);
-          console.log(thisUser);
-          if (response.author !== thisUser) {
+
+          console.log(response.author !== thisUserName);
+          if (response.author !== thisUserName) {
             setDialogOpen(true);
             window.location.href = '/diary';
           }
@@ -113,10 +107,10 @@ const MyDiaryDetail = () => {
     };
 
     fetchMyDiary();
-  }, [location.search, thisUser]);
+  }, [location.search, thisUserName]);
 
   const upadteMyDiary = async () => {
-    if (myDiaryDetail.author !== thisUser) {
+    if (myDiaryDetail.author !== thisUserName) {
       setDialogOpen(true);
       return;
     }
@@ -150,7 +144,7 @@ const MyDiaryDetail = () => {
   };
 
   const setMyDiaryEditMode = () => {
-    if (myDiaryDetail.author !== thisUser) {
+    if (myDiaryDetail.author !== thisUserName) {
       setDialogOpen(true);
       return;
     }
