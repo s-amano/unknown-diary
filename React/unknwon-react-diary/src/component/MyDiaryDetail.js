@@ -8,14 +8,22 @@ import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const MyDiaryDetail = () => {
   const location = useLocation();
+  const [thisUser, setThisUser] = useState('');
   const [myDiaryDetail, setMyDiaryDetail] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [editDiaryTitle, setEditDiaryTitle] = useState('');
   const [editDiaryContent, setEditDiaryContent] = useState('');
   const [editDiaryDate, setEditDiaryDate] = useState();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
 
   const dateConvert = (date) => {
     var y = date.getFullYear();
@@ -50,6 +58,14 @@ const MyDiaryDetail = () => {
   };
 
   useEffect(() => {
+    Auth.currentUserInfo()
+      .then((response) => {
+        setThisUser(response.username);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     const envFetchAPI = () => {
       const env = process.env.REACT_APP_ENVIROMENT;
       console.log(env);
@@ -76,6 +92,11 @@ const MyDiaryDetail = () => {
           if (response.id === '') {
             window.location.href = '/mydiary';
           }
+          console.log(response.author);
+          console.log(thisUser);
+          // if (response.author !== thisUser) {
+          //   window.location.href = '/diary';
+          // }
           setMyDiaryDetail(response);
           setEditDiaryTitle(response.title);
           setEditDiaryContent(response.content);
@@ -91,9 +112,13 @@ const MyDiaryDetail = () => {
     };
 
     fetchMyDiary();
-  }, [location.search]);
+  }, [location.search, thisUser]);
 
   const upadteMyDiary = async () => {
+    if (myDiaryDetail.author !== thisUser) {
+      setDialogOpen(true);
+      return;
+    }
     const apiName = envUpdateAPI();
     const path = '';
 
@@ -123,6 +148,14 @@ const MyDiaryDetail = () => {
       });
   };
 
+  const setMyDiaryEditMode = () => {
+    if (myDiaryDetail.author !== thisUser) {
+      setDialogOpen(true);
+      return;
+    }
+    setEditMode(!editMode);
+  };
+
   const updateDiaryContent = () => (event) => {
     setEditDiaryContent(event.target.value);
   };
@@ -139,7 +172,7 @@ const MyDiaryDetail = () => {
   return (
     <Container className="sm:w-full md:w-700">
       <Grid container justify="flex-end" style={{ marginTop: '5%' }}>
-        <Button className="mb-3" onClick={() => setEditMode(!editMode)} color="primary" variant="contained">
+        <Button className="mb-3" onClick={() => setMyDiaryEditMode()} color="primary" variant="contained">
           <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>編集モード</p>
         </Button>
       </Grid>
@@ -239,6 +272,9 @@ const MyDiaryDetail = () => {
           </div>
         </>
       )}
+      <Dialog open={dialogOpen} onClose={handleClose}>
+        <DialogTitle id="simple-dialog-title">自分の日記のみ編集ができます</DialogTitle>
+      </Dialog>
     </Container>
   );
 };
