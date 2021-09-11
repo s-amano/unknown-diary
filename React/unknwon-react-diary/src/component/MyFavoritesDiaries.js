@@ -24,7 +24,7 @@ const FetchMyFavoritesDiaries = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'GETMyDiariesAPIProd';
+      return 'FAVORITESDiaryAPIProd';
     } else if (env === 'dev') {
       return 'FAVORITESDiaryAPIDev';
     }

@@ -83,6 +83,11 @@ Amplify.configure({
         endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'comment',
         region: region,
       },
+      {
+        name: 'FAVORITESDiaryAPIProd',
+        endpoint: process.env.REACT_APP_PROD_API_ENDPOINT + 'get/favorites',
+        region: region,
+      },
     ],
   },
 });
