@@ -167,7 +167,7 @@ func (gd *GetDiaries) AddDiaries(res *dynamodb.QueryOutput) ([]Diary, error) {
 
 		err = json.Unmarshal([]byte(*item["post_data"].S), &diary)
 		if err != nil {
-			fmt.Printf("failed to unmarshal post_data. input: %s", *item["post_data"])
+			fmt.Printf("failed to unmarshal post_data. input: %s\n err: %v\n ", *item["post_data"], err)
 			continue
 		}
 		// リアクションがあるかどうかで条件分岐
