@@ -1,0 +1,41 @@
+name: Auto Deploy to AWS Lambda
+
+on:
+  push:
+      branches:
+        - main
+      paths:
+        - "backend/**"
+        
+  pull_request:
+      branches:
+        - main
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main  # リポジトリをチェックアウト
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+   
+      - name: Install Dependencies
+        run: |
+          npm install serverless -g
+          npm install
+        working-directory: ./backend/comconfirm-lambda  
+        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
+          aws-region: ap-northeast-1
+
+      - name: Deploy to Lambda
+        run: make deploy STAGE=prod
+        working-directory: ./backend/comconfirm-lambda
