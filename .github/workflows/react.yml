@@ -2,13 +2,13 @@ name: Build React on S3
 on:
   push:
       branches:
-        - main
+        - invalid
       paths:
         - "React/**"
         
   pull_request:
       branches:
-        - main
+        - invalid
       paths:
         - "React/**"
 jobs:
