@@ -14,7 +14,7 @@ jobs:
         run: make build STAGE=prod  # React ビルド
         working-directory: ./React/unknwon-react-diary
 
-      - name: Deploy  # S3にデプロイ 
+      - name: Deploy  # S3にデプロイ
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
