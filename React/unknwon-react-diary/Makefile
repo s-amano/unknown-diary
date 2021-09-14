@@ -27,7 +27,7 @@ clean:
 mod:
 	[ -d $(NODE_MODULES_DIR) ] || npm install
 
-build: mod
+build: clean mod
 	[ -d $(WEB_CONTENTS_SRC) ] || npm run $(STAGE)
 
 serve: mod
