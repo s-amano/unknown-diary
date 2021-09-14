@@ -3,13 +3,13 @@ name: Auto Deploy to AWS Lambda
 on:
   push:
       branches:
-        - main
+        - invalid
       paths:
         - "backend/**"
         
   pull_request:
       branches:
-        - main
+        - invalid
         
 jobs:
   build:
