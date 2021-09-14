@@ -13,7 +13,11 @@ jobs:
       - name: Clean BuildFile
         run: make clean
         working-directory: ./React/unknwon-react-diary
-
+        
+      - name: Clean node_module
+        run: rm -rf node_modules
+        working-directory: ./React/unknwon-react-diary
+        
       - name: Build
         run: make build STAGE=prod  # React ビルド
         working-directory: ./React/unknwon-react-diary
