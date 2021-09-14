@@ -1,0 +1,25 @@
+name: Build React on S3
+on:
+  push:
+      branches:
+        - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main  # リポジトリをチェックアウト
+
+      - name: Clean BuildFile
+        run: make clean
+        working-directory: ./React/unknown-react-diary
+
+      - name: Build
+        run: make build STAGE=prod  # React ビルド
+        working-directory: ./React/unknown-react-diary
+
+      - name: Deploy  # S3にデプロイ 
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: make deploy STAGE=prod
