@@ -3,6 +3,14 @@ on:
   push:
       branches:
         - main
+      paths:
+        - "React/**"
+        
+  pull_request:
+      branches:
+        - main
+      paths:
+        - "React/**"
 jobs:
   build:
     runs-on: ubuntu-latest
