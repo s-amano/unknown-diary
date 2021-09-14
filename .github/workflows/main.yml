@@ -12,11 +12,11 @@ jobs:
 
       - name: Clean BuildFile
         run: make clean
-        working-directory: ./React/unknown-react-diary
+        working-directory: ./React/unknwon-react-diary
 
       - name: Build
         run: make build STAGE=prod  # React ビルド
-        working-directory: ./React/unknown-react-diary
+        working-directory: ./React/unknwon-react-diary
 
       - name: Deploy  # S3にデプロイ 
         env:
