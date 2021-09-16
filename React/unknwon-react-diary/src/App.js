@@ -38,6 +38,7 @@ const theme = createTheme({
 });
 
 function App() {
+  console.log(process.env.REACT_APP_DEV_USERPOOL)
   const [authState, setAuthState] = React.useState();
   const [user, setUser] = React.useState();
 
