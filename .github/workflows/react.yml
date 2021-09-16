@@ -3,10 +3,12 @@ on:
   push:
       branches:
         - main
+      paths:
+        - "React/**"   
         
   pull_request:
       branches:
-        - invalid
+        - main
       paths:
         - "React/**"
 jobs:
@@ -24,7 +26,7 @@ jobs:
           REACT_APP_PROD_API_ENDPOINT: ${{ secrets.REACT_APP_PROD_API_ENDPOINT }}
           REACT_APP_PROD_USERPOOL: ${{ secrets.REACT_APP_PROD_USERPOOL }}
           REACT_APP_PROD_USERPOOL_WEBCLIENT: ${{ secrets.REACT_APP_PROD_USERPOOL_WEBCLIENT }}
-        run: make build # React ビルド
+        run: make build STAGE=prod # React ビルド
         working-directory: ./React/unknwon-react-diary
         
       - name: Configure AWS Credentials
