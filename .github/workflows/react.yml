@@ -15,6 +15,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main  # リポジトリをチェックアウト
+        
+      - name: Create dot env file
+      - shell: bash
+        run: |
+          touch .env
+          echo "FOO=${{ secrets.FOO }}" >> .env   
    
       - name: Clean and Build
         run: make build # React ビルド
