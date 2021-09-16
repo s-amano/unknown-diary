@@ -19,12 +19,7 @@ jobs:
       - name: Create dot env file
         run: |
           touch .env
-          echo "REACT_APP_DEV_API_ENDPOINT=${{ secrets.REACT_APP_DEV_API_ENDPOINT }}" >> .env
-          echo "REACT_APP_DEV_USERPOOL=${{ secrets.REACT_APP_DEV_USERPOOL }}" >> .env
-          echo "REACT_APP_DEV_USERPOOL_WEBCLIENT=${{ secrets.REACT_APP_DEV_USERPOOL_WEBCLIENT }}" >> .env
-          echo "REACT_APP_PROD_API_ENDPOINT=${{ secrets.REACT_APP_PROD_API_ENDPOINT }}" >> .env
-          echo "REACT_APP_PROD_USERPOOL=${{ secrets.REACT_APP_PROD_USERPOOL }}" >> .env
-          echo "REACT_APP_PROD_USERPOOL_WEBCLIENT=${{ secrets.REACT_APP_PROD_USERPOOL_WEBCLIENT }}" >> .env
+          echo "COGNITO_ENV=${{ secrets.COGNITO_ENV }}" >> .env
         shell: bash
    
       - name: Clean and Build
