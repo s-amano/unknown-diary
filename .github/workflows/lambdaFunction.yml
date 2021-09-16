@@ -39,5 +39,5 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: Deploy to Lambda
-        run: make deploy
+        run: make deploy STAGE=prod
         working-directory: ./backend/comconfirm-lambda
