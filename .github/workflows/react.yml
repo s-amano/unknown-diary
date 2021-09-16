@@ -15,14 +15,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main  # リポジトリをチェックアウト
-        
-      - name: Create dot env file
-        run: |
-          touch .env
-          echo "${{ secrets.COGNITO_ENV }}" >> .env
-        shell: bash
    
       - name: Clean and Build
+        env:
+          REACT_APP_DEV_API_ENDPOINT: ${{ secrets.REACT_APP_DEV_API_ENDPOINT }}
+          REACT_APP_DEV_USERPOOL: ${{ secrets.REACT_APP_DEV_USERPOOL }}
+          REACT_APP_DEV_USERPOOL_WEBCLIENT: ${{ secrets.REACT_APP_DEV_USERPOOL_WEBCLIENT }}
+          REACT_APP_PROD_API_ENDPOINT: ${{ secrets.REACT_APP_PROD_API_ENDPOINT }}
+          REACT_APP_PROD_USERPOOL: ${{ secrets.REACT_APP_PROD_USERPOOL }}
+          REACT_APP_PROD_USERPOOL_WEBCLIENT: ${{ secrets.REACT_APP_PROD_USERPOOL_WEBCLIENT }}
         run: make build # React ビルド
         working-directory: ./React/unknwon-react-diary
         
