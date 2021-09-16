@@ -181,7 +181,7 @@ const DiaryFetch = () => {
 
   const leaveCommentLength = leaveComment.length;
 
-  const maxCommentLength = diaryContentLength < 100 ? diaryContentLength : 100;
+  const maxCommentLength = diaryContentLength < 70 ? diaryContentLength : 70;
 
   const isCommentLengthOver = leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
 
@@ -233,9 +233,13 @@ const DiaryFetch = () => {
               <TextField
                 className="ml-1 sm:w-full md:w-2/3"
                 value={leaveComment}
+                rows={2}
+                rowsMax={2}
+                multiline
                 onChange={updateLeaveComment()}
                 helperText={`${maxCommentLength}文字以下`}
                 error={Boolean(!isCommentLengthOver)}
+                variant="filled"
               />
               <Button onClick={() => commentDiary()} disabled={Boolean(!isCommentLengthOver)}>
                 <AddCommentIcon />
