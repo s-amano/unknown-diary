@@ -2,7 +2,7 @@ name: Build React on S3
 on:
   push:
       branches:
-        - invalid
+        - main
       paths:
         - "React/**"
         
@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@main  # リポジトリをチェックアウト
    
       - name: Clean and Build
-        run: make build STAGE=prod  # React ビルド
+        run: make build # React ビルド
         working-directory: ./React/unknwon-react-diary
         
       - name: Configure AWS Credentials
