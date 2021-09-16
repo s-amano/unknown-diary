@@ -3,13 +3,13 @@ name: Auto Deploy to AWS Lambda
 on:
   push:
       branches:
-        - invalid
-      paths:
-        - "backend/**"
+        - main
         
   pull_request:
       branches:
         - invalid
+      paths:
+        - "backend/**"
         
 jobs:
   build:
@@ -37,5 +37,5 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: Deploy to Lambda
-        run: make deploy STAGE=prod
+        run: make deploy
         working-directory: ./backend/comconfirm-lambda
