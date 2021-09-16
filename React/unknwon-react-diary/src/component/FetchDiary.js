@@ -181,7 +181,7 @@ const DiaryFetch = () => {
 
   const leaveCommentLength = leaveComment.length;
 
-  const maxCommentLength = diaryContentLength < 144 ? diaryContentLength : 144;
+  const maxCommentLength = diaryContentLength < 100 ? diaryContentLength : 100;
 
   const isCommentLengthOver = leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
 
