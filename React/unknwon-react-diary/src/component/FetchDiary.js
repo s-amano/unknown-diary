@@ -14,6 +14,7 @@ import AddCommentIcon from '@material-ui/icons/AddComment';
 const DiaryFetch = () => {
   const location = useLocation();
   const [diary, setDiary] = useState({});
+  const [diaryContentLength, setDiaryContentLength] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditComment, setIsEditComment] = useState(false);
   const [leaveComment, setLeaveComment] = useState('');
@@ -81,6 +82,7 @@ const DiaryFetch = () => {
         .then((response) => {
           console.log(response);
           setDiary(response);
+          setDiaryContentLength(response.content.length);
           if (response.id === '') {
             handleClickOpen();
           }
@@ -105,6 +107,7 @@ const DiaryFetch = () => {
     await API.get(apiName, path, myInit)
       .then((response) => {
         setDiary(response);
+        setDiaryContentLength(response.content.length);
         if (response.id === '') {
           handleClickOpen();
         }
@@ -167,6 +170,7 @@ const DiaryFetch = () => {
           setAlreadyCommentedDialog(true);
         }
         setDiary({ ...diary, comments: response.comments });
+
         setIsEditComment(false);
         setLeaveComment('');
       })
@@ -174,6 +178,12 @@ const DiaryFetch = () => {
         console.log(err);
       });
   };
+
+  const leaveCommentLength = leaveComment.length;
+
+  const maxCommentLength = diaryContentLength < 144 ? diaryContentLength : 144;
+
+  const isCommentLengthOver = leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
 
   return (
     <Container className="sm:w-full md:w-700 mt-6">
@@ -200,7 +210,7 @@ const DiaryFetch = () => {
         </Grid>
       )}
 
-      <div className="flex flex-col w-9/12 pl-8 mt-4">
+      <div className="flex flex-col w-11/12 pl-8 mt-4">
         {location.search ? (
           <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡</p>
         ) : (
@@ -209,7 +219,7 @@ const DiaryFetch = () => {
 
         {diary.comments ? (
           diary.comments.map((comment, index) => (
-            <div key={index} className="bg-white shadow-xl rounded-2xl mb-2 sm:w-9/12 md:w-1/2 text-left">
+            <div key={index} className="bg-white shadow-xl rounded-2xl mb-4 sm:w-9/12 md:w-2/3 text-left">
               <p className="ml-3">{comment}</p>
             </div>
           ))
@@ -221,22 +231,19 @@ const DiaryFetch = () => {
           <div className="flex-start mt-2">
             <div className="flex">
               <TextField
-                className="ml-1"
+                className="ml-1 sm:w-full md:w-2/3"
                 value={leaveComment}
                 onChange={updateLeaveComment()}
-                helperText="13文字以下"
-                error={Boolean(!(leaveComment.length > 0 && leaveComment.length <= 13))}
+                helperText={`${maxCommentLength}文字以下`}
+                error={Boolean(!isCommentLengthOver)}
               />
-              <Button
-                onClick={() => commentDiary()}
-                disabled={Boolean(!(leaveComment.length > 0 && leaveComment.length <= 13))}
-              >
+              <Button onClick={() => commentDiary()} disabled={Boolean(!isCommentLengthOver)}>
                 <AddCommentIcon />
               </Button>
             </div>
           </div>
         ) : (
-          <div className="flex-start sm:w-9/12 md:w-1/2 mt-2">
+          <div className="flex-start w-full md:w-2/3 mt-2">
             <Button onClick={() => handleEditComment()}>
               <AddIcon />
             </Button>
@@ -245,11 +252,16 @@ const DiaryFetch = () => {
       </div>
 
       <Dialog open={dialogOpen} onClose={handleClose}>
-        <DialogTitle id="simple-dialog-title">取得できる日記がありません</DialogTitle>
+        <DialogTitle id="simple-dialog-title">
+          <p className="text-base">取得できる日記がありません</p>
+          <p className="text-sm">※過去にいいねした日記は取得できません</p>
+        </DialogTitle>
       </Dialog>
 
       <Dialog open={alreadyCommentedDialog} onClose={handleClose}>
-        <DialogTitle id="simple-dialog-title">足跡は1つまでしか残せません</DialogTitle>
+        <DialogTitle id="simple-dialog-title">
+          <p className="text-base">足跡は1つまでしか残せません</p>
+        </DialogTitle>
       </Dialog>
     </Container>
   );
