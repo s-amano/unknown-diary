@@ -1,27 +1,27 @@
 name: Build React on S3
 on:
   push:
-      branches:
-        - invalid
-      paths:
-        - "React/**"
-        
+    branches:
+      - main
+    paths:
+      - 'React/**'
+
   pull_request:
-      branches:
-        - invalid
-      paths:
-        - "React/**"
+    branches:
+      - invalid
+    paths:
+      - 'React/**'
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@main  # リポジトリをチェックアウト
-   
+        uses: actions/checkout@main # リポジトリをチェックアウト
+
       - name: Clean and Build
-        run: make build STAGE=prod  # React ビルド
+        run: make build # React ビルド
         working-directory: ./React/unknwon-react-diary
-        
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -29,7 +29,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ID }}
           aws-region: ap-northeast-1
 
-      - name: Deploy  # S3にデプロイ
+      - name: Deploy # S3にデプロイ
         run: |
           aws s3 sync ./build s3://${{ secrets.AWS_S3_BUCKET_NAME }}
         working-directory: ./React/unknwon-react-diary
