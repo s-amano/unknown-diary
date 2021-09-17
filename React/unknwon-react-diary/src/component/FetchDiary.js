@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
@@ -10,8 +10,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import AddCommentIcon from '@material-ui/icons/AddComment';
+import { IconButton } from '@material-ui/core';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import { ApiContext } from '../context/ApiContext';
 
 const DiaryFetch = () => {
+  const { thisUserName } = useContext(ApiContext);
+
   const location = useLocation();
   const [diary, setDiary] = useState({});
   const [diaryContentLength, setDiaryContentLength] = useState(0);
@@ -19,6 +24,7 @@ const DiaryFetch = () => {
   const [isEditComment, setIsEditComment] = useState(false);
   const [leaveComment, setLeaveComment] = useState('');
   const [alreadyCommentedDialog, setAlreadyCommentedDialog] = useState(false);
+  const [favorite, setFavorite] = useState(false);
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -86,13 +92,19 @@ const DiaryFetch = () => {
           if (response.id === '') {
             handleClickOpen();
           }
+          console.log(thisUserName);
+          if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
+            setFavorite(false);
+          } else {
+            setFavorite(true);
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     };
     fetchDiary();
-  }, [location.search]);
+  }, [location.search, thisUserName]);
 
   const fetchDiary = async () => {
     const apiName = envFetchAPI();
@@ -106,10 +118,17 @@ const DiaryFetch = () => {
 
     await API.get(apiName, path, myInit)
       .then((response) => {
+        console.log(response);
         setDiary(response);
         setDiaryContentLength(response.content.length);
         if (response.id === '') {
           handleClickOpen();
+        }
+        console.log(thisUserName);
+        if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
+          setFavorite(false);
+        } else {
+          setFavorite(true);
         }
       })
       .catch((err) => {
@@ -136,8 +155,9 @@ const DiaryFetch = () => {
     await API.post(apiName, path, myInit)
       .then((response) => {
         console.log('成功');
+        setDiary({ ...diary, reaction: response.reaction, reactioners: response.reactioners });
+        setFavorite(!favorite);
         console.log(diary);
-        setDiary({ ...diary, reaction: response.reaction });
       })
       .catch((err) => {
         console.log(err);
@@ -196,8 +216,14 @@ const DiaryFetch = () => {
         </p>
         <p className="text-left mb-4 pl-3 whitespace-pre-wrap">{diary.content}</p>
         <div className="flex justify-end">
-          <FavoriteIcon className="mr-1" color="error" onClick={() => upadteDiary()} />
-          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{diary.reaction}</p>
+          <IconButton className="p-2" onClick={() => upadteDiary()}>
+            {favorite ? (
+              <FavoriteIcon className="mr-1" color="error" />
+            ) : (
+              <FavoriteBorder className="mr-1" color="error" />
+            )}
+          </IconButton>
+          <p className="py-2 pr-2 m-0 text-base font-bold">{diary.reaction}</p>
         </div>
       </div>
       {location.search ? (

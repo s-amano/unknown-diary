@@ -48,12 +48,12 @@ function App() {
     });
   }, []);
   return (
-    <ApiContextProvider>
-      <MuiThemeProvider theme={theme}>
-        <BrowserRouter>
-          <AmplifyAuthenticator>
-            {authState === AuthState.SignedIn && user ? (
-              <div className="App">
+    <MuiThemeProvider theme={theme}>
+      <BrowserRouter>
+        <AmplifyAuthenticator>
+          {authState === AuthState.SignedIn && user ? (
+            <div className="App">
+              <ApiContextProvider>
                 <Navbar />
                 <Route exact path="/mydiary" component={MyProfile} />
                 <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
@@ -62,17 +62,17 @@ function App() {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/favorites" component={MyFavoritesDiaries} />
                 <Footer />
-              </div>
-            ) : (
-              <>
-                <Login />
-                <SignUp />
-              </>
-            )}
-          </AmplifyAuthenticator>
-        </BrowserRouter>
-      </MuiThemeProvider>
-    </ApiContextProvider>
+              </ApiContextProvider>
+            </div>
+          ) : (
+            <>
+              <Login />
+              <SignUp />
+            </>
+          )}
+        </AmplifyAuthenticator>
+      </BrowserRouter>
+    </MuiThemeProvider>
   );
 }
 

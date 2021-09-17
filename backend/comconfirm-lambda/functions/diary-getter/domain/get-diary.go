@@ -14,14 +14,15 @@ import (
 
 // Diary - 日記の内容を表現する構造体です
 type Diary struct {
-	ID       string   `json:"id"`      // id
-	PostAt   string   `json:"post_at"` // ポストされた日時
-	Title    string   `json:"title"`   // 日記のタイトル
-	Content  string   `json:"content"` // 日記の本文
-	Date     *string  `json:"date"`    // 日記の日付
-	Reaction string   `json:"reaction"`
-	Comments []string `json:"comments"`
-	Author   string   `json:"author"`
+	ID          string   `json:"id"`      // id
+	PostAt      string   `json:"post_at"` // ポストされた日時
+	Title       string   `json:"title"`   // 日記のタイトル
+	Content     string   `json:"content"` // 日記の本文
+	Date        *string  `json:"date"`    // 日記の日付
+	Reaction    string   `json:"reaction"`
+	Comments    []string `json:"comments"`
+	Author      string   `json:"author"`
+	Reactioners []string `json:"reactioners"`
 }
 
 // GetDiary - 日記を表現する構造体です
@@ -35,16 +36,8 @@ type GetDiary struct {
 func (gd *GetDiary) FetchRandomOneDiaryFromDynamoDB(dc adapter.DynamoDBClientRepository) (map[string]*dynamodb.AttributeValue, error) {
 	var err error
 
-	// author が　getをした当人ではない
-	// filter := expression.Name("author").NotEqual(expression.Value(gd.DiaryGetter))
-
+	// author が　getをした当人ではない　reactionersに自分が含まれていない
 	filter := expression.Not(expression.Or(expression.Name("reactioners").Contains(gd.DiaryGetter), expression.ConditionBuilder(expression.Name("author").Equal(expression.Value(gd.DiaryGetter)))))
-
-	// author が reaction済みではない
-	// condition := expression.Not(expression.Or(expression.Name("reactioners").Contains(gd.DiaryGetter), expression.ConditionBuilder(expression.Name("author").Equal(expression.Value(gd.DiaryGetter)))))
-
-	// condition := expression.Not(expression.Name("reactioners").Contains(gd.DiaryGetter))
-
 	// クエリ用 expression の生成
 	expr, err := expression.NewBuilder().WithFilter(filter).Build()
 	if err != nil {
@@ -123,12 +116,20 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 		return diary, err
 	}
 
-	// リアクションがない場合とある場合で条件分岐
+	// リアクションがない場合とある場合で条件分岐 リアクションがある場合はreactionersをresponseに加える
 	reaction, ok := item["reaction"]
 	if !ok {
 		diary.Reaction = "0"
 	} else {
 		diary.Reaction = *reaction.S
+		reactioners, ok := item["reactioners"]
+		if !ok {
+			diary.Reactioners = []string{}
+		} else {
+			for _, v := range reactioners.L {
+				diary.Reactioners = append(diary.Reactioners, *v.S)
+			}
+		}
 	}
 
 	//　コメントがない場合とある場合で条件分岐
