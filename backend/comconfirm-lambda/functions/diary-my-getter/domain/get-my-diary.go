@@ -14,13 +14,14 @@ import (
 
 // Diary - 各日記の内容を格納する構造体
 type Diary struct {
-	ID       string  `json:"id"`      // id
-	PostAt   string  `json:"post_at"` // ポストされた日時
-	Title    string  `json:"title"`   // 日記のタイトル
-	Content  string  `json:"content"` // 日記の本文
-	Date     *string `json:"date"`    // 日記の日付
-	Reaction string  `json:"reaction"`
-	Author   string  `json:"author"`
+	ID          string   `json:"id"`      // id
+	PostAt      string   `json:"post_at"` // ポストされた日時
+	Title       string   `json:"title"`   // 日記のタイトル
+	Content     string   `json:"content"` // 日記の本文
+	Date        *string  `json:"date"`    // 日記の日付
+	Reaction    string   `json:"reaction"`
+	Author      string   `json:"author"`
+	Reactioners []string `json:"reactioners"`
 }
 
 // GetDiaries - 日記を格納する構造体
@@ -170,6 +171,14 @@ func (gd *GetDiaries) AddDiaries(res *dynamodb.QueryOutput) ([]Diary, error) {
 			diary.Reaction = "0"
 		} else {
 			diary.Reaction = *reaction.S
+			reactioners, ok := item["reactioners"]
+			if !ok {
+				diary.Reactioners = []string{}
+			} else {
+				for _, v := range reactioners.L {
+					diary.Reactioners = append(diary.Reactioners, *v.S)
+				}
+			}
 		}
 
 		diary.ID = *item["id"].S

@@ -78,6 +78,7 @@ func (gj *GetterJob) Run(ctx context.Context) (ResultDiary, error) {
 	ResultDiary.Title = getItem.Title
 	ResultDiary.Comments = getItem.Comments
 	ResultDiary.Author = getItem.Author
+	ResultDiary.Reactioners = getItem.Reactioners
 
 	return ResultDiary, nil
 
