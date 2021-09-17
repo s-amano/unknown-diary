@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
@@ -12,8 +12,11 @@ import TextField from '@material-ui/core/TextField';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import { IconButton } from '@material-ui/core';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
+import { ApiContext } from '../context/ApiContext';
 
 const DiaryFetch = () => {
+  const { thisUserName } = useContext(ApiContext);
+
   const location = useLocation();
   const [diary, setDiary] = useState({});
   const [diaryContentLength, setDiaryContentLength] = useState(0);
@@ -89,14 +92,19 @@ const DiaryFetch = () => {
           if (response.id === '') {
             handleClickOpen();
           }
-          console.log(response.reactioner);
+          console.log(thisUserName);
+          if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
+            setFavorite(false);
+          } else {
+            setFavorite(true);
+          }
         })
         .catch((err) => {
           console.log(err);
         });
     };
     fetchDiary();
-  }, [location.search]);
+  }, [location.search, thisUserName]);
 
   const fetchDiary = async () => {
     const apiName = envFetchAPI();
@@ -110,10 +118,17 @@ const DiaryFetch = () => {
 
     await API.get(apiName, path, myInit)
       .then((response) => {
+        console.log(response);
         setDiary(response);
         setDiaryContentLength(response.content.length);
         if (response.id === '') {
           handleClickOpen();
+        }
+        console.log(thisUserName);
+        if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
+          setFavorite(false);
+        } else {
+          setFavorite(true);
         }
       })
       .catch((err) => {
@@ -140,9 +155,9 @@ const DiaryFetch = () => {
     await API.post(apiName, path, myInit)
       .then((response) => {
         console.log('成功');
-        console.log(diary);
-        setDiary({ ...diary, reaction: response.reaction });
+        setDiary({ ...diary, reaction: response.reaction, reactioners: response.reactioners });
         setFavorite(!favorite);
+        console.log(diary);
       })
       .catch((err) => {
         console.log(err);

@@ -4,7 +4,7 @@ export const ApiContext = createContext();
 
 const ApiContextProvider = (props) => {
   const [myDiaryDetail, setMyDiaryDetail] = useState([]);
-  const [thisUserName, setThisUserName] = useState([]);
+  const [thisUserName, setThisUserName] = useState();
 
   useEffect(() => {
     Auth.currentUserInfo()
@@ -22,6 +22,7 @@ const ApiContextProvider = (props) => {
         myDiaryDetail,
         setMyDiaryDetail,
         thisUserName,
+        setThisUserName,
       }}
     >
       {props.children}
