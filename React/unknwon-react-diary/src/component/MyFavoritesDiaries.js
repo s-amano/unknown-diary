@@ -56,7 +56,7 @@ const FetchMyFavoritesDiaries = () => {
 
   const fetchMyFavoritesDiaries = async (id) => {
     const limit = '6';
-    const apiName = envAPI();
+    const apiName = envAPI;
     const path = `?id=${id}&limit=${limit}`;
 
     const myInit = {
