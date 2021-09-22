@@ -24,12 +24,10 @@ const MyDiaryDetail = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleClose = () => {
-    console.log('handleclose');
     setDialogOpen(false);
   };
 
   const dateConvert = (date) => {
-    console.log('dateconvert');
     var y = date.getFullYear();
     var m = ('00' + (date.getMonth() + 1)).slice(-2);
     var d = ('00' + date.getDate()).slice(-2);
@@ -38,7 +36,6 @@ const MyDiaryDetail = () => {
   };
 
   const isDateValid = useMemo(() => {
-    console.log('isdatevalid');
     if (editDiaryDate === undefined) {
       return false;
     }
@@ -151,7 +148,6 @@ const MyDiaryDetail = () => {
   };
 
   const setMyDiaryEditMode = () => {
-    console.log('setmydiaryeditmode');
     if (myDiaryDetail.author !== thisUserName) {
       setDialogOpen(true);
       return;
@@ -160,17 +156,14 @@ const MyDiaryDetail = () => {
   };
 
   const updateDiaryContent = () => (event) => {
-    console.log('updatediarycontent');
     setEditDiaryContent(event.target.value);
   };
 
   const updateDiaryTitle = () => (event) => {
-    console.log('updatediarytitle');
     setEditDiaryTitle(event.target.value);
   };
 
   const updateDiaryDate = () => (date) => {
-    console.log('updatediarydate');
     const result = dateConvert(date);
     setEditDiaryDate(result);
   };
