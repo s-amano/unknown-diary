@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
@@ -43,7 +43,7 @@ const DiaryFetch = () => {
     setLeaveComment(event.target.value);
   };
 
-  const envFetchAPI = () => {
+  const envFetchAPI = useMemo(() => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
@@ -51,9 +51,9 @@ const DiaryFetch = () => {
     } else if (env === 'dev') {
       return 'GETStoreAPIDev';
     }
-  };
+  }, []);
 
-  const envUpdateAPI = () => {
+  const envUpdateAPI = useMemo(() => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
@@ -61,9 +61,9 @@ const DiaryFetch = () => {
     } else if (env === 'dev') {
       return 'REACTIONDiaryAPIDev';
     }
-  };
+  }, []);
 
-  const envCommentAPI = () => {
+  const envCommentAPI = useMemo(() => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
@@ -71,11 +71,11 @@ const DiaryFetch = () => {
     } else if (env === 'dev') {
       return 'COMMENTDiaryAPIDev';
     }
-  };
+  }, []);
 
   useEffect(() => {
     const fetchDiary = async () => {
-      const apiName = envFetchAPI();
+      const apiName = envFetchAPI;
       const path = `${location.search}`;
 
       const myInit = {
@@ -104,10 +104,10 @@ const DiaryFetch = () => {
         });
     };
     fetchDiary();
-  }, [location.search, thisUserName]);
+  }, [location.search, thisUserName, envFetchAPI]);
 
   const fetchDiary = async () => {
-    const apiName = envFetchAPI();
+    const apiName = envFetchAPI;
     const path = ``;
 
     const myInit = {
@@ -130,6 +130,8 @@ const DiaryFetch = () => {
         } else {
           setFavorite(true);
         }
+        setIsEditComment(false);
+        setLeaveComment('');
       })
       .catch((err) => {
         console.log(err);
@@ -137,7 +139,7 @@ const DiaryFetch = () => {
   };
 
   const upadteDiary = async () => {
-    const apiName = envUpdateAPI();
+    const apiName = envUpdateAPI;
     const path = '';
 
     const postData = {
@@ -166,7 +168,7 @@ const DiaryFetch = () => {
 
   const commentDiary = async () => {
     console.log(leaveComment);
-    const apiName = envCommentAPI();
+    const apiName = envCommentAPI;
     const path = '';
 
     const postData = {
