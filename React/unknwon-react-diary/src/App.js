@@ -14,7 +14,8 @@ import MyProfile from './component/MyProfile';
 import MyFavoritesDiaries from './component/MyFavoritesDiaries';
 import Home from './component/Home';
 import Footer from './component/Footer';
-import { Route, BrowserRouter } from 'react-router-dom';
+import Page404 from './component/Page404';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
 import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import { vocabularies } from './vocabularies';
@@ -55,12 +56,15 @@ function App() {
             <div className="App">
               <ApiContextProvider>
                 <Navbar />
-                <Route exact path="/mydiary" component={MyProfile} />
-                <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
-                <Route exact path="/diary" component={FetchDiary} />
-                <Route exact path="/post" component={PostDiary} />
-                <Route exact path="/" component={Home} />
-                <Route exact path="/favorites" component={MyFavoritesDiaries} />
+                <Switch>
+                  <Route exact path="/mydiary" component={MyProfile} />
+                  <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
+                  <Route exact path="/diary" component={FetchDiary} />
+                  <Route exact path="/post" component={PostDiary} />
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/favorites" component={MyFavoritesDiaries} />
+                  <Route component={Page404} />
+                </Switch>
                 <Footer />
               </ApiContextProvider>
             </div>
