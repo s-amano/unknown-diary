@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Container from '@material-ui/core/Container';
 import { Grid } from '@material-ui/core';
@@ -27,20 +27,20 @@ const DiaryPost = () => {
   const [postDiaryDate, setPostDiaryDate] = useState(dateConvert(todayDate));
   const [isSucces, setIsSucces] = useState(false);
 
-  const isDateValid = (strDate) => {
-    if (!strDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+  const isDateValid = useMemo(() => {
+    if (!postDiaryDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
       return false;
     }
-    var y = strDate.split('/')[0];
-    var m = strDate.split('/')[1] - 1;
-    var d = strDate.split('/')[2];
+    var y = postDiaryDate.split('/')[0];
+    var m = postDiaryDate.split('/')[1] - 1;
+    var d = postDiaryDate.split('/')[2];
     var date = new Date(y, m, d);
 
     if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
       return false;
     }
     return true;
-  };
+  }, [postDiaryDate]);
 
   const envAPI = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
@@ -147,7 +147,7 @@ const DiaryPost = () => {
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
-            error={Boolean(!isDateValid(postDiaryDate))}
+            error={Boolean(!isDateValid)}
             helperText="有効な形式で日付を入力してください"
           />
         </Grid>
@@ -171,12 +171,7 @@ const DiaryPost = () => {
           color="primary"
           onClick={() => survayPost()}
           disabled={Boolean(
-            !(
-              17 <= postDiary.length &&
-              postDiary.length < 5000 &&
-              postDiaryTitle.length <= 30 &&
-              isDateValid(postDiaryDate)
-            )
+            !(17 <= postDiary.length && postDiary.length < 5000 && postDiaryTitle.length <= 30 && isDateValid)
           )}
         >
           <p style={{ color: 'white', fontWeight: 'bold', margin: '3px' }}>日記を投稿する</p>
