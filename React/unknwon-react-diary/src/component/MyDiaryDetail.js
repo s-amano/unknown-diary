@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
@@ -24,10 +24,12 @@ const MyDiaryDetail = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleClose = () => {
+    console.log('handleclose');
     setDialogOpen(false);
   };
 
   const dateConvert = (date) => {
+    console.log('dateconvert');
     var y = date.getFullYear();
     var m = ('00' + (date.getMonth() + 1)).slice(-2);
     var d = ('00' + date.getDate()).slice(-2);
@@ -35,21 +37,26 @@ const MyDiaryDetail = () => {
     return result;
   };
 
-  const isDateValid = (strDate) => {
-    if (!strDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+  const isDateValid = useMemo(() => {
+    console.log('isdatevalid');
+    if (editDiaryDate === undefined) {
       return false;
     }
-    var y = strDate.split('/')[0];
-    var m = strDate.split('/')[1] - 1;
-    var d = strDate.split('/')[2];
+    if (!editDiaryDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+      return false;
+    }
+    var y = editDiaryDate.split('/')[0];
+    var m = editDiaryDate.split('/')[1] - 1;
+    var d = editDiaryDate.split('/')[2];
     var date = new Date(y, m, d);
     if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
       return false;
     }
     return true;
-  };
+  }, [editDiaryDate]);
 
   const envUpdateAPI = () => {
+    console.log('envupdateapi');
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
@@ -144,6 +151,7 @@ const MyDiaryDetail = () => {
   };
 
   const setMyDiaryEditMode = () => {
+    console.log('setmydiaryeditmode');
     if (myDiaryDetail.author !== thisUserName) {
       setDialogOpen(true);
       return;
@@ -152,14 +160,17 @@ const MyDiaryDetail = () => {
   };
 
   const updateDiaryContent = () => (event) => {
+    console.log('updatediarycontent');
     setEditDiaryContent(event.target.value);
   };
 
   const updateDiaryTitle = () => (event) => {
+    console.log('updatediarytitle');
     setEditDiaryTitle(event.target.value);
   };
 
   const updateDiaryDate = () => (date) => {
+    console.log('updatediarydate');
     const result = dateConvert(date);
     setEditDiaryDate(result);
   };
@@ -200,7 +211,7 @@ const MyDiaryDetail = () => {
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
-                  error={Boolean(!isDateValid(editDiaryDate))}
+                  error={Boolean(!isDateValid)}
                   helperText="有効な形式で日付を入力してください"
                 />
               </Grid>
@@ -227,7 +238,7 @@ const MyDiaryDetail = () => {
                   17 <= editDiaryContent.length &&
                   editDiaryContent.length < 5000 &&
                   editDiaryTitle.length <= 30 &&
-                  isDateValid(editDiaryDate)
+                  isDateValid
                 )
               )}
               variant="contained"

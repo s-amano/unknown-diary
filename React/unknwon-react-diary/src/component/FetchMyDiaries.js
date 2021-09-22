@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Button from '@material-ui/core/Button';
 
-const FetchMyDiaries = (props) => {
+const FetchMyDiaries = memo((props) => {
   const [page, setPage] = useState(1);
   const [myDiaries, setMyDiaries] = useState([]);
 
@@ -139,6 +139,6 @@ const FetchMyDiaries = (props) => {
       </div>
     </>
   );
-};
+});
 
 export default FetchMyDiaries;

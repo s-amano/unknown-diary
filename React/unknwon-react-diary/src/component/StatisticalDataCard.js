@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   numOfGotLike: { flex: 1 },
 }));
 
-const StatisticalDataCard = (props) => {
+const StatisticalDataCard = memo((props) => {
   const classes = useStyles();
 
   const numberOfMyDiaries = props.myDiaries.length;
@@ -51,6 +51,6 @@ const StatisticalDataCard = (props) => {
       </div>
     </Grid>
   );
-};
+});
 
 export default StatisticalDataCard;
