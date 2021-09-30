@@ -52,29 +52,9 @@ const MyDiaryDetail = () => {
     return true;
   }, [editDiaryDate]);
 
-  const envUpdateAPI = useMemo(() => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'UPDATEDiaryAPI';
-    } else if (env === 'dev') {
-      return 'UPDATEDiaryAPI';
-    }
-  }, []);
-
   useEffect(() => {
-    const envFetchAPI = () => {
-      const env = process.env.REACT_APP_ENVIROMENT;
-      console.log(env);
-      if (env === 'prod') {
-        return 'GETStoreAPI';
-      } else if (env === 'dev') {
-        return 'GETStoreAPI';
-      }
-    };
-
     const fetchMyDiary = async () => {
-      const apiName = envFetchAPI();
+      const apiName = 'GETStoreAPI';
       const path = `${location.search}`;
 
       const myInit = {
@@ -117,7 +97,7 @@ const MyDiaryDetail = () => {
       setDialogOpen(true);
       return;
     }
-    const apiName = envUpdateAPI;
+    const apiName = 'UPDATEDiaryAPI';
     const path = '';
 
     const postData = {

@@ -9,18 +9,8 @@ const MyProfile = () => {
   const [myDiaries, setMyDiaries] = useState([]);
 
   useEffect(() => {
-    const envAPI = () => {
-      const env = process.env.REACT_APP_ENVIROMENT;
-      console.log(env);
-      if (env === 'prod') {
-        return 'GETMyDiariesAPI';
-      } else if (env === 'dev') {
-        return 'GETMyDiariesAPI';
-      }
-    };
-
     const fetchMyDiaries = async () => {
-      const apiName = envAPI();
+      const apiName = 'GETMyDiariesAPI';
       const path = '';
 
       const myInit = {

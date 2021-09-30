@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
@@ -20,19 +20,9 @@ const FetchMyFavoritesDiaries = () => {
 
   let maxPageNumber = Math.ceil(myAllFavoritesDiaries.length / 6);
 
-  const envAPI = useMemo(() => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'FAVORITESDiaryAPI';
-    } else if (env === 'dev') {
-      return 'FAVORITESDiaryAPI';
-    }
-  }, []);
-
   useEffect(() => {
     const fetchMyFavoritesDiaries = async () => {
-      const apiName = envAPI;
+      const apiName = 'FAVORITESDiaryAPI';
       const path = ``;
 
       const myInit = {
@@ -52,11 +42,11 @@ const FetchMyFavoritesDiaries = () => {
         });
     };
     fetchMyFavoritesDiaries('');
-  }, [envAPI]);
+  }, []);
 
   const fetchMyFavoritesDiaries = async (id) => {
     const limit = '6';
-    const apiName = envAPI;
+    const apiName = 'FAVORITESDiaryAPI';
     const path = `?id=${id}&limit=${limit}`;
 
     const myInit = {

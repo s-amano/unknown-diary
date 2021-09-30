@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
@@ -43,39 +43,9 @@ const DiaryFetch = () => {
     setLeaveComment(event.target.value);
   };
 
-  const envFetchAPI = useMemo(() => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'GETStoreAPI';
-    } else if (env === 'dev') {
-      return 'GETStoreAPI';
-    }
-  }, []);
-
-  const envUpdateAPI = useMemo(() => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'REACTIONDiaryAPI';
-    } else if (env === 'dev') {
-      return 'REACTIONDiaryAPI';
-    }
-  }, []);
-
-  const envCommentAPI = useMemo(() => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'COMMENTDiaryAPI';
-    } else if (env === 'dev') {
-      return 'COMMENTDiaryAPI';
-    }
-  }, []);
-
   useEffect(() => {
     const fetchDiary = async () => {
-      const apiName = envFetchAPI;
+      const apiName = 'GETStoreAPI';
       const path = `${location.search}`;
 
       const myInit = {
@@ -104,10 +74,10 @@ const DiaryFetch = () => {
         });
     };
     fetchDiary();
-  }, [location.search, thisUserName, envFetchAPI]);
+  }, [location.search, thisUserName]);
 
   const fetchDiary = async () => {
-    const apiName = envFetchAPI;
+    const apiName = 'GETStoreAPI';
     const path = ``;
 
     const myInit = {
@@ -139,7 +109,7 @@ const DiaryFetch = () => {
   };
 
   const upadteDiary = async () => {
-    const apiName = envUpdateAPI;
+    const apiName = 'REACTIONDiaryAPI';
     const path = '';
 
     const postData = {
@@ -168,7 +138,7 @@ const DiaryFetch = () => {
 
   const commentDiary = async () => {
     console.log(leaveComment);
-    const apiName = envCommentAPI;
+    const apiName = 'COMMENTDiaryAPI';
     const path = '';
 
     const postData = {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo, useMemo } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
@@ -18,20 +18,10 @@ const FetchMyDiaries = memo((props) => {
 
   var maxPageNumber = Math.ceil(props.myDiaries.length / 6);
 
-  const envAPI = useMemo(() => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'GETMyDiariesAPI';
-    } else if (env === 'dev') {
-      return 'GETMyDiariesAPI';
-    }
-  }, []);
-
   useEffect(() => {
     const fetchMyDiaries = async () => {
       const limit = '6';
-      const apiName = envAPI;
+      const apiName = 'GETMyDiariesAPI';
       const path = `?limit=${limit}`;
 
       const myInit = {
@@ -50,11 +40,11 @@ const FetchMyDiaries = memo((props) => {
         });
     };
     fetchMyDiaries('');
-  }, [envAPI]);
+  }, []);
 
   const fetchMyDiaries = async (id) => {
     const limit = '6';
-    const apiName = envAPI;
+    const apiName = 'GETMyDiariesAPI';
     const path = `?id=${id}&limit=${limit}`;
 
     const myInit = {
