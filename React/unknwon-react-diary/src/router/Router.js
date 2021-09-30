@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Page404 from '../component/Page404';
+import Page404 from '../component/pages/Page404';
 import PostDiary from '../component/PostDiary';
 import FetchDiary from '../component/FetchDiary';
 import MyDiaryDetail from '../component/MyDiaryDetail';
