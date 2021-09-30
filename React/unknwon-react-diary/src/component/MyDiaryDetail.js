@@ -11,9 +11,10 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { ApiContext } from '../context/ApiContext';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const MyDiaryDetail = () => {
-  const { thisUserName } = useContext(ApiContext);
+  const { thisUserName, loading, setLoading } = useContext(ApiContext);
 
   const location = useLocation();
   const [myDiaryDetail, setMyDiaryDetail] = useState({});
@@ -54,6 +55,7 @@ const MyDiaryDetail = () => {
 
   useEffect(() => {
     const fetchMyDiary = async () => {
+      setLoading(true);
       const apiName = 'GETStoreAPI';
       const path = `${location.search}`;
 
@@ -83,14 +85,16 @@ const MyDiaryDetail = () => {
           } else {
             setEditDiaryDate(response.date);
           }
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
     };
 
     fetchMyDiary();
-  }, [location.search, thisUserName]);
+  }, [location.search, thisUserName, setLoading]);
 
   const upadteMyDiary = async () => {
     if (myDiaryDetail.author !== thisUserName) {
@@ -154,6 +158,7 @@ const MyDiaryDetail = () => {
           <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>編集モード</p>
         </Button>
       </Grid>
+      {loading && <CircularProgress />}
       {editMode ? (
         <>
           <Grid container justifyContent="space-around" style={{ marginTop: '4%' }}>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Container from '@material-ui/core/Container';
 import { Grid } from '@material-ui/core';
@@ -10,8 +10,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { ApiContext } from '../context/ApiContext';
 
 const DiaryPost = () => {
+  const { loading, setLoading } = useContext(ApiContext);
+
   const dateConvert = (date) => {
     var y = date.getFullYear();
     var m = ('00' + (date.getMonth() + 1)).slice(-2);
@@ -43,6 +47,7 @@ const DiaryPost = () => {
   }, [postDiaryDate]);
 
   const survayPost = async () => {
+    setLoading(true);
     const apiName = 'POSTStoreAPI';
     const path = '';
 
@@ -68,9 +73,11 @@ const DiaryPost = () => {
         setPostDiaryTitle('');
         setPostDiaryDate(dateConvert(todayDate));
         setInputDiaryDate(todayDate);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
       });
   };
 
@@ -93,6 +100,7 @@ const DiaryPost = () => {
       style={{ marginTop: '32px', marginBottom: '30px', paddingRight: '10%', paddingLeft: '10%' }}
       maxWidth="md"
     >
+      {loading && <CircularProgress />}
       <Collapse in={isSucces}>
         <Alert
           action={

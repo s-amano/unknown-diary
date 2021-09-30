@@ -1,11 +1,15 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { ApiContext } from '../context/ApiContext';
 
 const FetchMyDiaries = memo((props) => {
+  const { loading, setLoading } = useContext(ApiContext);
+
   const [page, setPage] = useState(1);
   const [myDiaries, setMyDiaries] = useState([]);
   const [diaryID, setDiaryID] = useState('');
@@ -21,6 +25,7 @@ const FetchMyDiaries = memo((props) => {
 
   useEffect(() => {
     const fetchMyDiaries = async () => {
+      setLoading(true);
       const limit = '6';
       const apiName = 'GETMyDiariesAPI';
       const path = diaryID === '' ? `?limit=${limit}` : `?id=${diaryID}&limit=${limit}`;
@@ -34,13 +39,15 @@ const FetchMyDiaries = memo((props) => {
       await API.get(apiName, path, myInit)
         .then((response) => {
           setMyDiaries(response.Diaries);
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
     };
     fetchMyDiaries('');
-  }, [diaryID]);
+  }, [diaryID, setLoading]);
 
   const prevPage = () => {
     if (page === 2) {
@@ -57,6 +64,7 @@ const FetchMyDiaries = memo((props) => {
   };
   return (
     <>
+      {loading && <CircularProgress />}
       <div className="flex flex-wrap content-between justify-center">
         {myDiaries.map((value, key) => {
           const diaryContent = value.content;

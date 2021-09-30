@@ -3,8 +3,8 @@ import { Auth } from 'aws-amplify';
 export const ApiContext = createContext();
 
 const ApiContextProvider = (props) => {
-  const [myDiaryDetail, setMyDiaryDetail] = useState([]);
   const [thisUserName, setThisUserName] = useState();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     Auth.currentUserInfo()
@@ -19,10 +19,10 @@ const ApiContextProvider = (props) => {
   return (
     <ApiContext.Provider
       value={{
-        myDiaryDetail,
-        setMyDiaryDetail,
         thisUserName,
         setThisUserName,
+        loading,
+        setLoading,
       }}
     >
       {props.children}

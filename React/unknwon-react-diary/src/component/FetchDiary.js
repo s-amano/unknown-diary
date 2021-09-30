@@ -13,9 +13,10 @@ import AddCommentIcon from '@material-ui/icons/AddComment';
 import { IconButton } from '@material-ui/core';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import { ApiContext } from '../context/ApiContext';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const DiaryFetch = () => {
-  const { thisUserName } = useContext(ApiContext);
+  const { thisUserName, loading, setLoading } = useContext(ApiContext);
 
   const location = useLocation();
   const [diary, setDiary] = useState({});
@@ -46,6 +47,7 @@ const DiaryFetch = () => {
 
   useEffect(() => {
     const fetchDiary = async () => {
+      setLoading(true);
       const apiName = 'GETStoreAPI';
       const path = `${location.search}`;
 
@@ -69,13 +71,15 @@ const DiaryFetch = () => {
           } else {
             setFavorite(true);
           }
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
+          setLoading(false);
         });
     };
     fetchDiary();
-  }, [location.search, thisUserName, fetch]);
+  }, [location.search, thisUserName, fetch, setLoading]);
 
   const upadteDiary = async () => {
     const apiName = 'REACTIONDiaryAPI';
@@ -148,6 +152,7 @@ const DiaryFetch = () => {
 
   return (
     <Container className="sm:w-full md:w-700 mt-6">
+      {loading && <CircularProgress />}
       <div className="text-right mr-12 mb-1">
         <p className="text-gray-500 text-lg ml-auto">{diary.date ? diary.date : '日付なし'}</p>
       </div>
@@ -234,7 +239,7 @@ const DiaryFetch = () => {
           <p className="text-base">足跡は1つまでしか残せません</p>
         </DialogTitle>
       </Dialog>
-      {}
+      {loading && <CircularProgress />}
     </Container>
   );
 };
