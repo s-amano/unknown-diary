@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
-import { Link } from 'react-router-dom';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { ApiContext } from '../context/ApiContext';
+import DiaryCard from '../component/atoms/DiaryCard';
 
 const FetchMyFavoritesDiaries = () => {
   const { loading, setLoading } = useContext(ApiContext);
@@ -75,37 +74,16 @@ const FetchMyFavoritesDiaries = () => {
       {loading && <CircularProgress />}
       <div className="flex flex-wrap content-between justify-center">
         {myFavoritesDiaries.map((value, key) => {
-          const diaryContent = value.content;
-          const diaryReaction = value.reaction;
-          const diaryTitle = value.title ? value.title : 'タイトルなし';
-          const diaryDate = value.date ? value.date : '日付なし';
+          value.title = value.title ? value.title : 'タイトルなし';
+          value.date = value.date ? value.date : '日付なし';
           const maxLength = 37;
-          let modifiedDiaryContent = '';
-          if (diaryContent.length > maxLength) {
-            modifiedDiaryContent = diaryContent.substr(0, maxLength) + '...';
+          if (value.content.length > maxLength) {
+            value.content = value.content.substr(0, maxLength) + '...';
           } else {
-            modifiedDiaryContent = diaryContent;
+            value.content = value.content;
           }
 
-          return (
-            <div key={key} className="shadow-xl rounded-md bg-white w-80 m-6">
-              <Link to={{ pathname: '/diary', search: `?id=${value.id}` }} style={{ textDecoration: 'none' }}>
-                <div className="flex flex-col h-full content-between">
-                  <div className="p-4 mb-auto">
-                    <p className="text-left text-xl font-semibold text-gray-600">{diaryTitle}</p>
-                    <Typography style={{ textAlign: 'left' }} variant="body2" color="textSecondary" component="p">
-                      {modifiedDiaryContent}
-                    </Typography>
-                  </div>
-                  <div className="flex px-2 pb-2 items-center">
-                    <FavoriteIcon style={{ marginRight: '2%' }} color="error" />
-                    <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{diaryReaction}</p>
-                    <p className="text-gray-500 text-lg ml-auto">{diaryDate}</p>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          );
+          return <DiaryCard key={key} pathname="/diary" diary={value} />;
         })}
       </div>
 
