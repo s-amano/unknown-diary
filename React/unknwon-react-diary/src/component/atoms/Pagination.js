@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { Button } from '@material-ui/core';
 
-export default function Pagination(props) {
+export default memo(function Pagination(props) {
   const { page, maxPageNumber, prevPage, nextPage } = props;
   return (
     <div className="px-3 mt-9 mb-12">
@@ -18,4 +19,4 @@ export default function Pagination(props) {
       )}
     </div>
   );
-}
+});

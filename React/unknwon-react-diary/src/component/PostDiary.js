@@ -1,17 +1,13 @@
 import React, { useState, useMemo, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Container from '@material-ui/core/Container';
-import { Grid } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { ApiContext } from '../context/ApiContext';
+import DiaryForm from '../component/atoms/DiaryForm';
 
 const DiaryPost = () => {
   const { loading, setLoading } = useContext(ApiContext);
@@ -25,10 +21,10 @@ const DiaryPost = () => {
   };
 
   const todayDate = new Date();
-  const [postDiary, setPostDiary] = useState('');
-  const [postDiaryTitle, setPostDiaryTitle] = useState('');
+
   const [inputDiaryDate, setInputDiaryDate] = useState(todayDate);
   const [postDiaryDate, setPostDiaryDate] = useState(dateConvert(todayDate));
+  const [inputDiary, setInputDiary] = useState({ title: '', content: '' });
   const [isSucces, setIsSucces] = useState(false);
 
   const isDateValid = useMemo(() => {
@@ -52,8 +48,8 @@ const DiaryPost = () => {
     const path = '';
 
     const postData = {
-      title: postDiaryTitle,
-      content: postDiary,
+      title: inputDiary.title,
+      content: inputDiary.content,
       date: postDiaryDate,
     };
     const myInit = {
@@ -66,11 +62,8 @@ const DiaryPost = () => {
 
     await API.post(apiName, path, myInit)
       .then(() => {
-        console.log('成功');
         setIsSucces(true);
-        console.log(postData);
-        setPostDiary('');
-        setPostDiaryTitle('');
+        setInputDiary({ title: '', content: '' });
         setPostDiaryDate(dateConvert(todayDate));
         setInputDiaryDate(todayDate);
         setLoading(false);
@@ -81,18 +74,16 @@ const DiaryPost = () => {
       });
   };
 
-  const updateDiary = () => (event) => {
-    setPostDiary(event.target.value);
-  };
-
-  const updateDiaryTitle = () => (event) => {
-    setPostDiaryTitle(event.target.value);
-  };
-
   const updateDiaryDate = () => (date) => {
     const result = dateConvert(date);
     setPostDiaryDate(result);
     setInputDiaryDate(date);
+  };
+
+  const handleInputChange = () => (event) => {
+    const value = event.target.value;
+    const name = event.target.name;
+    setInputDiary({ ...inputDiary, [name]: value });
   };
 
   return (
@@ -120,61 +111,15 @@ const DiaryPost = () => {
           日記を送信しました！
         </Alert>
       </Collapse>
-      <TextField
-        style={{ width: '100%' }}
-        label="日記のタイトル"
-        variant="filled"
-        helperText="30字以下で入力してください"
-        error={Boolean(postDiaryTitle.length !== 0 && !(postDiaryTitle.length <= 30))}
-        value={postDiaryTitle}
-        onChange={updateDiaryTitle()}
+      <DiaryForm
+        inputDiary={inputDiary}
+        handleInputChange={handleInputChange}
+        updateDiaryDate={updateDiaryDate}
+        isDateValid={isDateValid}
+        survayPost={survayPost}
+        inputDiaryDate={inputDiaryDate}
+        postWord={'日記を投稿する'}
       />
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Grid
-          container
-          justifyContent="flex-start"
-          style={{ justifyContent: 'flex-start', marginLeft: '1%', marginBottom: '16px' }}
-        >
-          <KeyboardDatePicker
-            margin="normal"
-            id="date-picker-dialog"
-            // label="日付"
-            format="yyyy/MM/dd"
-            value={inputDiaryDate}
-            onChange={updateDiaryDate()}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-            error={Boolean(!isDateValid)}
-            helperText="有効な形式で日付を入力してください"
-          />
-        </Grid>
-      </MuiPickersUtilsProvider>
-      <TextField
-        style={{ width: '100%', marginBottom: '5%' }}
-        label="日記の内容"
-        multiline
-        rows={15}
-        value={postDiary}
-        onChange={updateDiary()}
-        // postする文字数が17文字未満(初期値は除く),5000文字以上の場合はエラー文表示
-        error={Boolean(postDiary.length !== 0 && !(17 <= postDiary.length && postDiary.length < 5000))}
-        helperText="17文字以上5000字以下で入力してください"
-        variant="filled"
-      />
-
-      <Grid container justify="flex-start">
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => survayPost()}
-          disabled={Boolean(
-            !(17 <= postDiary.length && postDiary.length < 5000 && postDiaryTitle.length <= 30 && isDateValid)
-          )}
-        >
-          <p style={{ color: 'white', fontWeight: 'bold', margin: '3px' }}>日記を投稿する</p>
-        </Button>
-      </Grid>
     </Container>
   );
 };

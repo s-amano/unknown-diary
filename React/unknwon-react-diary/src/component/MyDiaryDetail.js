@@ -2,16 +2,14 @@ import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { ApiContext } from '../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DiaryForm from '../component/atoms/DiaryForm';
 
 const MyDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -19,10 +17,9 @@ const MyDiaryDetail = () => {
   const location = useLocation();
   const [myDiaryDetail, setMyDiaryDetail] = useState({});
   const [editMode, setEditMode] = useState(false);
-  const [editDiaryTitle, setEditDiaryTitle] = useState('');
-  const [editDiaryContent, setEditDiaryContent] = useState('');
   const [editDiaryDate, setEditDiaryDate] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDiary, setEditDiary] = useState({ title: '', content: '' });
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -78,8 +75,7 @@ const MyDiaryDetail = () => {
             window.location.href = '/diary';
           }
           setMyDiaryDetail(response);
-          setEditDiaryTitle(response.title);
-          setEditDiaryContent(response.content);
+          setEditDiary({ title: response.title, content: response.content });
           if (response.date == null) {
             setEditDiaryDate(dateConvert(new Date()));
           } else {
@@ -107,8 +103,8 @@ const MyDiaryDetail = () => {
     const postData = {
       id: myDiaryDetail.id,
       post_at: myDiaryDetail.post_at,
-      title: editDiaryTitle,
-      content: editDiaryContent,
+      title: editDiary.title,
+      content: editDiary.content,
       date: editDiaryDate,
     };
     const myInit = {
@@ -138,17 +134,16 @@ const MyDiaryDetail = () => {
     setEditMode(!editMode);
   };
 
-  const updateDiaryContent = () => (event) => {
-    setEditDiaryContent(event.target.value);
-  };
-
-  const updateDiaryTitle = () => (event) => {
-    setEditDiaryTitle(event.target.value);
-  };
-
   const updateDiaryDate = () => (date) => {
     const result = dateConvert(date);
     setEditDiaryDate(result);
+    setEditDiaryDate(date);
+  };
+
+  const handleInputChange = () => (event) => {
+    const value = event.target.value;
+    const name = event.target.name;
+    setEditDiary({ ...editDiary, [name]: value });
   };
 
   return (
@@ -160,71 +155,15 @@ const MyDiaryDetail = () => {
       </Grid>
       {loading && <CircularProgress />}
       {editMode ? (
-        <>
-          <Grid container justifyContent="space-around" style={{ marginTop: '4%' }}>
-            <TextField
-              className="w-full"
-              value={editDiaryTitle}
-              onChange={updateDiaryTitle()}
-              variant="filled"
-              label="日記のタイトル"
-              helperText="30字以下で入力してください"
-              error={Boolean(editDiaryTitle.length !== 0 && !(editDiaryTitle.length <= 30))}
-            />
-
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid
-                container
-                justifyContent="flex-start"
-                style={{ justifyContent: 'flex-start', marginLeft: '1%', marginBottom: '16px' }}
-              >
-                <KeyboardDatePicker
-                  margin="normal"
-                  id="date-picker-dialog"
-                  // label="日付"
-                  format="yyyy/MM/dd"
-                  value={editDiaryDate}
-                  onChange={updateDiaryDate()}
-                  KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                  }}
-                  error={Boolean(!isDateValid)}
-                  helperText="有効な形式で日付を入力してください"
-                />
-              </Grid>
-            </MuiPickersUtilsProvider>
-          </Grid>
-          <TextField
-            style={{ width: '100%', marginBottom: '5%' }}
-            label="日記の内容"
-            onChange={updateDiaryContent()}
-            multiline
-            rows={15}
-            value={editDiaryContent}
-            error={Boolean(
-              editDiaryContent.length !== 0 && !(17 <= editDiaryContent.length && editDiaryContent.length < 5000)
-            )}
-            helperText="17文字以上5000字以下で入力してください"
-            variant="filled"
-          />
-          <Grid container justify="flex-end" style={{ marginBottom: '8%' }}>
-            <Button
-              onClick={() => upadteMyDiary()}
-              disabled={Boolean(
-                !(
-                  17 <= editDiaryContent.length &&
-                  editDiaryContent.length < 5000 &&
-                  editDiaryTitle.length <= 30 &&
-                  isDateValid
-                )
-              )}
-              variant="contained"
-              color="primary"
-            >
-              <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>日記を編集する</p>
-            </Button>
-          </Grid>
-        </>
+        <DiaryForm
+          inputDiary={editDiary}
+          handleInputChange={handleInputChange}
+          updateDiaryDate={updateDiaryDate}
+          isDateValid={isDateValid}
+          survayPost={upadteMyDiary}
+          inputDiaryDate={editDiaryDate}
+          postWord={'日記を編集する'}
+        />
       ) : (
         <>
           <div className="text-right mr-12 mb-1">

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Typography from '@material-ui/core/Typography';
 
-export default function DiaryCard(props) {
+export default memo(function DiaryCard(props) {
   const { pathname, diary } = props;
   return (
     <div className="shadow-xl rounded-md bg-white w-80 m-6">
@@ -24,4 +24,4 @@ export default function DiaryCard(props) {
       </Link>
     </div>
   );
-}
+});
