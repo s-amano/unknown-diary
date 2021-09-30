@@ -25,6 +25,7 @@ const DiaryFetch = () => {
   const [leaveComment, setLeaveComment] = useState('');
   const [alreadyCommentedDialog, setAlreadyCommentedDialog] = useState(false);
   const [favorite, setFavorite] = useState(false);
+  const [fetch, setFetch] = useState(false);
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -74,39 +75,7 @@ const DiaryFetch = () => {
         });
     };
     fetchDiary();
-  }, [location.search, thisUserName]);
-
-  const fetchDiary = async () => {
-    const apiName = 'GETStoreAPI';
-    const path = ``;
-
-    const myInit = {
-      headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
-      },
-    };
-
-    await API.get(apiName, path, myInit)
-      .then((response) => {
-        console.log(response);
-        setDiary(response);
-        setDiaryContentLength(response.content.length);
-        if (response.id === '') {
-          handleClickOpen();
-        }
-        console.log(thisUserName);
-        if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
-          setFavorite(false);
-        } else {
-          setFavorite(true);
-        }
-        setIsEditComment(false);
-        setLeaveComment('');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  }, [location.search, thisUserName, fetch]);
 
   const upadteDiary = async () => {
     const apiName = 'REACTIONDiaryAPI';
@@ -202,7 +171,7 @@ const DiaryFetch = () => {
         <></>
       ) : (
         <Grid container justify="flex-end">
-          <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => fetchDiary()}>
+          <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => setFetch(!fetch)}>
             <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
           </Button>
         </Grid>
@@ -265,6 +234,7 @@ const DiaryFetch = () => {
           <p className="text-base">足跡は1つまでしか残せません</p>
         </DialogTitle>
       </Dialog>
+      {}
     </Container>
   );
 };
