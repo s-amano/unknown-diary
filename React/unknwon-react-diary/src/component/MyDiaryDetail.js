@@ -56,9 +56,9 @@ const MyDiaryDetail = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'UPDATEDiaryAPIProd';
+      return 'UPDATEDiaryAPI';
     } else if (env === 'dev') {
-      return 'UPDATEDiaryAPIDev';
+      return 'UPDATEDiaryAPI';
     }
   }, []);
 
@@ -67,9 +67,9 @@ const MyDiaryDetail = () => {
       const env = process.env.REACT_APP_ENVIROMENT;
       console.log(env);
       if (env === 'prod') {
-        return 'GETStoreAPIProd';
+        return 'GETStoreAPI';
       } else if (env === 'dev') {
-        return 'GETStoreAPIDev';
+        return 'GETStoreAPI';
       }
     };
 

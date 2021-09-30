@@ -13,9 +13,9 @@ const MyProfile = () => {
       const env = process.env.REACT_APP_ENVIROMENT;
       console.log(env);
       if (env === 'prod') {
-        return 'GETMyDiariesAPIProd';
+        return 'GETMyDiariesAPI';
       } else if (env === 'dev') {
-        return 'GETMyDiariesAPIDev';
+        return 'GETMyDiariesAPI';
       }
     };
 

@@ -46,9 +46,9 @@ const DiaryPost = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'POSTStoreAPIProd';
+      return 'POSTStoreAPI';
     } else if (env === 'dev') {
-      return 'POSTStoreAPIDev';
+      return 'POSTStoreAPI';
     }
   };
 

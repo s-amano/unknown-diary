@@ -47,9 +47,9 @@ const DiaryFetch = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'GETStoreAPIProd';
+      return 'GETStoreAPI';
     } else if (env === 'dev') {
-      return 'GETStoreAPIDev';
+      return 'GETStoreAPI';
     }
   }, []);
 
@@ -57,9 +57,9 @@ const DiaryFetch = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'REACTIONDiaryAPIProd';
+      return 'REACTIONDiaryAPI';
     } else if (env === 'dev') {
-      return 'REACTIONDiaryAPIDev';
+      return 'REACTIONDiaryAPI';
     }
   }, []);
 
@@ -67,9 +67,9 @@ const DiaryFetch = () => {
     const env = process.env.REACT_APP_ENVIROMENT;
     console.log(env);
     if (env === 'prod') {
-      return 'COMMENTDiaryAPIProd';
+      return 'COMMENTDiaryAPI';
     } else if (env === 'dev') {
-      return 'COMMENTDiaryAPIDev';
+      return 'COMMENTDiaryAPI';
     }
   }, []);
 
