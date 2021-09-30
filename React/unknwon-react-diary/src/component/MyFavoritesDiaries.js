@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { ApiContext } from '../context/ApiContext';
 import DiaryCard from '../component/atoms/DiaryCard';
+import Pagination from '../component/atoms/Pagination';
 
 const FetchMyFavoritesDiaries = () => {
   const { loading, setLoading } = useContext(ApiContext);
@@ -79,28 +79,12 @@ const FetchMyFavoritesDiaries = () => {
           const maxLength = 37;
           if (value.content.length > maxLength) {
             value.content = value.content.substr(0, maxLength) + '...';
-          } else {
-            value.content = value.content;
           }
-
           return <DiaryCard key={key} pathname="/diary" diary={value} />;
         })}
       </div>
 
-      <div style={{ paddingLeft: '12px', paddingRight: '12px', marginTop: '36px', marginBottom: '48px' }}>
-        {page !== 1 && (
-          <Button style={{ marginRight: '3%' }} onClick={() => prevPage()}>
-            <a href={() => false}>&lt; Previous</a>
-          </Button>
-        )}
-        {page !== maxPageNumber && (
-          <Button onClick={() => nextPage()}>
-            <a href={() => false} className="ml-4">
-              Next &gt;
-            </a>
-          </Button>
-        )}
-      </div>
+      <Pagination page={page} maxPageNumber={maxPageNumber} prevPage={prevPage} nextPage={nextPage} />
     </Container>
   );
 };

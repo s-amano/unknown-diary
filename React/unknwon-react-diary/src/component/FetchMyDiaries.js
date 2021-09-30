@@ -1,9 +1,9 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
 import { Auth, API } from 'aws-amplify';
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { ApiContext } from '../context/ApiContext';
 import DiaryCard from './atoms/DiaryCard';
+import Pagination from '../component/atoms/Pagination';
 
 const FetchMyDiaries = memo((props) => {
   const { loading, setLoading } = useContext(ApiContext);
@@ -75,20 +75,7 @@ const FetchMyDiaries = memo((props) => {
         })}
       </div>
 
-      <div style={{ paddingLeft: '12px', paddingRight: '12px', marginTop: '36px', marginBottom: '48px' }}>
-        {page !== 1 && (
-          <Button style={{ marginRight: '3%' }} onClick={() => prevPage()}>
-            <a href={() => false}>&lt; Previous</a>
-          </Button>
-        )}
-        {page !== maxPageNumber && (
-          <Button onClick={() => nextPage()}>
-            <a href={() => false} className="ml-4">
-              Next &gt;
-            </a>
-          </Button>
-        )}
-      </div>
+      <Pagination page={page} maxPageNumber={maxPageNumber} prevPage={prevPage} nextPage={nextPage} />
     </>
   );
 });
