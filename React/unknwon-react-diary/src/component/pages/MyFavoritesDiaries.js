@@ -3,9 +3,9 @@ import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { ApiContext } from '../context/ApiContext';
-import DiaryCard from '../component/atoms/DiaryCard';
-import Pagination from '../component/atoms/Pagination';
+import { ApiContext } from '../../context/ApiContext';
+import DiaryCard from '../atoms/DiaryCard';
+import Pagination from '../atoms/Pagination';
 
 const FetchMyFavoritesDiaries = () => {
   const { loading, setLoading } = useContext(ApiContext);

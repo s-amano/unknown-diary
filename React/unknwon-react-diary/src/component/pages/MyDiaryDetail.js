@@ -7,9 +7,9 @@ import Button from '@material-ui/core/Button';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { ApiContext } from '../context/ApiContext';
+import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DiaryForm from '../component/atoms/DiaryForm';
+import DiaryForm from '../atoms/DiaryForm';
 
 const MyDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);

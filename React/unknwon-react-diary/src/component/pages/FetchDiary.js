@@ -12,7 +12,7 @@ import TextField from '@material-ui/core/TextField';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import { IconButton } from '@material-ui/core';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import { ApiContext } from '../context/ApiContext';
+import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const DiaryFetch = () => {

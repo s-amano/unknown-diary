@@ -6,8 +6,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { ApiContext } from '../context/ApiContext';
-import DiaryForm from '../component/atoms/DiaryForm';
+import { ApiContext } from '../../context/ApiContext';
+import DiaryForm from '../atoms/DiaryForm';
 
 const DiaryPost = () => {
   const { loading, setLoading } = useContext(ApiContext);

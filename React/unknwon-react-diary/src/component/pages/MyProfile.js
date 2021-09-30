@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Auth, API } from 'aws-amplify';
 import FetchMyDiaries from '../FetchMyDiaries';
-import StatisticalDataCard from '../StatisticalDataCard';
+import StatisticalDataCard from '../atoms/StatisticalDataCard';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
