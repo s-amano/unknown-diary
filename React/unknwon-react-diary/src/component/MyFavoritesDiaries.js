@@ -10,6 +10,7 @@ const FetchMyFavoritesDiaries = () => {
   const [page, setPage] = useState(1);
   const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useState([]);
   const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
+  const [diaryID, setDiaryID] = useState('');
 
   const sliceByNumber = (array, number) => {
     const length = Math.ceil(array.length / number);
@@ -23,7 +24,8 @@ const FetchMyFavoritesDiaries = () => {
   useEffect(() => {
     const fetchMyFavoritesDiaries = async () => {
       const apiName = 'FAVORITESDiaryAPI';
-      const path = ``;
+      const limit = '6';
+      const path = diaryID === '' ? `` : `?id=${diaryID}&limit=${limit}`;
 
       const myInit = {
         headers: {
@@ -33,48 +35,29 @@ const FetchMyFavoritesDiaries = () => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          setMyAllFavoritesDiaries(response.Diaries);
+          if (response.Diaries.length > myAllFavoritesDiaries.length) {
+            setMyAllFavoritesDiaries(response.Diaries);
+          }
           setMyFavoritesDiaries(response.Diaries.slice(0, 6));
-          setPage(1);
         })
         .catch((err) => {
           console.log(err);
         });
     };
     fetchMyFavoritesDiaries('');
-  }, []);
-
-  const fetchMyFavoritesDiaries = async (id) => {
-    const limit = '6';
-    const apiName = 'FAVORITESDiaryAPI';
-    const path = `?id=${id}&limit=${limit}`;
-
-    const myInit = {
-      headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
-      },
-    };
-
-    await API.get(apiName, path, myInit)
-      .then((response) => {
-        setMyFavoritesDiaries(response.Diaries);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  }, [diaryID, myAllFavoritesDiaries.length]);
 
   const prevPage = () => {
     if (page === 2) {
-      fetchMyFavoritesDiaries('');
+      setDiaryID('');
     } else {
-      fetchMyFavoritesDiaries(lastDiraryIDList[page - 3].slice(-1)[0].id);
+      setDiaryID(lastDiraryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
   };
 
   const nextPage = () => {
-    fetchMyFavoritesDiaries(lastDiraryIDList[page - 1].slice(-1)[0].id);
+    setDiaryID(lastDiraryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
   };
   return (

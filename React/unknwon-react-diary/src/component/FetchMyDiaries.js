@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 const FetchMyDiaries = memo((props) => {
   const [page, setPage] = useState(1);
   const [myDiaries, setMyDiaries] = useState([]);
+  const [diaryID, setDiaryID] = useState('');
 
   const sliceByNumber = (array, number) => {
     const length = Math.ceil(array.length / number);
@@ -22,7 +23,7 @@ const FetchMyDiaries = memo((props) => {
     const fetchMyDiaries = async () => {
       const limit = '6';
       const apiName = 'GETMyDiariesAPI';
-      const path = `?limit=${limit}`;
+      const path = diaryID === '' ? `?limit=${limit}` : `?id=${diaryID}&limit=${limit}`;
 
       const myInit = {
         headers: {
@@ -33,46 +34,25 @@ const FetchMyDiaries = memo((props) => {
       await API.get(apiName, path, myInit)
         .then((response) => {
           setMyDiaries(response.Diaries);
-          setPage(1);
         })
         .catch((err) => {
           console.log(err);
         });
     };
     fetchMyDiaries('');
-  }, []);
-
-  const fetchMyDiaries = async (id) => {
-    const limit = '6';
-    const apiName = 'GETMyDiariesAPI';
-    const path = `?id=${id}&limit=${limit}`;
-
-    const myInit = {
-      headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
-      },
-    };
-
-    await API.get(apiName, path, myInit)
-      .then((response) => {
-        setMyDiaries(response.Diaries);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  }, [diaryID]);
 
   const prevPage = () => {
     if (page === 2) {
-      fetchMyDiaries('');
+      setDiaryID('');
     } else {
-      fetchMyDiaries(lastDiraryIDList[page - 3].slice(-1)[0].id);
+      setDiaryID(lastDiraryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
   };
 
   const nextPage = () => {
-    fetchMyDiaries(lastDiraryIDList[page - 1].slice(-1)[0].id);
+    setDiaryID(lastDiraryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
   };
   return (
