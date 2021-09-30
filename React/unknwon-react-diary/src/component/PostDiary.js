@@ -42,18 +42,8 @@ const DiaryPost = () => {
     return true;
   }, [postDiaryDate]);
 
-  const envAPI = () => {
-    const env = process.env.REACT_APP_ENVIROMENT;
-    console.log(env);
-    if (env === 'prod') {
-      return 'POSTStoreAPI';
-    } else if (env === 'dev') {
-      return 'POSTStoreAPI';
-    }
-  };
-
   const survayPost = async () => {
-    const apiName = envAPI();
+    const apiName = 'POSTStoreAPI';
     const path = '';
 
     const postData = {
