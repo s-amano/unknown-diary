@@ -4,7 +4,7 @@ import Page404 from '../component/Page404';
 import PostDiary from '../component/PostDiary';
 import FetchDiary from '../component/FetchDiary';
 import MyDiaryDetail from '../component/MyDiaryDetail';
-import MyProfile from '../component/MyProfile';
+import MyProfile from '../component/pages/MyProfile';
 import MyFavoritesDiaries from '../component/MyFavoritesDiaries';
 import Home from '../component/Home';
 

@@ -152,7 +152,6 @@ const DiaryFetch = () => {
 
   return (
     <Container className="sm:w-full md:w-700 mt-6">
-      {loading && <CircularProgress />}
       <div className="text-right mr-12 mb-1">
         <p className="text-gray-500 text-lg ml-auto">{diary.date ? diary.date : '日付なし'}</p>
       </div>
