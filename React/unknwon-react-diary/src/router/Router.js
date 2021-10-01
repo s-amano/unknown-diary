@@ -6,7 +6,7 @@ import FetchDiary from '../component/pages/FetchDiary';
 import MyDiaryDetail from '../component/pages/MyDiaryDetail';
 import MyProfile from '../component/pages/MyProfile';
 import MyFavoritesDiaries from '../component/pages/MyFavoritesDiaries';
-import Home from '../component/Home';
+import Home from '../component/pages/Home';
 
 const Router = () => {
   return (
