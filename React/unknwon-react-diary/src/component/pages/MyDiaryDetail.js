@@ -8,7 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DiaryForm from '../atoms/DiaryForm';
+import DiaryForm from '../organisms/DiaryForm';
 import MyDiaryCard from '../organisms/MyDiaryCard';
 import DiaryCommentBubble from '../atoms/DiaryCommentBubble';
 

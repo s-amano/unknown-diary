@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
@@ -20,17 +20,20 @@ const MyFavoriteDiaryDetail = () => {
   const [alreadyCommentedDialog, setAlreadyCommentedDialog] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
-  const handleEditComment = () => {
+  const handleEditComment = useCallback(() => {
     setIsEditComment(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAlreadyCommentedDialog(false);
-  };
+  }, []);
 
-  const updateLeaveComment = () => (event) => {
-    setLeaveComment(event.target.value);
-  };
+  const updateLeaveComment = useCallback(
+    () => (event) => {
+      setLeaveComment(event.target.value);
+    },
+    []
+  );
 
   useEffect(() => {
     const fetchDiary = async () => {
@@ -65,7 +68,7 @@ const MyFavoriteDiaryDetail = () => {
     fetchDiary();
   }, [location.search, thisUserName, setLoading]);
 
-  const updateDiary = async () => {
+  const updateDiary = useCallback(async () => {
     const apiName = 'REACTIONDiaryAPI';
     const path = '';
 
@@ -91,9 +94,9 @@ const MyFavoriteDiaryDetail = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
+  }, [diary, favorite]);
 
-  const commentDiary = async () => {
+  const commentDiary = useCallback(async () => {
     console.log(leaveComment);
     const apiName = 'COMMENTDiaryAPI';
     const path = '';
@@ -117,22 +120,25 @@ const MyFavoriteDiaryDetail = () => {
         console.log(response);
         if (response.is_comment) {
           setAlreadyCommentedDialog(true);
+        } else {
+          setDiary({ ...diary, comments: response.comments });
         }
-        setDiary({ ...diary, comments: response.comments });
-
         setIsEditComment(false);
         setLeaveComment('');
       })
       .catch((err) => {
         console.log(err);
       });
-  };
+  }, [diary, leaveComment]);
 
-  const leaveCommentLength = leaveComment.length;
+  const maxCommentLength = useMemo(() => {
+    return diaryContentLength < 70 ? diaryContentLength : 70;
+  }, [diaryContentLength]);
 
-  const maxCommentLength = diaryContentLength < 70 ? diaryContentLength : 70;
-
-  const isCommentLengthOver = leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
+  const isCommentLengthOver = useMemo(() => {
+    const leaveCommentLength = leaveComment.length;
+    return leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
+  }, [leaveComment.length, maxCommentLength]);
 
   return (
     <Container className="sm:w-full md:w-700">

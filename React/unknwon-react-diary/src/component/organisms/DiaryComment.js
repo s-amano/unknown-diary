@@ -4,7 +4,6 @@ import DiaryCommentEdit from '../molecules/DiaryCommentEdit';
 import DiaryCommentButton from '../atoms/DiaryCommentButton';
 
 const DiaryComment = memo((props) => {
-  console.log('再レンダリング');
   const {
     diaryComment,
     isEditComment,

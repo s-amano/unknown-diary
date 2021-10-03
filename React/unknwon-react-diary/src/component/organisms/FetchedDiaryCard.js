@@ -5,6 +5,7 @@ import ReactionIconCount from '../molecules/ReactionIconCount';
 import DiaryContent from '../atoms/DiaryContent';
 
 export default memo(function FetchedDiaryCard(props) {
+  console.log('再レンダリング');
   const { diary, updateDiary, favorite } = props;
   return (
     <>
