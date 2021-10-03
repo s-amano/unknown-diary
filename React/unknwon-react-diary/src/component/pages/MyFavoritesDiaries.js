@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { Auth, API } from 'aws-amplify';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
@@ -15,14 +15,15 @@ const FetchMyFavoritesDiaries = () => {
   const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
   const [diaryID, setDiaryID] = useState('');
 
-  const sliceByNumber = (array, number) => {
-    const length = Math.ceil(array.length / number);
-    return new Array(length).fill().map((_, i) => array.slice(i * number, (i + 1) * number));
-  };
+  const lastDiraryIDList = useMemo(() => {
+    const number = 6;
+    const length = Math.ceil(myAllFavoritesDiaries.length / number);
+    return new Array(length).fill().map((_, i) => myAllFavoritesDiaries.slice(i * number, (i + 1) * number));
+  }, [myAllFavoritesDiaries]);
 
-  const lastDiraryIDList = sliceByNumber(myAllFavoritesDiaries, 6);
-
-  let maxPageNumber = Math.ceil(myAllFavoritesDiaries.length / 6);
+  const maxPageNumber = useMemo(() => {
+    Math.ceil(myAllFavoritesDiaries.length / 6);
+  }, [myAllFavoritesDiaries]);
 
   useEffect(() => {
     const fetchMyFavoritesDiaries = async () => {
@@ -53,19 +54,20 @@ const FetchMyFavoritesDiaries = () => {
     fetchMyFavoritesDiaries('');
   }, [diaryID, myAllFavoritesDiaries.length, setLoading]);
 
-  const prevPage = () => {
+  const prevPage = useCallback(() => {
     if (page === 2) {
       setDiaryID('');
     } else {
       setDiaryID(lastDiraryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
-  };
+  }, [page, lastDiraryIDList]);
 
-  const nextPage = () => {
+  const nextPage = useCallback(() => {
     setDiaryID(lastDiraryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
-  };
+  }, [page, lastDiraryIDList]);
+
   return (
     <Container style={{ marginTop: '40px' }} maxWidth="md">
       <Typography style={{ marginTop: '30px', color: 'black' }} variant="h6">
