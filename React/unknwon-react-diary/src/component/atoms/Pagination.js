@@ -3,6 +3,7 @@ import { Button } from '@material-ui/core';
 
 export default memo(function Pagination(props) {
   const { page, maxPageNumber, prevPage, nextPage } = props;
+  console.log(props);
   return (
     <div className="px-3 mt-9 mb-12">
       {page !== 1 && (

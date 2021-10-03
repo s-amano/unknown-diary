@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { Auth, API } from 'aws-amplify';
-import { Grid } from '@material-ui/core';
+import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { ApiContext } from '../../context/ApiContext';
@@ -10,25 +9,23 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import FetchedDiaryCard from '../organisms/FetchedDiaryCard';
 import DiaryComment from '../organisms/DiaryComment';
 
-const FetchDiary = () => {
+const MyFavoriteDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
 
+  const location = useLocation();
   const [diary, setDiary] = useState({});
   const [diaryContentLength, setDiaryContentLength] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditComment, setIsEditComment] = useState(false);
   const [leaveComment, setLeaveComment] = useState('');
   const [alreadyCommentedDialog, setAlreadyCommentedDialog] = useState(false);
   const [favorite, setFavorite] = useState(false);
-  const [fetch, setFetch] = useState(false);
-
-  const handleClose = useCallback(() => {
-    setDialogOpen(false);
-    setAlreadyCommentedDialog(false);
-  }, []);
 
   const handleEditComment = useCallback(() => {
     setIsEditComment(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setAlreadyCommentedDialog(false);
   }, []);
 
   const updateLeaveComment = useCallback(
@@ -42,7 +39,7 @@ const FetchDiary = () => {
     const fetchDiary = async () => {
       setLoading(true);
       const apiName = 'GETStoreAPI';
-      const path = ``;
+      const path = `${location.search}`;
 
       const myInit = {
         headers: {
@@ -55,16 +52,12 @@ const FetchDiary = () => {
           console.log(response);
           setDiary(response);
           setDiaryContentLength(response.content.length);
-          if (response.id === '') {
-            setDialogOpen(true);
-          }
           console.log(thisUserName);
           if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
             setFavorite(false);
           } else {
             setFavorite(true);
           }
-          setIsEditComment(false);
           setLoading(false);
         })
         .catch((err) => {
@@ -73,7 +66,7 @@ const FetchDiary = () => {
         });
     };
     fetchDiary();
-  }, [thisUserName, fetch, setLoading]);
+  }, [location.search, thisUserName, setLoading]);
 
   const updateDiary = useCallback(async () => {
     const apiName = 'REACTIONDiaryAPI';
@@ -148,15 +141,8 @@ const FetchDiary = () => {
   }, [leaveComment.length, maxCommentLength]);
 
   return (
-    <Container className="sm:w-full md:w-700 mt-6">
+    <Container className="sm:w-full md:w-700">
       <FetchedDiaryCard diary={diary} updateDiary={updateDiary} favorite={favorite} />
-
-      <Grid container justify="flex-end">
-        <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => setFetch(!fetch)}>
-          <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
-        </Button>
-      </Grid>
-
       <DiaryComment
         diaryComment={diary.comments}
         isEditComment={isEditComment}
@@ -166,16 +152,8 @@ const FetchDiary = () => {
         isCommentLengthOver={isCommentLengthOver}
         commentDiary={commentDiary}
         handleEditComment={handleEditComment}
-        diaryCommentTile={'足跡を残す'}
+        diaryCommentTile={'足跡'}
       />
-
-      <Dialog open={dialogOpen} onClose={handleClose}>
-        <DialogTitle id="simple-dialog-title">
-          <p className="text-base">取得できる日記がありません</p>
-          <p className="text-sm">※過去にいいねした日記は取得できません</p>
-        </DialogTitle>
-      </Dialog>
-
       <Dialog open={alreadyCommentedDialog} onClose={handleClose}>
         <DialogTitle id="simple-dialog-title">
           <p className="text-base">足跡は1つまでしか残せません</p>
@@ -186,4 +164,4 @@ const FetchDiary = () => {
   );
 };
 
-export default FetchDiary;
+export default MyFavoriteDiaryDetail;
