@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import DiaryDate from '../atoms/DiaryDate';
 import DiaryTitle from '../atoms/DiaryTilte';
 import DiaryContent from '../atoms/DiaryContent';
@@ -6,7 +6,7 @@ import FilledFavoriteIcon from '../atoms/FilledFavoriteIcon';
 import DiaryReactionCount from '../atoms/DiaryReactionCount';
 import { IconButton } from '@material-ui/core';
 
-export default function MyDiaryCard(props) {
+export default memo(function MyDiaryCard(props) {
   const { diary } = props;
   return (
     <>
@@ -23,4 +23,4 @@ export default function MyDiaryCard(props) {
       </div>
     </>
   );
-}
+});

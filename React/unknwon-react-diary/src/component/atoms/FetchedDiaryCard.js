@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 
-export default function FetchedDiaryCard(props) {
+export default memo(function FetchedDiaryCard(props) {
   const { diary } = props;
 
   return (
@@ -22,4 +22,4 @@ export default function FetchedDiaryCard(props) {
       </div>
     </>
   );
-}
+});

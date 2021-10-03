@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 
-export default function DiaryCommentBubble(props) {
+export default memo(function DiaryCommentBubble(props) {
   const { diaryComment } = props;
   console.log(diaryComment);
   return (
@@ -8,4 +8,4 @@ export default function DiaryCommentBubble(props) {
       <p className="ml-3">{diaryComment}</p>
     </div>
   );
-}
+});

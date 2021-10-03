@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import TextField from '@material-ui/core/TextField';
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import Button from '@material-ui/core/Button';
 
-const DiaryCommentEdit = (props) => {
+const DiaryCommentEdit = memo((props) => {
   const { leaveComment, updateLeaveComment, maxCommentLength, isCommentLengthOver, commentDiary } = props;
   return (
     <div className="flex-start mt-2">
@@ -25,6 +25,6 @@ const DiaryCommentEdit = (props) => {
       </div>
     </div>
   );
-};
+});
 
 export default DiaryCommentEdit;

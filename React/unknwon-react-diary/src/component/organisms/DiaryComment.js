@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import DiaryCommentBubble from '../atoms/DiaryCommentBubble';
 import DiaryCommentEdit from '../molecules/DiaryCommentEdit';
 import DiaryCommentButton from '../atoms/DiaryCommentButton';
 
-const DiaryComment = (props) => {
+const DiaryComment = memo((props) => {
   const {
     diaryComment,
     isEditComment,
@@ -37,6 +37,6 @@ const DiaryComment = (props) => {
       )}
     </div>
   );
-};
+});
 
 export default DiaryComment;
