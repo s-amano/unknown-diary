@@ -10,6 +10,7 @@ import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DiaryForm from '../atoms/DiaryForm';
 import MyDiaryCard from '../organisms/MyDiaryCard';
+import DiaryCommentBubble from '../atoms/DiaryCommentBubble';
 
 const MyDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -169,15 +170,11 @@ const MyDiaryDetail = () => {
           <MyDiaryCard diary={myDiaryDetail} />
           <div className="flex flex-col w-9/12 pl-8 mt-4">
             <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡</p>
-            {myDiaryDetail.comments ? (
-              myDiaryDetail.comments.map((comment, index) => (
-                <div key={index} className="bg-white shadow-xl rounded-2xl w-1/2 mb-2 text-left">
-                  <p className="ml-3">{comment}</p>
-                </div>
-              ))
-            ) : (
-              <></>
-            )}
+            {myDiaryDetail.comments
+              ? myDiaryDetail.comments.map((comment, index) => (
+                  <DiaryCommentBubble key={index} diaryComment={comment} />
+                ))
+              : null}
           </div>
         </>
       )}

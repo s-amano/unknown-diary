@@ -5,12 +5,10 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import AddIcon from '@material-ui/icons/Add';
-import TextField from '@material-ui/core/TextField';
-import AddCommentIcon from '@material-ui/icons/AddComment';
 import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FetchedDiaryCard from '../organisms/FetchedDiaryCard';
+import DiaryComment from '../organisms/DiaryComment';
 
 const DiaryFetch = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -157,44 +155,17 @@ const DiaryFetch = () => {
         </Button>
       </Grid>
 
-      <div className="flex flex-col w-11/12 pl-8 mt-4">
-        <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
-
-        {diary.comments
-          ? diary.comments.map((comment, index) => (
-              <div key={index} className="bg-white shadow-xl rounded-2xl mb-4 sm:w-9/12 md:w-2/3 text-left py-1 px-2">
-                <p className="ml-3">{comment}</p>
-              </div>
-            ))
-          : null}
-
-        {isEditComment ? (
-          <div className="flex-start mt-2">
-            <div className="flex">
-              <TextField
-                className="ml-1 sm:w-full md:w-2/3"
-                value={leaveComment}
-                rows={2}
-                rowsMax={2}
-                multiline
-                onChange={updateLeaveComment()}
-                helperText={`${maxCommentLength}文字以下`}
-                error={Boolean(!isCommentLengthOver)}
-                variant="filled"
-              />
-              <Button onClick={() => commentDiary()} disabled={Boolean(!isCommentLengthOver)}>
-                <AddCommentIcon />
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="flex-start w-full md:w-2/3 mt-2">
-            <Button onClick={() => handleEditComment()}>
-              <AddIcon />
-            </Button>
-          </div>
-        )}
-      </div>
+      <DiaryComment
+        diaryComment={diary.comments}
+        isEditComment={isEditComment}
+        leaveComment={leaveComment}
+        updateLeaveComment={updateLeaveComment}
+        maxCommentLength={maxCommentLength}
+        isCommentLengthOver={isCommentLengthOver}
+        commentDiary={commentDiary}
+        handleEditComment={handleEditComment}
+        diaryCommentTile={'足跡を残す'}
+      />
 
       <Dialog open={dialogOpen} onClose={handleClose}>
         <DialogTitle id="simple-dialog-title">
