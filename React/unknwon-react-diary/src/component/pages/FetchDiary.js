@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -10,7 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import FetchedDiaryCard from '../organisms/FetchedDiaryCard';
 import DiaryComment from '../organisms/DiaryComment';
 
-const DiaryFetch = () => {
+const FetchDiary = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
 
   const [diary, setDiary] = useState({});
@@ -22,22 +22,21 @@ const DiaryFetch = () => {
   const [favorite, setFavorite] = useState(false);
   const [fetch, setFetch] = useState(false);
 
-  const handleClickOpen = () => {
-    setDialogOpen(true);
-  };
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setDialogOpen(false);
     setAlreadyCommentedDialog(false);
-  };
+  }, []);
 
-  const handleEditComment = () => {
+  const handleEditComment = useCallback(() => {
     setIsEditComment(true);
-  };
+  }, []);
 
-  const updateLeaveComment = () => (event) => {
-    setLeaveComment(event.target.value);
-  };
+  const updateLeaveComment = useCallback(
+    () => (event) => {
+      setLeaveComment(event.target.value);
+    },
+    []
+  );
 
   useEffect(() => {
     const fetchDiary = async () => {
@@ -57,7 +56,7 @@ const DiaryFetch = () => {
           setDiary(response);
           setDiaryContentLength(response.content.length);
           if (response.id === '') {
-            handleClickOpen();
+            setDialogOpen(true);
           }
           console.log(thisUserName);
           if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
@@ -76,7 +75,7 @@ const DiaryFetch = () => {
     fetchDiary();
   }, [thisUserName, fetch, setLoading]);
 
-  const updateDiary = async () => {
+  const updateDiary = useCallback(async () => {
     const apiName = 'REACTIONDiaryAPI';
     const path = '';
 
@@ -102,9 +101,9 @@ const DiaryFetch = () => {
       .catch((err) => {
         console.log(err);
       });
-  };
+  }, [diary, favorite]);
 
-  const commentDiary = async () => {
+  const commentDiary = useCallback(async () => {
     console.log(leaveComment);
     const apiName = 'COMMENTDiaryAPI';
     const path = '';
@@ -128,22 +127,25 @@ const DiaryFetch = () => {
         console.log(response);
         if (response.is_comment) {
           setAlreadyCommentedDialog(true);
+        } else {
+          setDiary({ ...diary, comments: response.comments });
         }
-        setDiary({ ...diary, comments: response.comments });
-
         setIsEditComment(false);
         setLeaveComment('');
       })
       .catch((err) => {
         console.log(err);
       });
-  };
+  }, [diary, leaveComment]);
 
-  const leaveCommentLength = leaveComment.length;
+  const maxCommentLength = useMemo(() => {
+    return diaryContentLength < 70 ? diaryContentLength : 70;
+  }, [diaryContentLength]);
 
-  const maxCommentLength = diaryContentLength < 70 ? diaryContentLength : 70;
-
-  const isCommentLengthOver = leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
+  const isCommentLengthOver = useMemo(() => {
+    const leaveCommentLength = leaveComment.length;
+    return leaveCommentLength > 0 && leaveCommentLength <= maxCommentLength;
+  }, [leaveComment.length, maxCommentLength]);
 
   return (
     <Container className="sm:w-full md:w-700 mt-6">
@@ -184,4 +186,4 @@ const DiaryFetch = () => {
   );
 };
 
-export default DiaryFetch;
+export default FetchDiary;

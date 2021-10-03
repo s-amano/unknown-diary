@@ -4,6 +4,7 @@ import DiaryCommentEdit from '../molecules/DiaryCommentEdit';
 import DiaryCommentButton from '../atoms/DiaryCommentButton';
 
 const DiaryComment = memo((props) => {
+  console.log('再レンダリング');
   const {
     diaryComment,
     isEditComment,
@@ -15,7 +16,6 @@ const DiaryComment = memo((props) => {
     handleEditComment,
     diaryCommentTile,
   } = props;
-  console.log(diaryComment);
   return (
     <div className="flex flex-col w-11/12 pl-8 mt-4">
       <p className="text-xl text-gray-800 font-semibold mb-3 text-left">{diaryCommentTile}</p>
