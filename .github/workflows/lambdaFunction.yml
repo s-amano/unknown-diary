@@ -2,35 +2,29 @@ name: Auto Deploy to AWS Lambda
 
 on:
   push:
-      branches:
-        - main
-      paths:
-        - "backend/**"
-        
-  pull_request:
-      branches:
-        - main
-      paths:
-        - "backend/**"
-        
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@main  # リポジトリをチェックアウト
-        
+        uses: actions/checkout@main # リポジトリをチェックアウト
+
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
-   
+
       - name: Install Dependencies
         run: |
           npm install serverless -g
           npm install
-        working-directory: ./backend/comconfirm-lambda  
-        
+        working-directory: ./backend/comconfirm-lambda
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
