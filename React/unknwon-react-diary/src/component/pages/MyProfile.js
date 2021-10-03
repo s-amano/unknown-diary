@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo, useCallback } from 'react';
 import { Auth, API } from 'aws-amplify';
 import FetchMyDiaries from '../organisms/FetchMyDiaries';
 import StatisticalDataCard from '../molecules/StatisticalDataCard';
@@ -15,28 +15,29 @@ const MyProfile = () => {
   const [page, setPage] = useState(1);
   const [diaryID, setDiaryID] = useState('');
 
-  const sliceByNumber = (array, number) => {
-    const length = Math.ceil(array.length / number);
-    return new Array(length).fill().map((_, i) => array.slice(i * number, (i + 1) * number));
-  };
+  const lastDiraryIDList = useMemo(() => {
+    const number = 6;
+    const length = Math.ceil(myAllDiaries.length / 6);
+    return new Array(length).fill().map((_, i) => myAllDiaries.slice(i * number, (i + 1) * number));
+  }, [myAllDiaries]);
 
-  const lastDiraryIDList = sliceByNumber(myAllDiaries, 6);
+  const maxPageNumber = useMemo(() => {
+    Math.ceil(myAllDiaries.length / 6);
+  }, [myAllDiaries]);
 
-  var maxPageNumber = Math.ceil(myAllDiaries.length / 6);
-
-  const prevPage = () => {
+  const prevPage = useCallback(() => {
     if (page === 2) {
       setDiaryID('');
     } else {
       setDiaryID(lastDiraryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
-  };
+  }, [page, lastDiraryIDList]);
 
-  const nextPage = () => {
+  const nextPage = useCallback(() => {
     setDiaryID(lastDiraryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
-  };
+  }, [page, lastDiraryIDList]);
 
   useEffect(() => {
     const fetchMyDiaries = async () => {
