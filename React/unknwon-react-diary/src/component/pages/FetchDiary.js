@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
@@ -16,7 +15,6 @@ import FetchedDiaryCard from '../organisms/FetchedDiaryCard';
 const DiaryFetch = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
 
-  const location = useLocation();
   const [diary, setDiary] = useState({});
   const [diaryContentLength, setDiaryContentLength] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -47,7 +45,7 @@ const DiaryFetch = () => {
     const fetchDiary = async () => {
       setLoading(true);
       const apiName = 'GETStoreAPI';
-      const path = `${location.search}`;
+      const path = ``;
 
       const myInit = {
         headers: {
@@ -69,6 +67,7 @@ const DiaryFetch = () => {
           } else {
             setFavorite(true);
           }
+          setIsEditComment(false);
           setLoading(false);
         })
         .catch((err) => {
@@ -77,7 +76,7 @@ const DiaryFetch = () => {
         });
     };
     fetchDiary();
-  }, [location.search, thisUserName, fetch, setLoading]);
+  }, [thisUserName, fetch, setLoading]);
 
   const updateDiary = async () => {
     const apiName = 'REACTIONDiaryAPI';
@@ -151,32 +150,23 @@ const DiaryFetch = () => {
   return (
     <Container className="sm:w-full md:w-700 mt-6">
       <FetchedDiaryCard diary={diary} updateDiary={updateDiary} favorite={favorite} />
-      {location.search ? (
-        <></>
-      ) : (
-        <Grid container justify="flex-end">
-          <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => setFetch(!fetch)}>
-            <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
-          </Button>
-        </Grid>
-      )}
+
+      <Grid container justify="flex-end">
+        <Button style={{ marginRight: '3%' }} variant="contained" color="primary" onClick={() => setFetch(!fetch)}>
+          <p style={{ color: 'white', margin: '3px', fontWeight: 'bold' }}>日記を取得する</p>
+        </Button>
+      </Grid>
 
       <div className="flex flex-col w-11/12 pl-8 mt-4">
-        {location.search ? (
-          <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡</p>
-        ) : (
-          <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
-        )}
+        <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡を残す</p>
 
-        {diary.comments ? (
-          diary.comments.map((comment, index) => (
-            <div key={index} className="bg-white shadow-xl rounded-2xl mb-4 sm:w-9/12 md:w-2/3 text-left py-1 px-2">
-              <p className="ml-3">{comment}</p>
-            </div>
-          ))
-        ) : (
-          <></>
-        )}
+        {diary.comments
+          ? diary.comments.map((comment, index) => (
+              <div key={index} className="bg-white shadow-xl rounded-2xl mb-4 sm:w-9/12 md:w-2/3 text-left py-1 px-2">
+                <p className="ml-3">{comment}</p>
+              </div>
+            ))
+          : null}
 
         {isEditComment ? (
           <div className="flex-start mt-2">
