@@ -7,16 +7,18 @@ import MyDiaryDetail from '../component/pages/MyDiaryDetail';
 import MyProfile from '../component/pages/MyProfile';
 import MyFavoritesDiaries from '../component/pages/MyFavoritesDiaries';
 import Home from '../component/pages/Home';
+import MyFavoriteDiaryDetail from '../component/pages/MyFavoriteDiaryDetail';
 
 const Router = () => {
   return (
     <Switch>
       <Route exact path="/mydiary" component={MyProfile} />
-      <Route exact path="/mydiary-detail" component={MyDiaryDetail} />
+      <Route exact path="/mydiary/detail" component={MyDiaryDetail} />
       <Route exact path="/diary" component={FetchDiary} />
       <Route exact path="/post" component={PostDiary} />
       <Route exact path="/" component={Home} />
       <Route exact path="/favorites" component={MyFavoritesDiaries} />
+      <Route exact path="/favorites/detail" component={MyFavoriteDiaryDetail} />
       <Route component={Page404} />
     </Switch>
   );

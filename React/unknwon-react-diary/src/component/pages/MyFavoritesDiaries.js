@@ -80,7 +80,7 @@ const FetchMyFavoritesDiaries = () => {
           if (value.content.length > maxLength) {
             value.content = value.content.substr(0, maxLength) + '...';
           }
-          return <DiaryCard key={key} pathname="/diary" diary={value} />;
+          return <DiaryCard key={key} pathname="/favorites/detail" diary={value} />;
         })}
       </div>
 

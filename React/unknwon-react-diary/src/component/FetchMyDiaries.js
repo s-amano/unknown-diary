@@ -71,7 +71,7 @@ const FetchMyDiaries = memo((props) => {
           if (value.content.length > maxLength) {
             value.content = value.content.substr(0, maxLength) + '...';
           }
-          return <DiaryCard key={key} pathname="/mydiary-detail" diary={value} />;
+          return <DiaryCard key={key} pathname="/mydiary/detail" diary={value} />;
         })}
       </div>
 
