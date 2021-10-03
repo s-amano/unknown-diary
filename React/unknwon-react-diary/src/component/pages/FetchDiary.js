@@ -4,16 +4,14 @@ import { Auth, API } from 'aws-amplify';
 import { Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import AddCommentIcon from '@material-ui/icons/AddComment';
-import { IconButton } from '@material-ui/core';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import FetchedDiaryCard from '../organisms/FetchedDiaryCard';
 
 const DiaryFetch = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -81,7 +79,7 @@ const DiaryFetch = () => {
     fetchDiary();
   }, [location.search, thisUserName, fetch, setLoading]);
 
-  const upadteDiary = async () => {
+  const updateDiary = async () => {
     const apiName = 'REACTIONDiaryAPI';
     const path = '';
 
@@ -152,25 +150,7 @@ const DiaryFetch = () => {
 
   return (
     <Container className="sm:w-full md:w-700 mt-6">
-      <div className="text-right mr-12 mb-1">
-        <p className="text-gray-500 text-lg ml-auto">{diary.date ? diary.date : '日付なし'}</p>
-      </div>
-      <div className="bg-white text-center shadow-xl py-4 px-3 w-10/12 max-w-2xl rounded-md mx-6 mb-6">
-        <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
-          {diary.title !== '' ? diary.title : 'タイトルなし'}
-        </p>
-        <p className="text-left mb-4 pl-3 whitespace-pre-wrap">{diary.content}</p>
-        <div className="flex justify-end">
-          <IconButton className="p-2" onClick={() => upadteDiary()}>
-            {favorite ? (
-              <FavoriteIcon className="mr-1" color="error" />
-            ) : (
-              <FavoriteBorder className="mr-1" color="error" />
-            )}
-          </IconButton>
-          <p className="py-2 pr-2 m-0 text-base font-bold">{diary.reaction}</p>
-        </div>
-      </div>
+      <FetchedDiaryCard diary={diary} updateDiary={updateDiary} favorite={favorite} />
       {location.search ? (
         <></>
       ) : (

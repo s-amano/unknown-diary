@@ -4,12 +4,12 @@ import { useLocation } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { ApiContext } from '../../context/ApiContext';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DiaryForm from '../atoms/DiaryForm';
+import MyDiaryCard from '../organisms/MyDiaryCard';
 
 const MyDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -166,20 +166,7 @@ const MyDiaryDetail = () => {
         />
       ) : (
         <>
-          <div className="text-right mr-12 mb-1">
-            <p className="text-gray-500 text-lg ml-auto">{myDiaryDetail.date ? myDiaryDetail.date : '日付なし'}</p>
-          </div>
-
-          <div className="bg-white text-center shadow-xl py-4 px-3 max-w-2xl rounded-md md:mx-7 mb-6">
-            <p className="text-xl mb-3 text-black font-bold text-gray-600 text-left">
-              {myDiaryDetail.title !== '' ? myDiaryDetail.title : 'タイトルなし'}
-            </p>
-            <p className="text-left mb-4 pl-3 whitespace-pre-wrap">{myDiaryDetail.content}</p>
-            <div className="flex justify-end">
-              <FavoriteIcon className="mr-1" color="error" />
-              <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px' }}>{myDiaryDetail.reaction}</p>
-            </div>
-          </div>
+          <MyDiaryCard diary={myDiaryDetail} />
           <div className="flex flex-col w-9/12 pl-8 mt-4">
             <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡</p>
             {myDiaryDetail.comments ? (
