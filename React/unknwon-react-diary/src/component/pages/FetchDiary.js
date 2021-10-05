@@ -96,7 +96,7 @@ const FetchDiary = () => {
         console.log('成功');
         setDiary({ ...diary, reaction: response.reaction, reactioners: response.reactioners });
         setFavorite(!favorite);
-        console.log(diary);
+        console.log(response);
       })
       .catch((err) => {
         console.log(err);

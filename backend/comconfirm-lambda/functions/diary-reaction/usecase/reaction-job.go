@@ -18,9 +18,10 @@ type ReactionJob struct {
 
 // ResultDiary はAPIのresponse内に格納する日記を格納する構造体です
 type ResultDiary struct {
-	ID       string `json:"id"`
-	PostAt   string `json:"post_at"`
-	Reaction string `json:"reaction"`
+	ID          string   `json:"id"`
+	PostAt      string   `json:"post_at"`
+	Reaction    string   `json:"reaction"`
+	Reactioners []string `json:"reactioners"`
 }
 
 // Run メソッドは、受け取ったポストデータを実際に処理します
@@ -60,6 +61,7 @@ func (rj *ReactionJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProx
 	ResultDiary.ID = responseDiary.ID
 	ResultDiary.PostAt = responseDiary.PostAt
 	ResultDiary.Reaction = responseDiary.Reaction
+	ResultDiary.Reactioners = responseDiary.Reactioners
 
 	return ResultDiary, nil
 }

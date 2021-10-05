@@ -152,11 +152,32 @@ func (rd *ReactionDiary) UpdateDiaryReaction(item map[string]*dynamodb.Attribute
 	if err != nil {
 		return ReactionDiary{}, err
 	}
-	responseitem := res.Attributes
+
+	resItem := res.Attributes
+	var reaction string
+	var reactioners []string
+
+	// リアクションがない場合とある場合で条件分岐 リアクションがある場合はreactionersをresponseに加える
+	attributeReaction, ok := resItem["reaction"]
+	if !ok {
+		reaction = "0"
+	} else {
+		reaction = *attributeReaction.S
+		attributeReactioners, ok := resItem["reactioners"]
+		if !ok {
+			reactioners = []string{}
+		} else {
+			for _, v := range attributeReactioners.L {
+				reactioners = append(reactioners, *v.S)
+			}
+		}
+	}
+
 	responseDiary := ReactionDiary{
-		ID:       rd.ID,
-		PostAt:   rd.PostAt,
-		Reaction: *responseitem["reaction"].S,
+		ID:          rd.ID,
+		PostAt:      rd.PostAt,
+		Reaction:    reaction,
+		Reactioners: reactioners,
 	}
 
 	fmt.Printf("updateItemのres : %+v\n", res.Attributes)
