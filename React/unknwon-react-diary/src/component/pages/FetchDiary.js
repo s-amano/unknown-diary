@@ -28,8 +28,12 @@ const FetchDiary = () => {
   }, []);
 
   const handleEditComment = useCallback(() => {
-    setIsEditComment(true);
-  }, []);
+    if (!(diary.commenters === null || diary.commenters.indexOf(thisUserName) === -1)) {
+      setAlreadyCommentedDialog(true);
+    } else {
+      setIsEditComment(true);
+    }
+  }, [diary.commenters, thisUserName]);
 
   const updateLeaveComment = useCallback(
     () => (event) => {
