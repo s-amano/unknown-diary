@@ -154,15 +154,33 @@ func (cd *CommentDiary) UpdateDiaryComment(item map[string]*dynamodb.AttributeVa
 		return CommentDiary{}, err
 	}
 	responseitem := res.Attributes
-	commentArray := []string{}
+	var commentArray []string
+	var commenters []string
 
-	for _, v := range responseitem["comments"].L {
-		commentArray = append(commentArray, *v.S)
+	attributeCommenters, ok := responseitem["commenters"]
+	if !ok {
+		commentArray = []string{}
+		commenters = []string{}
+		fmt.Printf("既存コメントがない %+v\n", responseitem)
+	} else {
+		fmt.Printf("commentersSlice L %+v\n", attributeCommenters.L)
+		for _, v := range attributeCommenters.L {
+			commenters = append(commenters, *v.S)
+		}
+		attributeComments, ok := responseitem["comments"]
+		if !ok {
+			commentArray = []string{}
+		} else {
+			for _, v := range attributeComments.L {
+				commentArray = append(commentArray, *v.S)
+			}
+		}
 	}
 	responseDiary := CommentDiary{
 		ID:            cd.ID,
 		PostAt:        cd.PostAt,
 		CommentArray:  commentArray,
+		Commenters:    commenters,
 		CommenterFlag: cd.CommenterFlag,
 	}
 
