@@ -21,6 +21,7 @@ type Diary struct {
 	Date        *string  `json:"date"`    // 日記の日付
 	Reaction    string   `json:"reaction"`
 	Comments    []string `json:"comments"`
+	Commenters  []string `json:"commenters"`
 	Author      string   `json:"author"`
 	Reactioners []string `json:"reactioners"`
 }
@@ -137,8 +138,30 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 	if !ok {
 		diary.Comments = []string{}
 	} else {
+
 		for _, v := range comments.L {
 			diary.Comments = append(diary.Comments, *v.S)
+		}
+	}
+
+	//　コメントがない場合とある場合で条件分岐
+	commenters, ok := item["commenters"]
+	if !ok {
+		diary.Comments = []string{}
+		diary.Commenters = []string{}
+		fmt.Printf("既存コメントがない %+v\n", diary)
+	} else {
+		fmt.Printf("commentersSlice L %+v\n", commenters.L)
+		for _, v := range commenters.L {
+			diary.Commenters = append(diary.Commenters, *v.S)
+		}
+		comments, ok := item["comments"]
+		if !ok {
+			diary.Comments = []string{}
+		} else {
+			for _, v := range comments.L {
+				diary.Comments = append(diary.Comments, *v.S)
+			}
 		}
 	}
 
