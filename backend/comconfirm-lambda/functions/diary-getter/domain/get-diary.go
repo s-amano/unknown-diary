@@ -134,17 +134,6 @@ func (gd *GetDiary) SetDiary(item map[string]*dynamodb.AttributeValue) (Diary, e
 	}
 
 	//　コメントがない場合とある場合で条件分岐
-	comments, ok := item["comments"]
-	if !ok {
-		diary.Comments = []string{}
-	} else {
-
-		for _, v := range comments.L {
-			diary.Comments = append(diary.Comments, *v.S)
-		}
-	}
-
-	//　コメントがない場合とある場合で条件分岐
 	commenters, ok := item["commenters"]
 	if !ok {
 		diary.Comments = []string{}
