@@ -21,8 +21,12 @@ const MyFavoriteDiaryDetail = () => {
   const [favorite, setFavorite] = useState(false);
 
   const handleEditComment = useCallback(() => {
-    setIsEditComment(true);
-  }, []);
+    if (!(diary.commenters === null || diary.commenters.indexOf(thisUserName) === -1)) {
+      setAlreadyCommentedDialog(true);
+    } else {
+      setIsEditComment(true);
+    }
+  }, [diary.commenters, thisUserName]);
 
   const handleClose = useCallback(() => {
     setAlreadyCommentedDialog(false);
@@ -89,7 +93,7 @@ const MyFavoriteDiaryDetail = () => {
         console.log('成功');
         setDiary({ ...diary, reaction: response.reaction, reactioners: response.reactioners });
         setFavorite(!favorite);
-        console.log(diary);
+        console.log(response);
       })
       .catch((err) => {
         console.log(err);
@@ -121,7 +125,7 @@ const MyFavoriteDiaryDetail = () => {
         if (response.is_comment) {
           setAlreadyCommentedDialog(true);
         } else {
-          setDiary({ ...diary, comments: response.comments });
+          setDiary({ ...diary, comments: response.comments, commenters: response.commenters });
         }
         setIsEditComment(false);
         setLeaveComment('');

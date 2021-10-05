@@ -132,7 +132,7 @@ const FetchDiary = () => {
         if (response.is_comment) {
           setAlreadyCommentedDialog(true);
         } else {
-          setDiary({ ...diary, comments: response.comments });
+          setDiary({ ...diary, comments: response.comments, commenters: response.commenters });
         }
         setIsEditComment(false);
         setLeaveComment('');
