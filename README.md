@@ -32,7 +32,7 @@ password: 12345678
 ## 補足
 フロントエンドはS3 のWebホスティング + CloudFrontで、バックエンドAPIはLambdaで実装、データベースにはDynamoDBという感じです。
 認証にはAWS cognitoを利用しています。Amplifyのライブラリを利用しているので、ログイン画面のUIと機能は全てAWSが行ってくれています。
-また、デプロイ作業をなるべく簡略化できるようにMakefileを作り、Github Actionsで自動デプロイ環境を作っています。
+また、デプロイ作業をなるべく簡略化できるようにMakefileを作りデプロイコマンドを簡素化した上で、Github Actionsで自動デプロイ環境を作っています。
 
 
 # 構成図
