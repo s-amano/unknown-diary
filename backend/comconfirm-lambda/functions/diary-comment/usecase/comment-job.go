@@ -21,6 +21,7 @@ type ResultDiary struct {
 	ID            string   `json:"id"`
 	PostAt        string   `json:"post_at"`
 	Comments      []string `json:"comments"`
+	Commenters    []string `json:"commenters"`
 	CommenterFlag bool     `json:"is_comment"`
 }
 
@@ -61,6 +62,7 @@ func (cj *CommentJob) Run(ctx context.Context, apiGWEvent events.APIGatewayProxy
 	ResultDiary.ID = responseDiary.ID
 	ResultDiary.PostAt = responseDiary.PostAt
 	ResultDiary.Comments = responseDiary.CommentArray
+	ResultDiary.Commenters = responseDiary.Commenters
 	ResultDiary.CommenterFlag = responseDiary.CommenterFlag
 
 	return ResultDiary, nil
