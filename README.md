@@ -32,7 +32,7 @@ password: 12345678
 ## 補足
 フロントエンドはS3 のWebホスティング + CloudFrontで、バックエンドAPIはLambdaで実装、データベースにはDynamoDBという感じです。
 認証にはAWS cognitoを利用しています。Amplifyのライブラリを利用しているので、ログイン画面のUIと機能は全てAWSが行ってくれています。
-また、デプロイ作業をなるべく簡略化できるようにMakefileを作りデプロイコマンドを簡素化した上で、Github Actionsで自動デプロイ環境を作っています。
+また、デプロイ作業を簡略化できるようにMakefileを作りデプロイコマンドを簡素化した上で、Github Actionsで自動デプロイ環境を作っています。
 
 
 # 構成図
@@ -65,3 +65,6 @@ dynamoDBから全件取得したあと、authorが自分でないものをFilter
 ### 日記にリアクションをつけることができ、それを著者が確認することができる
 日記のリアクションボタンを押すと、該当の日記をDynamoDBから取得する。押したUserがreactioners配列に含まれていれば、reacrtionの数を1つ減らし、reactionersからUserを排除する。  
 押したUserがreactioners配列に含まれていなければ、reactionの数を1つ増やし、reactionersへUserを追加する。
+
+### 日記にコメントを残せる
+日記へのコメントは1つのみ残せる。
