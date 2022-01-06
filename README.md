@@ -20,7 +20,7 @@ password: 12345678
 へログインしてください。
 
 # 使用した技術など
-- React (UIフレームワークにMaterial UI)(フロントの開発環境はDockerで構築)
+- React (UIフレームワークにMaterial UI, CSSフレームワークにTailwindCSS)(フロントの開発環境はDockerで構築)
 - AWS (serverlessframework + cloudformation で構築)
   - Lambda (APIとして利用, 言語はGolang, 単体テスト)
   - DynamoDB (データベース)
