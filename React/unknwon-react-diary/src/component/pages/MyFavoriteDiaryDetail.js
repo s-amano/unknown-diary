@@ -1,13 +1,19 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
-import { Auth, API } from 'aws-amplify';
-import { useLocation } from 'react-router-dom';
-import Container from '@material-ui/core/Container';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { ApiContext } from '../../context/ApiContext';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import FetchedDiaryCard from '../organisms/FetchedDiaryCard';
-import DiaryComment from '../organisms/DiaryComment';
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
+import { Auth, API } from "aws-amplify";
+import { useLocation } from "react-router-dom";
+import Container from "@material-ui/core/Container";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { ApiContext } from "../../context/ApiContext";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FetchedDiaryCard from "../organisms/FetchedDiaryCard";
+import DiaryComment from "../organisms/DiaryComment";
 
 const MyFavoriteDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -16,12 +22,17 @@ const MyFavoriteDiaryDetail = () => {
   const [diary, setDiary] = useState({});
   const [diaryContentLength, setDiaryContentLength] = useState(0);
   const [isEditComment, setIsEditComment] = useState(false);
-  const [leaveComment, setLeaveComment] = useState('');
+  const [leaveComment, setLeaveComment] = useState("");
   const [alreadyCommentedDialog, setAlreadyCommentedDialog] = useState(false);
   const [favorite, setFavorite] = useState(false);
 
   const handleEditComment = useCallback(() => {
-    if (!(diary.commenters === null || diary.commenters.indexOf(thisUserName) === -1)) {
+    if (
+      !(
+        diary.commenters === null ||
+        diary.commenters.indexOf(thisUserName) === -1
+      )
+    ) {
       setAlreadyCommentedDialog(true);
     } else {
       setIsEditComment(true);
@@ -42,12 +53,14 @@ const MyFavoriteDiaryDetail = () => {
   useEffect(() => {
     const fetchDiary = async () => {
       setLoading(true);
-      const apiName = 'GETStoreAPI';
+      const apiName = "GETStoreAPI";
       const path = `${location.search}`;
 
       const myInit = {
         headers: {
-          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+          Authorization: `Bearer ${(await Auth.currentSession())
+            .getIdToken()
+            .getJwtToken()}`,
         },
       };
 
@@ -57,7 +70,10 @@ const MyFavoriteDiaryDetail = () => {
           setDiary(response);
           setDiaryContentLength(response.content.length);
           console.log(thisUserName);
-          if (response.reactioners === null || response.reactioners.indexOf(thisUserName) === -1) {
+          if (
+            response.reactioners === null ||
+            response.reactioners.indexOf(thisUserName) === -1
+          ) {
             setFavorite(false);
           } else {
             setFavorite(true);
@@ -73,8 +89,8 @@ const MyFavoriteDiaryDetail = () => {
   }, [location.search, thisUserName, setLoading]);
 
   const updateDiary = useCallback(async () => {
-    const apiName = 'REACTIONDiaryAPI';
-    const path = '';
+    const apiName = "REACTIONDiaryAPI";
+    const path = "";
 
     const postData = {
       id: diary.id,
@@ -82,16 +98,22 @@ const MyFavoriteDiaryDetail = () => {
     };
     const myInit = {
       headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        Authorization: `Bearer ${(await Auth.currentSession())
+          .getIdToken()
+          .getJwtToken()}`,
       },
       body: postData,
-      contentType: 'application/json',
+      contentType: "application/json",
     };
 
     await API.post(apiName, path, myInit)
       .then((response) => {
-        console.log('成功');
-        setDiary({ ...diary, reaction: response.reaction, reactioners: response.reactioners });
+        console.log("成功");
+        setDiary({
+          ...diary,
+          reaction: response.reaction,
+          reactioners: response.reactioners,
+        });
         setFavorite(!favorite);
         console.log(response);
       })
@@ -102,8 +124,8 @@ const MyFavoriteDiaryDetail = () => {
 
   const commentDiary = useCallback(async () => {
     console.log(leaveComment);
-    const apiName = 'COMMENTDiaryAPI';
-    const path = '';
+    const apiName = "COMMENTDiaryAPI";
+    const path = "";
 
     const postData = {
       id: diary.id,
@@ -112,23 +134,29 @@ const MyFavoriteDiaryDetail = () => {
     };
     const myInit = {
       headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        Authorization: `Bearer ${(await Auth.currentSession())
+          .getIdToken()
+          .getJwtToken()}`,
       },
       body: postData,
-      contentType: 'application/json',
+      contentType: "application/json",
     };
 
     await API.post(apiName, path, myInit)
       .then((response) => {
-        console.log('成功');
+        console.log("成功");
         console.log(response);
         if (response.is_comment) {
           setAlreadyCommentedDialog(true);
         } else {
-          setDiary({ ...diary, comments: response.comments, commenters: response.commenters });
+          setDiary({
+            ...diary,
+            comments: response.comments,
+            commenters: response.commenters,
+          });
         }
         setIsEditComment(false);
-        setLeaveComment('');
+        setLeaveComment("");
       })
       .catch((err) => {
         console.log(err);
@@ -145,8 +173,12 @@ const MyFavoriteDiaryDetail = () => {
   }, [leaveComment.length, maxCommentLength]);
 
   return (
-    <Container className="sm:w-full md:w-700">
-      <FetchedDiaryCard diary={diary} updateDiary={updateDiary} favorite={favorite} />
+    <Container className="sm:w-full md:w-[700px]">
+      <FetchedDiaryCard
+        diary={diary}
+        updateDiary={updateDiary}
+        favorite={favorite}
+      />
       <DiaryComment
         diaryComment={diary.comments}
         isEditComment={isEditComment}
@@ -156,7 +188,7 @@ const MyFavoriteDiaryDetail = () => {
         isCommentLengthOver={isCommentLengthOver}
         commentDiary={commentDiary}
         handleEditComment={handleEditComment}
-        diaryCommentTile={'足跡'}
+        diaryCommentTile={"足跡"}
       />
       <Dialog open={alreadyCommentedDialog} onClose={handleClose}>
         <DialogTitle id="simple-dialog-title">

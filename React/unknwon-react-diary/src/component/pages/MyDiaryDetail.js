@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { Auth, API } from 'aws-amplify';
-import { useLocation } from 'react-router-dom';
-import Container from '@material-ui/core/Container';
-import { Grid } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { ApiContext } from '../../context/ApiContext';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import DiaryForm from '../organisms/DiaryForm';
-import MyDiaryCard from '../organisms/MyDiaryCard';
-import DiaryCommentBubble from '../atoms/DiaryCommentBubble';
+import React, { useState, useEffect, useContext, useMemo } from "react";
+import { Auth, API } from "aws-amplify";
+import { useLocation } from "react-router-dom";
+import Container from "@material-ui/core/Container";
+import { Grid } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { ApiContext } from "../../context/ApiContext";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import DiaryForm from "../organisms/DiaryForm";
+import MyDiaryCard from "../organisms/MyDiaryCard";
+import DiaryCommentBubble from "../atoms/DiaryCommentBubble";
 
 const MyDiaryDetail = () => {
   const { thisUserName, loading, setLoading } = useContext(ApiContext);
@@ -20,7 +20,7 @@ const MyDiaryDetail = () => {
   const [editMode, setEditMode] = useState(false);
   const [editDiaryDate, setEditDiaryDate] = useState();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editDiary, setEditDiary] = useState({ title: '', content: '' });
+  const [editDiary, setEditDiary] = useState({ title: "", content: "" });
 
   const handleClose = () => {
     setDialogOpen(false);
@@ -28,9 +28,9 @@ const MyDiaryDetail = () => {
 
   const dateConvert = (date) => {
     var y = date.getFullYear();
-    var m = ('00' + (date.getMonth() + 1)).slice(-2);
-    var d = ('00' + date.getDate()).slice(-2);
-    var result = y + '/' + m + '/' + d;
+    var m = ("00" + (date.getMonth() + 1)).slice(-2);
+    var d = ("00" + date.getDate()).slice(-2);
+    var result = y + "/" + m + "/" + d;
     return result;
   };
 
@@ -41,11 +41,15 @@ const MyDiaryDetail = () => {
     if (!editDiaryDate.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
       return false;
     }
-    var y = editDiaryDate.split('/')[0];
-    var m = editDiaryDate.split('/')[1] - 1;
-    var d = editDiaryDate.split('/')[2];
+    var y = editDiaryDate.split("/")[0];
+    var m = editDiaryDate.split("/")[1] - 1;
+    var d = editDiaryDate.split("/")[2];
     var date = new Date(y, m, d);
-    if (date.getFullYear() !== Number(y) || date.getMonth() !== m || date.getDate() !== Number(d)) {
+    if (
+      date.getFullYear() !== Number(y) ||
+      date.getMonth() !== m ||
+      date.getDate() !== Number(d)
+    ) {
       return false;
     }
     return true;
@@ -54,26 +58,28 @@ const MyDiaryDetail = () => {
   useEffect(() => {
     const fetchMyDiary = async () => {
       setLoading(true);
-      const apiName = 'GETStoreAPI';
+      const apiName = "GETStoreAPI";
       const path = `${location.search}`;
 
       const myInit = {
         headers: {
-          Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+          Authorization: `Bearer ${(await Auth.currentSession())
+            .getIdToken()
+            .getJwtToken()}`,
         },
       };
 
       await API.get(apiName, path, myInit)
         .then((response) => {
           console.log(response);
-          if (response.id === '') {
-            window.location.href = '/mydiary';
+          if (response.id === "") {
+            window.location.href = "/mydiary";
           }
 
           console.log(response.author !== thisUserName);
           if (response.author !== thisUserName) {
             setDialogOpen(true);
-            window.location.href = '/diary';
+            window.location.href = "/diary";
           }
           setMyDiaryDetail(response);
           setEditDiary({ title: response.title, content: response.content });
@@ -98,8 +104,8 @@ const MyDiaryDetail = () => {
       setDialogOpen(true);
       return;
     }
-    const apiName = 'UPDATEDiaryAPI';
-    const path = '';
+    const apiName = "UPDATEDiaryAPI";
+    const path = "";
 
     const postData = {
       id: myDiaryDetail.id,
@@ -110,16 +116,23 @@ const MyDiaryDetail = () => {
     };
     const myInit = {
       headers: {
-        Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}`,
+        Authorization: `Bearer ${(await Auth.currentSession())
+          .getIdToken()
+          .getJwtToken()}`,
       },
       body: postData,
-      contentType: 'application/json',
+      contentType: "application/json",
     };
 
     await API.post(apiName, path, myInit)
       .then((response) => {
-        console.log('成功');
-        setMyDiaryDetail({ ...myDiaryDetail, title: response.title, content: response.content, date: response.date });
+        console.log("成功");
+        setMyDiaryDetail({
+          ...myDiaryDetail,
+          title: response.title,
+          content: response.content,
+          date: response.date,
+        });
         setEditMode(!editMode);
       })
       .catch((err) => {
@@ -148,10 +161,24 @@ const MyDiaryDetail = () => {
   };
 
   return (
-    <Container className="sm:w-full md:w-700">
-      <Grid container justify="flex-end" style={{ marginTop: '5%' }}>
-        <Button className="mb-3" onClick={() => setMyDiaryEditMode()} color="primary" variant="contained">
-          <p style={{ margin: 0, fontWeight: 'bold', fontSize: '16px', color: 'white' }}>編集モード</p>
+    <Container className="sm:w-full md:w-[700px]">
+      <Grid container justify="flex-end" style={{ marginTop: "5%" }}>
+        <Button
+          className="mb-3"
+          onClick={() => setMyDiaryEditMode()}
+          color="primary"
+          variant="contained"
+        >
+          <p
+            style={{
+              margin: 0,
+              fontWeight: "bold",
+              fontSize: "16px",
+              color: "white",
+            }}
+          >
+            編集モード
+          </p>
         </Button>
       </Grid>
       {loading && <CircularProgress />}
@@ -163,13 +190,15 @@ const MyDiaryDetail = () => {
           isDateValid={isDateValid}
           survayPost={upadteMyDiary}
           inputDiaryDate={editDiaryDate}
-          postWord={'日記を編集する'}
+          postWord={"日記を編集する"}
         />
       ) : (
         <>
           <MyDiaryCard diary={myDiaryDetail} />
           <div className="flex flex-col w-9/12 pl-8 mt-4">
-            <p className="text-xl text-gray-800 font-semibold mb-3 text-left">足跡</p>
+            <p className="text-xl text-gray-800 font-semibold mb-3 text-left">
+              足跡
+            </p>
             {myDiaryDetail.comments
               ? myDiaryDetail.comments.map((comment, index) => (
                   <DiaryCommentBubble key={index} diaryComment={comment} />
@@ -179,7 +208,9 @@ const MyDiaryDetail = () => {
         </>
       )}
       <Dialog open={dialogOpen} onClose={handleClose}>
-        <DialogTitle id="simple-dialog-title">自分の日記のみ編集ができます</DialogTitle>
+        <DialogTitle id="simple-dialog-title">
+          自分の日記のみ編集ができます
+        </DialogTitle>
       </Dialog>
     </Container>
   );
