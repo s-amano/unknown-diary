@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { myPageAtom, myDiaryIDAtom, myAllDiariesAtom } from "../../recoil/atom";
 import { Auth, API } from "aws-amplify";
