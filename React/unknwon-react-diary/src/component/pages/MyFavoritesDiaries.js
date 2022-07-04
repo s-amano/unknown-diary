@@ -20,6 +20,7 @@ const FetchMyFavoritesDiaries = () => {
   const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useState([]);
   const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
   const [diaryID, setDiaryID] = useState("");
+  const [maxPageNumber, setMaxPageNumber] = useState();
 
   const lastDiaryIDList = useMemo(() => {
     const number = 6;
@@ -27,10 +28,6 @@ const FetchMyFavoritesDiaries = () => {
     return new Array(length)
       .fill()
       .map((_, i) => myAllFavoritesDiaries.slice(i * number, (i + 1) * number));
-  }, [myAllFavoritesDiaries]);
-
-  const maxPageNumber = useMemo(() => {
-    Math.ceil(myAllFavoritesDiaries.length / 6);
   }, [myAllFavoritesDiaries]);
 
   useEffect(() => {
@@ -61,6 +58,7 @@ const FetchMyFavoritesDiaries = () => {
           setLoading(false);
         });
     };
+    setMaxPageNumber(Math.ceil(myAllFavoritesDiaries.length / 6));
     fetchMyFavoritesDiaries("");
   }, [diaryID, myAllFavoritesDiaries.length, setLoading]);
 
