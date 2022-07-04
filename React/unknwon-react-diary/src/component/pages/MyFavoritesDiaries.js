@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { atom, useRecoilState } from "recoil";
 import { Auth, API } from "aws-amplify";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
@@ -16,10 +17,20 @@ import Pagination from "../atoms/Pagination";
 const FetchMyFavoritesDiaries = () => {
   const { loading, setLoading } = useContext(ApiContext);
 
-  const [page, setPage] = useState(1);
+  const pageAtom = atom({
+    key: "pageAtom",
+    default: 1,
+  });
+
+  const diaryIDAtom = atom({
+    key: "diaryIDAtom",
+    default: "",
+  });
+
+  const [diaryID, setDiaryID] = useRecoilState(diaryIDAtom);
+  const [page, setPage] = useRecoilState(pageAtom);
   const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useState([]);
   const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
-  const [diaryID, setDiaryID] = useState("");
   const [maxPageNumber, setMaxPageNumber] = useState();
 
   const lastDiaryIDList = useMemo(() => {
@@ -69,12 +80,12 @@ const FetchMyFavoritesDiaries = () => {
       setDiaryID(lastDiaryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
-  }, [page, lastDiaryIDList]);
+  }, [page, lastDiaryIDList, setDiaryID, setPage]);
 
   const nextPage = useCallback(() => {
     setDiaryID(lastDiaryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
-  }, [page, lastDiaryIDList]);
+  }, [page, lastDiaryIDList, setDiaryID, setPage]);
 
   return (
     <Container style={{ marginTop: "40px" }} maxWidth="md">
