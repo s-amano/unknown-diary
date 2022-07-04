@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import {
-  diaryIDAtom,
-  pageAtom,
+  favoriteDiaryIDAtom,
+  favoritePageAtom,
   myAllFavoritesDiariesAtom,
 } from "../../recoil/atom";
 import { Auth, API } from "aws-amplify";
@@ -16,8 +16,8 @@ import Pagination from "../atoms/Pagination";
 const FetchMyFavoritesDiaries = () => {
   const { loading, setLoading } = useContext(ApiContext);
 
-  const [diaryID, setDiaryID] = useRecoilState(diaryIDAtom);
-  const [page, setPage] = useRecoilState(pageAtom);
+  const [diaryID, setDiaryID] = useRecoilState(favoriteDiaryIDAtom);
+  const [page, setPage] = useRecoilState(favoritePageAtom);
   const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useRecoilState(
     myAllFavoritesDiariesAtom
   );
