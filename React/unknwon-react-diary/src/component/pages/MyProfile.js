@@ -75,7 +75,7 @@ const MyProfile = () => {
 
   const length = Math.ceil(myAllDiaries.length / 6);
   const maxPageNumber = Math.ceil(myAllDiaries.length / 6);
-  const lastDiraryIDList = new Array(length)
+  const lastDiaryIDList = new Array(length)
     .fill()
     .map((_, i) => myAllDiaries.slice(i * 6, (i + 1) * 6));
 
@@ -83,15 +83,15 @@ const MyProfile = () => {
     if (page === 2) {
       setDiaryID("");
     } else {
-      setDiaryID(lastDiraryIDList[page - 3].slice(-1)[0].id);
+      setDiaryID(lastDiaryIDList[page - 3].slice(-1)[0].id);
     }
     setPage(page - 1);
-  }, [page, lastDiraryIDList, setDiaryID, setPage]);
+  }, [page, lastDiaryIDList, setDiaryID, setPage]);
 
   const nextPage = useCallback(() => {
-    setDiaryID(lastDiraryIDList[page - 1].slice(-1)[0].id);
+    setDiaryID(lastDiaryIDList[page - 1].slice(-1)[0].id);
     setPage(page + 1);
-  }, [page, lastDiraryIDList, setDiaryID, setPage]);
+  }, [page, lastDiaryIDList, setDiaryID, setPage]);
 
   return (
     <Container style={{ marginTop: "40px" }} maxWidth="md">
