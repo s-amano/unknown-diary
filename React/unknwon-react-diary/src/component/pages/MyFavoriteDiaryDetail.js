@@ -66,10 +66,8 @@ const MyFavoriteDiaryDetail = () => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          console.log(response);
           setDiary(response);
           setDiaryContentLength(response.content.length);
-          console.log(thisUserName);
           if (
             response.reactioners === null ||
             response.reactioners.indexOf(thisUserName) === -1
@@ -108,14 +106,12 @@ const MyFavoriteDiaryDetail = () => {
 
     await API.post(apiName, path, myInit)
       .then((response) => {
-        console.log("成功");
         setDiary({
           ...diary,
           reaction: response.reaction,
           reactioners: response.reactioners,
         });
         setFavorite(!favorite);
-        console.log(response);
       })
       .catch((err) => {
         console.log(err);
@@ -123,7 +119,6 @@ const MyFavoriteDiaryDetail = () => {
   }, [diary, favorite]);
 
   const commentDiary = useCallback(async () => {
-    console.log(leaveComment);
     const apiName = "COMMENTDiaryAPI";
     const path = "";
 
@@ -144,8 +139,6 @@ const MyFavoriteDiaryDetail = () => {
 
     await API.post(apiName, path, myInit)
       .then((response) => {
-        console.log("成功");
-        console.log(response);
         if (response.is_comment) {
           setAlreadyCommentedDialog(true);
         } else {
