@@ -1,11 +1,10 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useMemo,
-  useCallback,
-} from "react";
-import { atom, useRecoilState } from "recoil";
+import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useRecoilState } from "recoil";
+import {
+  diaryIDAtom,
+  pageAtom,
+  myAllFavoritesDiariesAtom,
+} from "../../recoil/atom";
 import { Auth, API } from "aws-amplify";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
@@ -17,37 +16,16 @@ import Pagination from "../atoms/Pagination";
 const FetchMyFavoritesDiaries = () => {
   const { loading, setLoading } = useContext(ApiContext);
 
-  const pageAtom = atom({
-    key: "pageAtom",
-    default: 1,
-  });
-
-  const diaryIDAtom = atom({
-    key: "diaryIDAtom",
-    default: "",
-  });
-
   const [diaryID, setDiaryID] = useRecoilState(diaryIDAtom);
   const [page, setPage] = useRecoilState(pageAtom);
-  const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useState([]);
+  const [myAllFavoritesDiaries, setMyAllFavoritesDiaries] = useRecoilState(
+    myAllFavoritesDiariesAtom
+  );
   const [myFavoritesDiaries, setMyFavoritesDiaries] = useState([]);
-  const [maxPageNumber, setMaxPageNumber] = useState();
-
-  const lastDiaryIDList = useMemo(() => {
-    const number = 6;
-    const length = Math.ceil(myAllFavoritesDiaries.length / number);
-    return new Array(length)
-      .fill()
-      .map((_, i) => myAllFavoritesDiaries.slice(i * number, (i + 1) * number));
-  }, [myAllFavoritesDiaries]);
 
   useEffect(() => {
-    const fetchMyFavoritesDiaries = async () => {
-      setLoading(true);
-      const apiName = "FAVORITESDiaryAPI";
-      const limit = "6";
-      const path = diaryID === "" ? `` : `?id=${diaryID}&limit=${limit}`;
-
+    const apiName = "FAVORITESDiaryAPI";
+    const fetchAllFavoritesDiaries = async () => {
       const myInit = {
         headers: {
           Authorization: `Bearer ${(await Auth.currentSession())
@@ -55,12 +33,30 @@ const FetchMyFavoritesDiaries = () => {
             .getJwtToken()}`,
         },
       };
+      setLoading(true);
+      await API.get(apiName, "", myInit)
+        .then((response) => {
+          setMyAllFavoritesDiaries(response.Diaries);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+    };
 
+    const fetchMyFavoritesDiaries = async () => {
+      const myInit = {
+        headers: {
+          Authorization: `Bearer ${(await Auth.currentSession())
+            .getIdToken()
+            .getJwtToken()}`,
+        },
+      };
+      const path = diaryID === "" ? `` : `?id=${diaryID}&limit=${6}`;
+      setLoading(true);
       await API.get(apiName, path, myInit)
         .then((response) => {
-          if (response.Diaries.length > myAllFavoritesDiaries.length) {
-            setMyAllFavoritesDiaries(response.Diaries);
-          }
           setMyFavoritesDiaries(response.Diaries.slice(0, 6));
           setLoading(false);
         })
@@ -69,9 +65,15 @@ const FetchMyFavoritesDiaries = () => {
           setLoading(false);
         });
     };
-    setMaxPageNumber(Math.ceil(myAllFavoritesDiaries.length / 6));
-    fetchMyFavoritesDiaries("");
-  }, [diaryID, myAllFavoritesDiaries.length, setLoading]);
+    fetchAllFavoritesDiaries();
+    fetchMyFavoritesDiaries();
+  }, [diaryID, setLoading, setMyAllFavoritesDiaries]);
+
+  const length = Math.ceil(myAllFavoritesDiaries.length / 6);
+  const maxPageNumber = Math.ceil(myAllFavoritesDiaries.length / 6);
+  const lastDiaryIDList = new Array(length)
+    .fill()
+    .map((_, i) => myAllFavoritesDiaries.slice(i * 6, (i + 1) * 6));
 
   const prevPage = useCallback(() => {
     if (page === 2) {
