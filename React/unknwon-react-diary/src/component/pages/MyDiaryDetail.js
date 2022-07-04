@@ -71,12 +71,9 @@ const MyDiaryDetail = () => {
 
       await API.get(apiName, path, myInit)
         .then((response) => {
-          console.log(response);
           if (response.id === "") {
             window.location.href = "/mydiary";
           }
-
-          console.log(response.author !== thisUserName);
           if (response.author !== thisUserName) {
             setDialogOpen(true);
             window.location.href = "/diary";
@@ -126,7 +123,6 @@ const MyDiaryDetail = () => {
 
     await API.post(apiName, path, myInit)
       .then((response) => {
-        console.log("成功");
         setMyDiaryDetail({
           ...myDiaryDetail,
           title: response.title,

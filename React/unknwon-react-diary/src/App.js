@@ -1,35 +1,36 @@
-import './App.css';
-import React from 'react';
-import { I18n } from 'aws-amplify';
-import { AmplifyAuthenticator } from '@aws-amplify/ui-react';
-import { AuthState, onAuthUIStateChange } from '@aws-amplify/ui-components';
-import ApiContextProvider from './context/ApiContext';
-import Navbar from './component/Navbar';
-import Login from './component/pages/Login';
-import SignUp from './component/pages/SignUp';
-import Footer from './component/Footer';
-import Router from './router/Router';
-import { BrowserRouter } from 'react-router-dom';
-import { createTheme } from '@material-ui/core/styles';
-import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-import { vocabularies } from './vocabularies';
+import "./App.css";
+import React from "react";
+import { I18n } from "aws-amplify";
+import { AmplifyAuthenticator } from "@aws-amplify/ui-react";
+import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
+import ApiContextProvider from "./context/ApiContext";
+import Navbar from "./component/Navbar";
+import Login from "./component/pages/Login";
+import SignUp from "./component/pages/SignUp";
+import Footer from "./component/Footer";
+import Router from "./router/Router";
+import { BrowserRouter } from "react-router-dom";
+import { createTheme } from "@material-ui/core/styles";
+import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
+import { vocabularies } from "./vocabularies";
+import { RecoilRoot } from "recoil";
 
 I18n.putVocabularies(vocabularies);
-I18n.setLanguage('ja');
+I18n.setLanguage("ja");
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#6e7d84',
+      main: "#6e7d84",
     },
     secondary: {
-      main: 'rgba(67, 56, 202)',
+      main: "rgba(67, 56, 202)",
     },
   },
   typography: {
-    fontFamily: 'Comic Neue',
+    fontFamily: "Comic Neue",
   },
-  shadows: ['none'],
+  shadows: ["none"],
 });
 
 function App() {
@@ -43,26 +44,28 @@ function App() {
     });
   }, []);
   return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <AmplifyAuthenticator>
-          {authState === AuthState.SignedIn && user ? (
-            <div className="App">
-              <ApiContextProvider>
-                <Navbar />
-                <Router />
-                <Footer />
-              </ApiContextProvider>
-            </div>
-          ) : (
-            <>
-              <Login />
-              <SignUp />
-            </>
-          )}
-        </AmplifyAuthenticator>
-      </BrowserRouter>
-    </MuiThemeProvider>
+    <RecoilRoot>
+      <MuiThemeProvider theme={theme}>
+        <BrowserRouter>
+          <AmplifyAuthenticator>
+            {authState === AuthState.SignedIn && user ? (
+              <div className="App">
+                <ApiContextProvider>
+                  <Navbar />
+                  <Router />
+                  <Footer />
+                </ApiContextProvider>
+              </div>
+            ) : (
+              <>
+                <Login />
+                <SignUp />
+              </>
+            )}
+          </AmplifyAuthenticator>
+        </BrowserRouter>
+      </MuiThemeProvider>
+    </RecoilRoot>
   );
 }
 
